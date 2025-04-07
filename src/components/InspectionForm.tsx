@@ -1,6 +1,17 @@
+
 import { generatePDF } from "../utils/pdfGenerator";
 import RoofSection from './RoofSection';
 import React, { useState } from 'react';
+
+const convertToBase64 = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (err) => reject(err);
+  });
+
+
 
 const InspectionForm = () => {
     // State to store form data
@@ -124,24 +135,29 @@ roofSquareFootage: '',
     
 
     
-    // Function to handle input changes
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+      const { name, value } = e.target;
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
     };
+    
 
-    // Function to handle form submission
     const handleSubmit = (e) => {
       e.preventDefault();
-      console.log("Submit button clicked!");
-      
+    
       const completeFormData = {
         ...formData,
-        roofSections: roofSections // 👈 Include roof sections here
+        roofSections,
+        images: formData.images || [],
+        overviewImages: formData.overviewImages || [],
+        droneImages: formData.droneImages || [],
       };
     
-      console.log("Form Data:", completeFormData);
-      generatePDF(completeFormData); // Pass the updated object
+      generatePDF(completeFormData);
     };
+    
     
     
 
@@ -522,10 +538,7 @@ roofSquareFootage: '',
                 </select>
                 <input type="text" name="temperature" placeholder="Temperature (°F)" onChange={handleChange} className="w-full border p-2 rounded" />
                 
-                {/* Roof Type and Age */}
-                <h3 className="text-lg font-bold">Roof Type & Age</h3>
-                <input type="text" name="roofType" placeholder="Roof Type" onChange={handleChange} className="w-full border p-2 rounded" />
-                <input type="text" name="roofAge" placeholder="Roof Age (approx.)" onChange={handleChange} className="w-full border p-2 rounded" />
+
                 
 
 
@@ -615,5 +628,6 @@ roofSquareFootage: '',
         </div>
     );
 };
+
 
 export default InspectionForm;
