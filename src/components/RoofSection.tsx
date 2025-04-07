@@ -1,10 +1,15 @@
-// components/RoofSection.tsx
-import React from 'react';
 
 const RoofSection = ({ section, index, onChange }) => {
-  const handleChange = (e) => {
-    onChange(e, index);
-  };
+  
+    
+
+    const handleChange = (e) => {
+        const { name, value, type } = e.target;
+        const val = type === "number" ? Number(value) : value;
+      
+        onChange(index, { ...section, [name]: val });
+      };
+      
 
   return (
     <div className="border p-4 mt-4 bg-gray-50 rounded">
@@ -16,14 +21,30 @@ const RoofSection = ({ section, index, onChange }) => {
     <input
       type="text"
       name="sectionName"
-      placeholder="e.g. Office Roof, Canopy A"
-      value={section.sectionName || ""}
-      onChange={onChange}
+      placeholder="e.g. Section 3: Canopy A"
+
+      onChange={handleChange}
       className="w-full border p-2 rounded"
     />
+
+    
+
+
+
+<label className="block font-semibold">Section Age</label>
+    <input
+      type="text"
+      name="sectionAge"
+      placeholder="Section Age (Approx.)"
+
+      onChange={handleChange}
+      className="w-full border p-2 rounded"
+    />
+
+
   </div>
   <div>
-    <label className="block font-semibold">Roof Sq. Footage</label>
+    <label className="block font-semibold">Section Sq. Footage</label>
     <input
       type="text"
       name="roofSquareFootage"
@@ -37,6 +58,40 @@ const RoofSection = ({ section, index, onChange }) => {
     />
   </div>
 </div>
+
+
+
+{/* Roof Square Footage Section */}
+<h3 className="text-lg font-bold mt-6">Section Square Footage</h3>
+
+<label className="block">Section Length (ft)</label>
+<input 
+    type="number" 
+    name="roofLength" 
+    placeholder="Enter Roof Length" 
+    value={section.roofLength} 
+    onChange={handleChange} 
+    className="w-full border p-2 rounded" 
+/>
+
+<label className="block mt-2">Section Width (ft)</label>
+<input 
+    type="number" 
+    name="roofWidth" 
+    placeholder="Enter Roof Width" 
+    value={section.roofWidth} 
+    onChange={handleChange} 
+    className="w-full border p-2 rounded" 
+/>
+
+<label className="block mt-2">Total Roof Square Footage</label>
+<input 
+    type="number" 
+    name="roofSquareFootage" 
+    value={section.roofLength && section.roofWidth ? section.roofLength * section.roofWidth : ''} 
+    readOnly 
+    className="w-full border p-2 rounded bg-gray-100" 
+/>
 
 
                  {/* General Observations Section */}
@@ -64,7 +119,7 @@ const RoofSection = ({ section, index, onChange }) => {
     placeholder="If yes, describe location and extent" 
     onChange={handleChange} 
     className="w-full border p-2 rounded"
-    rows="3"
+    rows={3}
 />
 
 {/* Ponding Water */}
@@ -79,7 +134,7 @@ const RoofSection = ({ section, index, onChange }) => {
     placeholder="If yes, describe location and extent" 
     onChange={handleChange} 
     className="w-full border p-2 rounded"
-    rows="3"
+    rows={3}
 />
 
 {/* Debris Accumulation */}
@@ -94,8 +149,7 @@ const RoofSection = ({ section, index, onChange }) => {
     placeholder="If yes, describe location and type of debris" 
     onChange={handleChange} 
     className="w-full border p-2 rounded"
-    rows="3"
-/>
+    rows={3}/>
 
 {/* Vegetation Growth */}
 <label className="block mt-2">Vegetation Growth?</label>
@@ -109,8 +163,7 @@ const RoofSection = ({ section, index, onChange }) => {
     placeholder="If yes, describe location and type of vegetation" 
     onChange={handleChange} 
     className="w-full border p-2 rounded"
-    rows="3"
-/>
+    rows={3}/>
 
 {/* Accessibility Issues */}
 <label className="block mt-2">Accessibility Issues?</label>
@@ -124,8 +177,7 @@ const RoofSection = ({ section, index, onChange }) => {
     placeholder="If yes, describe" 
     onChange={handleChange} 
     className="w-full border p-2 rounded"
-    rows="3"
-/>
+    rows={3}/>
 
                 
                 {/* Interior Evaluation Section */}
@@ -161,8 +213,7 @@ const RoofSection = ({ section, index, onChange }) => {
     placeholder="If yes, provide their location and brief description" 
     onChange={handleChange} 
     className="w-full border p-2 rounded"
-    rows="3"
-/>
+    rows={3}/>
 
 {/* Signs of Moisture Intrusion or Water Damage */}
 <label className="block mt-2">Signs of Moisture Intrusion or Water Damage?</label>
@@ -176,8 +227,7 @@ const RoofSection = ({ section, index, onChange }) => {
     placeholder="If yes, provide their location and brief description" 
     onChange={handleChange} 
     className="w-full border p-2 rounded"
-    rows="3"
-/>
+    rows={3}/>
 
    
                 
@@ -195,6 +245,16 @@ const RoofSection = ({ section, index, onChange }) => {
 {/* Seams/Overlaps Condition */}
 <label className="block mt-2">Seams/Overlaps Condition (Secure, Separated, Damaged, etc.)</label>
 <input type="text" name="seamsCondition" placeholder="Enter condition of seams/overlaps" onChange={handleChange} className="w-full border p-2 rounded" />
+
+
+<input 
+    type="number" 
+    name="membraneLength" 
+    placeholder="Enter Roof Length" 
+    value={section.membraneLength} 
+    onChange={handleChange} 
+    className="w-full border p-2 rounded" 
+/>
 
 {/* Fasteners Condition */}
 <label className="block mt-2">Fasteners Condition (Rusted, Loose, Missing, etc.)</label>
@@ -464,37 +524,6 @@ const RoofSection = ({ section, index, onChange }) => {
 <input type="text" name="coreSampleDeckType" placeholder="Deck Type" onChange={handleChange} className="w-full border p-2 rounded" />
 
 
-{/* Roof Square Footage Section */}
-<h3 className="text-lg font-bold mt-6">Roof Square Footage</h3>
-
-<label className="block">Roof Length (ft)</label>
-<input 
-    type="number" 
-    name="roofLength" 
-    placeholder="Enter Roof Length" 
-    value={section.roofLength} 
-    onChange={handleChange} 
-    className="w-full border p-2 rounded" 
-/>
-
-<label className="block mt-2">Roof Width (ft)</label>
-<input 
-    type="number" 
-    name="roofWidth" 
-    placeholder="Enter Roof Width" 
-    value={section.roofWidth} 
-    onChange={handleChange} 
-    className="w-full border p-2 rounded" 
-/>
-
-<label className="block mt-2">Total Roof Square Footage</label>
-<input 
-    type="number" 
-    name="roofSquareFootage" 
-    value={section.roofLength && section.roofWidth ? section.roofLength * section.roofWidth : ''} 
-    readOnly 
-    className="w-full border p-2 rounded bg-gray-100" 
-/>
 
 
 {/* Wall and Curb Square Footage Section */}
@@ -552,90 +581,6 @@ const RoofSection = ({ section, index, onChange }) => {
     className="w-full border p-2 rounded bg-gray-100" 
 />
 
-
-{/* Total Square Footage of Membrane Section */}
-<h3 className="text-lg font-bold mt-6">Total Square Footage of Membrane</h3>
-
-<label className="block">Roof Length (ft)</label>
-<input 
-    type="number" 
-    name="membraneLength" 
-    placeholder="Enter Roof Length" 
-    value={section.membraneLength} 
-    onChange={handleChange} 
-    className="w-full border p-2 rounded" 
-/>
-
-<label className="block mt-2">Roof Width (ft)</label>
-<input 
-    type="number" 
-    name="membraneWidth" 
-    placeholder="Enter Roof Width" 
-    value={section.membraneWidth} 
-    onChange={handleChange} 
-    className="w-full border p-2 rounded" 
-/>
-
-{/* Auto-calculated Total Square Footage of Membrane */}
-<label className="block mt-2">Total Square Footage of Membrane</label>
-<input 
-    type="number" 
-    name="totalMembraneSquareFootage" 
-    value={section.membraneLength && section.membraneWidth 
-        ? section.membraneLength * section.membraneWidth 
-        : ''} 
-    readOnly 
-    className="w-full border p-2 rounded bg-gray-100" 
-/>
-
-
-{/* Recommendations Section */}
-<h3 className="text-lg font-bold mt-6">Recommendations</h3>
-
-<label className="block">Detailed Description of Recommended Repairs or Maintenance</label>
-<textarea 
-    name="repairRecommendations" 
-    placeholder="Enter detailed repair recommendations..." 
-    value={section.repairRecommendations} 
-    onChange={handleChange} 
-    className="w-full border p-2 rounded h-24" 
-/>
-
-<label className="block mt-2">Prioritization of Repairs</label>
-<select 
-    name="repairPriority" 
-    value={section.repairPriority} 
-    onChange={handleChange} 
-    className="w-full border p-2 rounded"
->
-    <option value="">Select Priority</option>
-    <option value="Immediate">Immediate</option>
-    <option value="Short-Term">Short-Term</option>
-    <option value="Long-Term">Long-Term</option>
-</select>
-
-<label className="block mt-2">Estimated Cost of Repairs ($)</label>
-<input 
-    type="number" 
-    name="repairCost" 
-    placeholder="Enter estimated cost..." 
-    value={section.repairCost} 
-    onChange={handleChange} 
-    className="w-full border p-2 rounded" 
-/>
-
-
-{/* Summary Section */}
-<h3 className="text-lg font-bold mt-6">Summary</h3>
-
-<label className="block">Brief Summary of the Overall Roof Condition and Recommendations</label>
-<textarea 
-    name="inspectionSummary" 
-    placeholder="Enter a concise summary of the roof condition and suggested actions..." 
-    value={section.inspectionSummary} 
-    onChange={handleChange} 
-    className="w-full border p-2 rounded h-24" 
-/>
 
 
 
