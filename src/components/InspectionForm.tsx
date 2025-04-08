@@ -1,7 +1,13 @@
 
 import { generatePDF } from "../utils/pdfGenerator";
 import RoofSection from './RoofSection';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+
+interface InspectionFormProps {
+  onSubmit: (data: any) => void;
+}
+
 
 const convertToBase64 = (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -13,7 +19,8 @@ const convertToBase64 = (file: File): Promise<string> =>
 
 
 
-const InspectionForm = () => {
+  const InspectionForm: React.FC<InspectionFormProps> = ({ onSubmit }) => {
+
     // State to store form data
     const [formData, setFormData] = useState({
         // Property Details
@@ -132,6 +139,27 @@ roofSquareFootage: '',
       granulesCondition: '',
       coatingCondition: ''
     };
+
+
+    useEffect(() => {
+      const saved = localStorage.getItem("activeInspectionDraft");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        
+        // Only update if values exist
+        setFormData((prev) => ({
+          ...prev,
+          ...parsed,
+        }));
+    
+        if (parsed.roofSections && parsed.roofSections.length > 0) {
+          setRoofSections(parsed.roofSections);
+        }
+    
+        // Optional: Clear the draft after loading
+        localStorage.removeItem("activeInspectionDraft");
+      }
+    }, []);
     
 
     
@@ -142,6 +170,9 @@ roofSquareFootage: '',
         [name]: value,
       }));
     };
+
+    
+    
     
 
     const handleSubmit = (e) => {
@@ -155,8 +186,13 @@ roofSquareFootage: '',
         droneImages: formData.droneImages || [],
       };
     
+      // 🔴 Call the onSubmit handler passed down from App.tsx
+      onSubmit(completeFormData);
+    
+      // 🔵 Then generate the PDF as usual
       generatePDF(completeFormData);
     };
+    
     
     
     
