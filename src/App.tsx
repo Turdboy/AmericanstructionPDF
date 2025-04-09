@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import { generatePDF } from "./utils/pdfGenerator"; // ← Make sure this path is correct
 import RevisitPage from "./components/RevisitPage";
 import EditProposalPage from "./components/EditProposalPage";
+import LoginPage from "./components/LoginPage";  // Add this import
 
 
 
@@ -63,6 +64,7 @@ function App() {
             <Route path="/projects/:id/report" element={<ProjectReportPage />} />
             <Route path="/revisit" element={<RevisitPage />} />
             <Route path="/edit-proposal" element={<EditProposalPage />} />
+            <Route path="/login" element={<LoginPage />} />
 
             <Route
               path="/inspection"
