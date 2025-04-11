@@ -1,75 +1,53 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";  // Use useNavigate instead of useHistory
+import { useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
 
 const LoginPage: React.FC = () => {
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [error, setError] = useState<string>("");
-
-  const navigate = useNavigate();  // Changed to useNavigate
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Basic client-side validation
-    if (!username || !password) {
-      setError("Please enter both username and password.");
-      return;
-    }
-
     try {
-      // Make login request to server
-      const response = await axios.post("http://localhost:5000/login", {
-        username,
-        password,
-      });
-
-      if (response.data.success) {
-        // Save user data to localStorage (or use context if needed)
-        localStorage.setItem("user", JSON.stringify({ username }));
-        navigate("/dashboard"); // Redirect to the dashboard or main page using navigate
-      } else {
-        setError(response.data.message || "Login failed. Try again.");
-      }
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate("/inspection");
     } catch (error) {
-      console.error("Login error:", error);
-      setError("An error occurred. Please try again.");
+      alert("❌ Login failed. Please check your email and password.");
+      console.error(error);
     }
   };
 
   return (
-    <div className="login-container">
-      <h2>Login</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleLogin}>
-        <div>
-          <label htmlFor="username">Username:</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Login</button>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <form onSubmit={handleLogin} className="bg-white p-8 rounded shadow-md space-y-4 w-full max-w-sm">
+        <h2 className="text-2xl font-bold text-center text-[#002147]">Login</h2>
+        <input
+          type="email"
+          placeholder="Email"
+          className="w-full px-4 py-2 border border-gray-300 rounded"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          className="w-full px-4 py-2 border border-gray-300 rounded"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button type="submit" className="w-full bg-[#002147] text-white py-2 rounded hover:bg-[#001830]">
+          Login
+        </button>
+        <button
+          type="button"
+          onClick={() => navigate("/create-account")}
+          className="w-full bg-[#FF6B6B] text-white py-2 rounded hover:bg-[#FF4B4B]"
+        >
+          Create Account
+        </button>
       </form>
-      <div>
-        <p>Don't have an account? <a href="/register">Register here</a></p>
-      </div>
     </div>
   );
 };
