@@ -8,9 +8,16 @@ import InspectionForm from "./components/InspectionForm";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { generatePDF } from "./utils/pdfGenerator"; // ← Make sure this path is correct
-import RevisitPage from "./components/RevisitPage";
+import RevisitPage from "./components/Home";
 import EditProposalPage from "./components/EditProposalPage";
-import LoginPage from "./components/LoginPage";  // Add this import
+import LoginPage from "./components/LoginPage";
+import CreateAccountPage from "./components/CreateAccountPage";
+import AccountPage from "./components/AccountPage"; // Add this at the top
+
+
+
+
+
 
 
 
@@ -28,43 +35,54 @@ function App() {
   return (
     <Router>
       <div className="min-h-screen bg-white">
-        {/* Header */}
-        <header className="bg-[#002147] text-white">
-          <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div className="flex space-x-4">
-              <Link
-                to="/inspection"
-                className="bg-[#FF6B6B] text-white px-4 py-2 rounded hover:bg-[#FF4B4B] transition"
-              >
-                Start Inspection
-              </Link>
-              <Link
-                to="/revisit"
-                className="bg-[#FFC107] text-[#002147] px-4 py-2 rounded hover:bg-[#FFD54F] transition"
-              >
-                Revisit Old Inspections
-              </Link>
-              <Link
-  to="/edit-proposal"
-  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
->
-  Edit Proposal
-</Link>
+      <header className="bg-[#002147] text-white">
+  <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+  <div className="flex space-x-4">
+  <Link
+    to="/revisit"
+    className="bg-[#FFC107] text-[#002147] px-4 py-2 rounded hover:bg-[#FFD54F] transition"
+  >
+    Home
+  </Link>
+  <Link
+    to="/inspection"
+    className="bg-[#FF6B6B] text-white px-4 py-2 rounded hover:bg-[#FF4B4B] transition"
+  >
+    Start Inspection
+  </Link>
+  <Link
+    to="/edit-proposal"
+    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+  >
+    Edit Proposal Format
+  </Link>
+</div>
 
-            </div>
-          </div>
-        </header>
+    <div>
+      <Link
+        to="/account"
+        className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
+      >
+        Account
+      </Link>
+    </div>
+  </div>
+</header>
+
 
         {/* Main Content */}
         <main className="container mx-auto px-4 py-8">
           <Routes>
-            <Route path="/" element={<MainPage />} />
+            <Route path="/" element={<LoginPage />} /> 
+            <Route path="/account" element={<AccountPage />} />
+            <Route path="/create-account" element={<CreateAccountPage />} />
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/projects/:id" element={<ProjectAnalysisPage />} />
             <Route path="/projects/:id/report" element={<ProjectReportPage />} />
             <Route path="/revisit" element={<RevisitPage />} />
             <Route path="/edit-proposal" element={<EditProposalPage />} />
-            <Route path="/login" element={<LoginPage />} />
+
+
 
             <Route
               path="/inspection"
@@ -94,6 +112,5 @@ function App() {
     </Router>
   );
 }
-
 
 export default App;
