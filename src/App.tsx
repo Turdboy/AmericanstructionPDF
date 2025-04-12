@@ -1,38 +1,113 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import { Upload, Home, FileText, AlertCircle, Building, ClipboardList } from "lucide-react";
-import { ImageUploader } from "./components/ImageUploader";
-import { ReportViewer } from "./components/ReportViewer";
+import { ClipboardList } from "lucide-react";
 import { ProjectsPage } from "./components/ProjectsPage";
 import { ProjectAnalysisPage } from "./components/ProjectAnalysisPage";
 import { ProjectReportPage } from "./components/ProjectReportPage";
 import InspectionForm from "./components/InspectionForm";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { generatePDF } from "./utils/pdfGenerator"; // ← Make sure this path is correct
+import RevisitPage from "./components/Home";
+import EditProposalPage from "./components/EditProposalPage";
+import LoginPage from "./components/LoginPage";
+import CreateAccountPage from "./components/CreateAccountPage";
+import AccountPage from "./components/AccountPage"; // Add this at the top
 
-import { RoofDamageReport } from "./types/types";
+
+
+
+
+
+
+
+function MainPage() {
+  return (
+    <div className="flex flex-col items-center space-y-4 min-h-[60vh]">
+
+    </div>
+  );
+}
+
+
 
 function App() {
   return (
     <Router>
-      <div style={{ padding: "1rem" }}>
-        <h1>Roof-X Portal</h1>
-        <nav style={{ display: "flex", gap: "1rem" }}>
-          <Link to="/">Home</Link>
-          <Link to="/upload">Upload</Link>
-          <Link to="/report">Report Viewer</Link>
-          <Link to="/projects">Projects</Link>
-          <Link to="/analysis">Analysis</Link>
-          <Link to="/form">Inspection Form</Link>
-        </nav>
+      <div className="min-h-screen bg-white">
+      <header className="bg-[#002147] text-white">
+  <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+  <div className="flex space-x-4">
+  <Link
+    to="/revisit"
+    className="bg-[#FFC107] text-[#002147] px-4 py-2 rounded hover:bg-[#FFD54F] transition"
+  >
+    Home
+  </Link>
+  <Link
+    to="/inspection"
+    className="bg-[#FF6B6B] text-white px-4 py-2 rounded hover:bg-[#FF4B4B] transition"
+  >
+    Start Inspection
+  </Link>
+  <Link
+    to="/edit-proposal"
+    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+  >
+    Edit Proposal Format
+  </Link>
+</div>
 
-        <Routes>
-          <Route path="/" element={<h2>Welcome to Roof-X</h2>} />
-          <Route path="/upload" element={<ImageUploader />} />
-          <Route path="/report" element={<ReportViewer />} />
-          <Route path="/projects" element={<ProjectsPage />} />
-          <Route path="/analysis" element={<ProjectAnalysisPage />} />
-          <Route path="/project-report" element={<ProjectReportPage />} />
-          <Route path="/form" element={<InspectionForm />} />
-        </Routes>
+    <div>
+      <Link
+        to="/account"
+        className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
+      >
+        Account
+      </Link>
+    </div>
+  </div>
+</header>
+
+
+        {/* Main Content */}
+        <main className="container mx-auto px-4 py-8">
+          <Routes>
+            <Route path="/" element={<LoginPage />} /> 
+            <Route path="/account" element={<AccountPage />} />
+            <Route path="/create-account" element={<CreateAccountPage />} />
+            <Route path="/projects" element={<ProjectsPage />} />
+            <Route path="/projects/:id" element={<ProjectAnalysisPage />} />
+            <Route path="/projects/:id/report" element={<ProjectReportPage />} />
+            <Route path="/revisit" element={<RevisitPage />} />
+            <Route path="/edit-proposal" element={<EditProposalPage />} />
+
+
+
+            <Route
+              path="/inspection"
+              element={
+                <InspectionForm
+                  onSubmit={(data) => {
+                    const existing = JSON.parse(localStorage.getItem("savedInspections") || "[]");
+                    const { images, overviewImages, droneImages, ...textOnlyData } = data;
+                    const newInspection = {
+                      ...textOnlyData,
+                      id: crypto.randomUUID(),
+                      date: new Date().toISOString(),
+                    };
+                    localStorage.setItem(
+                      "savedInspections",
+                      JSON.stringify([newInspection, ...existing])
+                    );
+                    console.log("📝 Saved inspection (text only):", newInspection);
+                  }}
+                />
+              }
+            />
+            <Route path="/v1/*" element={<MainPage />} />
+          </Routes>
+        </main>
       </div>
     </Router>
   );

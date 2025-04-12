@@ -1,7 +1,17 @@
 
 import { generatePDF } from "../utils/pdfGenerator";
 import RoofSection from './RoofSection';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { db, storage, auth } from "../firebase";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { User } from "firebase/auth"; // Add this if needed
+
+
+interface InspectionFormProps {
+  onSubmit: (data: any) => void;
+}
+
 
 const convertToBase64 = (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -13,7 +23,8 @@ const convertToBase64 = (file: File): Promise<string> =>
 
 
 
-const InspectionForm = () => {
+  const InspectionForm: React.FC<InspectionFormProps> = ({ onSubmit }) => {
+
     // State to store form data
     const [formData, setFormData] = useState({
         // Property Details
@@ -132,6 +143,27 @@ roofSquareFootage: '',
       granulesCondition: '',
       coatingCondition: ''
     };
+
+
+    useEffect(() => {
+      const saved = localStorage.getItem("activeInspectionDraft");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        
+        // Only update if values exist
+        setFormData((prev) => ({
+          ...prev,
+          ...parsed,
+        }));
+    
+        if (parsed.roofSections && parsed.roofSections.length > 0) {
+          setRoofSections(parsed.roofSections);
+        }
+    
+        // Optional: Clear the draft after loading
+        localStorage.removeItem("activeInspectionDraft");
+      }
+    }, []);
     
 
     
@@ -142,6 +174,22 @@ roofSquareFootage: '',
         [name]: value,
       }));
     };
+
+    
+    const uploadImagesAndGetUrls = async (images: any[], folder: string) => {
+      const uploaded = [];
+      for (const image of images) {
+        const response = await fetch(image.url); // get image blob
+        const blob = await response.blob();
+        const filename = `${Date.now()}-${Math.random().toString(36).substring(2)}.jpg`;
+        const imageRef = ref(storage, `${folder}/${filename}`);
+        await uploadBytes(imageRef, blob);
+        const url = await getDownloadURL(imageRef);
+        uploaded.push({ ...image, url }); // keep other fields (caption, etc.)
+      }
+      return uploaded;
+    };
+    
     
 
     const handleSubmit = (e) => {
@@ -155,8 +203,13 @@ roofSquareFootage: '',
         droneImages: formData.droneImages || [],
       };
     
+      // 🔴 Call the onSubmit handler passed down from App.tsx
+      onSubmit(completeFormData);
+    
+      // 🔵 Then generate the PDF as usual
       generatePDF(completeFormData);
     };
+    
     
     
     

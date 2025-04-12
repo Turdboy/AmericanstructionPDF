@@ -22,6 +22,67 @@ const chunkImages = (images, size = 2) => {
   return chunks;
 };
 
+const truncateText = (text = "", maxChars = 250) => {
+  if (typeof text !== "string") return "";
+
+  if (text.length > maxChars) {
+    alert("❗ Text too long. Please re-enter under 250 characters.");
+    return ""; // return nothing or original text if you prefer
+  }
+
+  return text;
+};
+
+
+
+
+
+const isImageTextTooLong = (image) => {
+  if (!image) return false;
+  const fields = [
+    image.section,
+    image.area,
+    image.caption,
+    image.description,
+    image.cause,
+    image.impact,
+    image.solution
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  return fields.length > 400; // ← adjust this threshold as needed
+};
+
+const splitLongImageText = (image, threshold = 400) => {
+  const lines = [
+    image.section && "Section: " + image.section,
+    image.area && "Area: " + image.area,
+    image.caption && "Caption: " + image.caption,
+    image.description && "Description: " + image.description,
+    image.cause && "Cause: " + image.cause,
+    image.impact && "Impact: " + image.impact,
+    image.solution && "Solution: " + image.solution,
+  ].filter(Boolean);
+
+  let currentLength = 0;
+  const firstHalf = [];
+  const secondHalf = [];
+
+  for (const line of lines) {
+    if (currentLength + line.length <= threshold) {
+      firstHalf.push(line);
+      currentLength += line.length;
+    } else {
+      secondHalf.push(line);
+    }
+  }
+
+  return { firstHalf, secondHalf };
+};
+
+
+
 
 const toBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -1824,20 +1885,27 @@ overviewPages.forEach((pair, index) => {
                   {
                     image: image1?.base64 || placeholderImage,
                     width: 250,
-                    alignment: "center",
+                    fit: [250, 150],
                     margin: [0, 0, 0, 8]
                   },
                   {
-                    ul: [
-                      image1.section && { text: "Section: " + image1.section },
-                      image1.area && { text: "Area: " + image1.area },
-                      image1.caption && { text: "Caption: " + image1.caption },
-                      image1.description && { text: "Description: " + image1.description },
-                      image1.cause && { text: "Cause: " + image1.cause },
-                      image1.impact && { text: "Impact: " + image1.impact },
-                      image1.solution && { text: "Solution: " + image1.solution }
-                    ].filter(Boolean),
-                    fontSize: 9
+                    stack: [
+                      {
+                        ul: [
+                          image1.section && { text: truncateText("Section: " + image1.section) },
+                          image1.area && { text: truncateText("Area: " + image1.area) },
+                          image1.caption && { text: truncateText("Caption: " + image1.caption) },
+                          image1.description && { text: truncateText("Description: " + image1.description) },
+                          image1.cause && { text: truncateText("Cause: " + image1.cause) },
+                          image1.impact && { text: truncateText("Impact: " + image1.impact) },
+                          image1.solution && { text: truncateText("Solution: " + image1.solution) }
+                        ].filter(Boolean),
+                        fontSize: 9
+                      }
+                    ],
+                    height: 150,
+                    overflow: "shrink"
+                    
                   }
                 ]
               : []
@@ -1849,21 +1917,28 @@ overviewPages.forEach((pair, index) => {
             stack: image2
               ? [
                   {
-                    image: image2?.base64 || placeholderImage,                    width: 250,
+                    image: image2?.base64 || placeholderImage,                    fit: [250, 150],
                     alignment: "center",
                     margin: [0, 0, 0, 8]
                   },
                   {
-                    ul: [
-                      image2.section && { text: "Section: " + image2.section },
-                      image2.area && { text: "Area: " + image2.area },
-                      image2.caption && { text: "Caption: " + image2.caption },
-                      image2.description && { text: "Description: " + image2.description },
-                      image2.cause && { text: "Cause: " + image2.cause },
-                      image2.impact && { text: "Impact: " + image2.impact },
-                      image2.solution && { text: "Solution: " + image2.solution }
-                    ].filter(Boolean),
-                    fontSize: 9
+                    stack: [
+                      {
+                        ul: [
+                          image2.section && { text: truncateText("Section: " + image2.section) },
+                          image2.area && { text: truncateText("Area: " + image2.area) },
+                          image2.caption && { text: truncateText("Caption: " + image2.caption) },
+                          image2.description && { text: truncateText("Description: " + image2.description) },
+                          image2.cause && { text: truncateText("Cause: " + image2.cause) },
+                          image2.impact && { text: truncateText("Impact: " + image2.impact) },
+                          image2.solution && { text: truncateText("Solution: " + image2.solution) }
+                        ].filter(Boolean),
+                        fontSize: 9
+                      }
+                    ],
+                    height: 150,
+                    overflow: "shrink"
+                    
                   }
                 ]
               : []
@@ -1963,21 +2038,28 @@ droneImages.forEach((pair, index) => {
                 ? [
                     {
                       image: image1?.base64 || placeholderImage,
-                      width: 250,
+                      fit: [250, 150],
                       alignment: "center",
                       margin: [0, 0, 0, 8]
                     },
                     {
-                      ul: [
-                        image1.section && { text: "Section: " + image1.section },
-                        image1.area && { text: "Area: " + image1.area },
-                        image1.caption && { text: "Caption: " + image1.caption },
-                        image1.description && { text: "Description: " + image1.description },
-                        image1.cause && { text: "Cause: " + image1.cause },
-                        image1.impact && { text: "Impact: " + image1.impact },
-                        image1.solution && { text: "Solution: " + image1.solution }
-                      ].filter(Boolean),
-                      fontSize: 9
+                      stack: [
+                        {
+                          ul: [
+                            image1.section && { text: truncateText("Section: " + image1.section) },
+                            image1.area && { text: truncateText("Area: " + image1.area) },
+                            image1.caption && { text: truncateText("Caption: " + image1.caption) },
+                            image1.description && { text: truncateText("Description: " + image1.description) },
+                            image1.cause && { text: truncateText("Cause: " + image1.cause) },
+                            image1.impact && { text: truncateText("Impact: " + image1.impact) },
+                            image1.solution && { text: truncateText("Solution: " + image1.solution) }
+                          ].filter(Boolean),
+                          fontSize: 9
+                        }
+                      ],
+                      height: 150,
+                      overflow: "shrink"
+                      
                     }
                   ]
                 : []
@@ -1990,21 +2072,28 @@ droneImages.forEach((pair, index) => {
                 ? [
                     {
                       image: image2?.base64 || placeholderImage,
-                      width: 250,
+                      fit: [250, 150],
                       alignment: "center",
                       margin: [0, 0, 0, 8]
                     },
                     {
-                      ul: [
-                        image2.section && { text: "Section: " + image2.section },
-                        image2.area && { text: "Area: " + image2.area },
-                        image2.caption && { text: "Caption: " + image2.caption },
-                        image2.description && { text: "Description: " + image2.description },
-                        image2.cause && { text: "Cause: " + image2.cause },
-                        image2.impact && { text: "Impact: " + image2.impact },
-                        image2.solution && { text: "Solution: " + image2.solution }
-                      ].filter(Boolean),
-                      fontSize: 9
+                      stack: [
+                        {
+                          ul: [
+                            image2.section && { text: truncateText("Section: " + image2.section) },
+                            image2.area && { text: truncateText("Area: " + image2.area) },
+                            image2.caption && { text: truncateText("Caption: " + image2.caption) },
+                            image2.description && { text: truncateText("Description: " + image2.description) },
+                            image2.cause && { text: truncateText("Cause: " + image2.cause) },
+                            image2.impact && { text: truncateText("Impact: " + image2.impact) },
+                            image2.solution && { text: truncateText("Solution: " + image2.solution) }
+                          ].filter(Boolean),
+                          fontSize: 9
+                        }
+                      ],
+                      height: 150,
+                      overflow: "shrink"
+                      
                     }
                   ]
                 : []
@@ -2116,22 +2205,29 @@ imagePages.forEach((pair, index) => {
               ? [
                   {
                     image: image1?.base64 || placeholderImage,
-                    width: 250,
-                    alignment: "center",
-                    margin: [0, 0, 0, 8]
+fit: [250, 150],
+alignment: "center",
+margin: [0, 0, 0, 8]
                   },
                   {
-                    ul: [
-                      image1.section && { text: "Section: " + image1.section },
-                      image1.area && { text: "Area: " + image1.area },
-                      image1.caption && { text: "Caption: " + image1.caption },
-                      image1.description && { text: "Description: " + image1.description },
-                      image1.cause && { text: "Cause: " + image1.cause },
-                      image1.impact && { text: "Impact: " + image1.impact },
-                      image1.solution && { text: "Solution: " + image1.solution }
-                    ].filter(Boolean),
-                    fontSize: 9
+                    stack: [
+                      {
+                        ul: [
+                          image1.section && { text: truncateText("Section: " + image1.section) },
+                          image1.area && { text: truncateText("Area: " + image1.area) },
+                          image1.caption && { text: truncateText("Caption: " + image1.caption) },
+                          image1.description && { text: truncateText("Description: " + image1.description) },
+                          image1.cause && { text: truncateText("Cause: " + image1.cause) },
+                          image1.impact && { text: truncateText("Impact: " + image1.impact) },
+                          image1.solution && { text: truncateText("Solution: " + image1.solution) }
+                        ].filter(Boolean),
+                        fontSize: 9,
+                      }
+                    ],
+                    height: 150,           // ⚠️ this caps the box
+                    overflow: "shrink",    // ⚠️ font shrinks to fit, no overflow
                   }
+                  
                 ]
               : []
           },
@@ -2143,7 +2239,7 @@ imagePages.forEach((pair, index) => {
               ? [
                   {
                     image: image2?.base64 || placeholderImage,
-                    width: 250,
+                    fit: [250, 150],
                     alignment: "center",
                     margin: [0, 0, 0, 8]
                   },
@@ -2179,7 +2275,8 @@ imagePages.forEach((pair, index) => {
             columns: [
               { text: "", width: "*" },
               {
-                text: "Page " + (6 + overviewPages.length + index),
+                text: "Page " + (6 + + overviewPages.length + droneImages.length
+                  + index),
                 fontSize: 10,
                 alignment: "right",
                 margin: [0, 10, 40, 0],
@@ -2192,6 +2289,14 @@ imagePages.forEach((pair, index) => {
       }
     ]
   });
+
+
+  
+
+
+
+
+
   }
    catch (err) {
     console.error("Error rendering defect picture pair", index, pair, err);
