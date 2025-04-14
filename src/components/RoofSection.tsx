@@ -5,10 +5,10 @@ const RoofSection = ({ section, index, onChange }) => {
 
     const handleChange = (e) => {
         const { name, value, type } = e.target;
-        const val = type === "number" ? Number(value) : value;
-      
+        const val = type === "number" && value !== "" ? Number(value) : value;
         onChange(index, { ...section, [name]: val });
       };
+      
       
 
   return (
@@ -64,24 +64,22 @@ const RoofSection = ({ section, index, onChange }) => {
 {/* Roof Square Footage Section */}
 <h3 className="text-lg font-bold mt-6">Section Square Footage</h3>
 
-<label className="block">Section Length (ft)</label>
-<input 
-    type="number" 
-    name="roofLength" 
-    placeholder="Enter Roof Length" 
-    value={section.roofLength} 
-    onChange={handleChange} 
-    className="w-full border p-2 rounded" 
+
+<input
+  type="number"
+  name="roofLength"
+  value={section.roofLength ?? ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
 />
 
-<label className="block mt-2">Section Width (ft)</label>
-<input 
-    type="number" 
-    name="roofWidth" 
-    placeholder="Enter Roof Width" 
-    value={section.roofWidth} 
-    onChange={handleChange} 
-    className="w-full border p-2 rounded" 
+
+<input
+  type="number"
+  name="roofWidth"
+  value={section.roofWidth ?? ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
 />
 
 <label className="block mt-2">Total Roof Square Footage</label>
@@ -298,7 +296,7 @@ const RoofSection = ({ section, index, onChange }) => {
 
 {/* Length of Damaged Flashing */}
 <label className="block mt-2">Length of Damaged Flashing (in feet)</label>
-<input type="number" name="damagedFlashingLength" placeholder="Enter length in feet" onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="number" name="flashingDamageLength" placeholder="Enter length in feet" onChange={handleChange} className="w-full border p-2 rounded" />
 
 {/* Flashing Locations */}
 <label className="block mt-2">Flashing Locations (Around vents, chimneys, skylights, parapet walls, etc.)</label>
@@ -310,7 +308,7 @@ const RoofSection = ({ section, index, onChange }) => {
 
 {/* Length of Cracked/Deteriorated Sealant */}
 <label className="block mt-2">Length of Cracked/Deteriorated Sealant (in feet)</label>
-<input type="number" name="deterioratedSealantLength" placeholder="Enter length in feet" onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="number" name="sealantsLength" placeholder="Enter length in feet" onChange={handleChange} className="w-full border p-2 rounded" />
 
 {/* Drainage System Section */}
 <h3 className="text-lg font-bold">Drainage System</h3>
@@ -329,7 +327,7 @@ const RoofSection = ({ section, index, onChange }) => {
 
 {/* Downspouts Count */}
 <label className="block mt-2">Number of Downspouts</label>
-<input type="number" name="downspoutsCount" placeholder="Enter total number of downspouts" onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="number" name="downspoutsNumber" placeholder="Enter total number of downspouts" onChange={handleChange} className="w-full border p-2 rounded" />
 
 {/* Downspouts Size */}
 <label className="block mt-2">Downspouts Size</label>
@@ -360,7 +358,7 @@ const RoofSection = ({ section, index, onChange }) => {
 
 {/* HVAC Units Condition */}
 <label className="block mt-2">HVAC Units Condition (Leaks, Damage, etc.)</label>
-<textarea name="hvacUnitsCondition" placeholder="Describe the condition of the roof around HVAC units" onChange={handleChange} className="w-full border p-2 rounded"></textarea>
+<textarea name="hvacCondition" placeholder="Describe the condition of the roof around HVAC units" onChange={handleChange} className="w-full border p-2 rounded"></textarea>
 
 {/* Skylights Condition */}
 <label className="block mt-2">Skylights Condition (Cracked, Leaking, Sealed, etc.)</label>
@@ -380,7 +378,7 @@ const RoofSection = ({ section, index, onChange }) => {
 
 {/* Parapet Walls Condition */}
 <label className="block">Condition of Parapet Walls (Cracks, Loose Masonry, etc.)</label>
-<textarea name="parapetWallsCondition" placeholder="Describe the condition of the parapet walls" onChange={handleChange} className="w-full border p-2 rounded"></textarea>
+<textarea name="parapetWallCondition" placeholder="Describe the condition of the parapet walls" onChange={handleChange} className="w-full border p-2 rounded"></textarea>
 
 {/* Coping Condition */}
 <label className="block mt-2">Coping Condition (Cracked, Loose, Missing, etc.)</label>
@@ -390,58 +388,108 @@ const RoofSection = ({ section, index, onChange }) => {
 {/* Insulation Section */}
 <h3 className="text-lg font-bold">Insulation</h3>
 
-{/* Evidence of Wet Insulation */}
-<label className="block">Is there evidence of wet insulation?</label>
-<select name="wetInsulation" onChange={handleChange} className="w-full border p-2 rounded">
-    <option value="">Select</option>
-    <option value="Yes">Yes</option>
-    <option value="No">No</option>
+<label className="block">Insulation Type</label>
+<input
+  type="text"
+  name="insulationType"
+  placeholder="e.g., Rigid Board, Loose Fill"
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
+
+<label className="block mt-2">Insulation Thickness (inches)</label>
+<input
+  type="text"
+  name="insulationThickness"
+  placeholder="e.g., 2.5"
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
+
+<label className="block mt-2">General Condition of Insulation</label>
+<input
+  type="text"
+  name="insulationCondition"
+  placeholder="e.g., Good, Poor"
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
+
+<label className="block mt-2">Evidence of Wet Insulation?</label>
+<select
+  name="wetInsulation"
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+>
+  <option value="">Select</option>
+  <option value="Yes">Yes</option>
+  <option value="No">No</option>
 </select>
-
-{/* Wet Insulation Description */}
-<label className="block mt-2">If yes, describe location and extent</label>
-<textarea name="wetInsulationDescription" placeholder="Describe the location and extent of wet insulation" onChange={handleChange} className="w-full border p-2 rounded"></textarea>
-
-{/* Type of Insulation */}
-<label className="block mt-2">Type of Insulation (if known)</label>
-<input type="text" name="insulationType" placeholder="e.g., Rigid Board, Loose Fill" onChange={handleChange} className="w-full border p-2 rounded" />
-
-
 
 
 {/* Deck/Structure Section */}
-<h3 className="text-lg font-bold">Deck/Structure</h3>
+<h3 className="text-lg font-bold mt-6">Deck / Structure</h3>
 
-{/* Evidence of Structural Issues */}
-<label className="block">Is there evidence of structural issues?</label>
-<select name="structuralIssues" onChange={handleChange} className="w-full border p-2 rounded">
-    <option value="">Select</option>
-    <option value="Yes">Yes</option>
-    <option value="No">No</option>
+<label className="block">Evidence of Structural Issues?</label>
+<select
+  name="structuralIssues"
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+>
+  <option value="">Select</option>
+  <option value="Yes">Yes</option>
+  <option value="No">No</option>
 </select>
 
-{/* Structural Issues Description */}
-<label className="block mt-2">If yes, describe location and extent</label>
-<textarea name="structuralIssuesDescription" placeholder="Describe location and extent of structural issues" onChange={handleChange} className="w-full border p-2 rounded"></textarea>
+<label className="block mt-2">Location & Extent of Issues</label>
+<input
+  type="text"
+  name="structuralIssueDetails"
+  placeholder="Describe location and extent"
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
 
-{/* Plywood/Sheathing Condition */}
-<label className="block mt-2">Plywood/Sheathing Condition (if accessible)</label>
-<input type="text" name="sheathingCondition" placeholder="Describe condition - delamination, rot, etc." onChange={handleChange} className="w-full border p-2 rounded" />
+<label className="block mt-2">Plywood/Sheathing Condition</label>
+<input
+  type="text"
+  name="sheathingCondition"
+  placeholder="e.g., Rotting, Delamination"
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
+
 
 {/* Safety Section */}
-<h3 className="text-lg font-bold">Safety</h3>
+<h3 className="text-lg font-bold mt-6">Safety</h3>
 
-{/* Roof Access */}
 <label className="block">Is safe roof access available?</label>
-<input type="text" name="roofAccess" placeholder="Describe how access is provided (ladder, hatch, etc.)" onChange={handleChange} className="w-full border p-2 rounded" />
+<input
+  type="text"
+  name="safeAccess"
+  placeholder="e.g., Hatch, Ladder Access"
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
 
-{/* Guardrails/Parapets */}
 <label className="block mt-2">Condition of guardrails or parapets</label>
-<input type="text" name="guardrailsParapets" placeholder="Describe the condition (secure, damaged, missing, etc.)" onChange={handleChange} className="w-full border p-2 rounded" />
+<input
+  type="text"
+  name="guardrailCondition"
+  placeholder="e.g., Missing guardrails on west side"
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
 
-{/* Trip Hazards */}
-<label className="block mt-2">Identify any potential trip hazards on the roof</label>
-<input type="text" name="tripHazards" placeholder="Describe any hazards present" onChange={handleChange} className="w-full border p-2 rounded" />
+<label className="block mt-2">Trip hazards on roof</label>
+<input
+  type="text"
+  name="tripHazards"
+  placeholder="e.g., Loose cable, uneven membrane"
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
+
 
 
 {/* Additional Roof Elements Section */}

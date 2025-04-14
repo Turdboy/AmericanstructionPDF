@@ -47,12 +47,12 @@ const convertToBase64 = (file: File): Promise<string> =>
         
     });
 
-    const handleRoofSectionChange = (e, index) => {
-      const { name, value } = e.target;
+    const handleRoofSectionChange = (index, updatedSection) => {
       const updatedSections = [...roofSections];
-      updatedSections[index][name] = value;
+      updatedSections[index] = updatedSection;
       setRoofSections(updatedSections);
     };
+    
     
 
 
@@ -62,8 +62,9 @@ const convertToBase64 = (file: File): Promise<string> =>
 
 
         sectionName: '',
-roofLength: '',
-roofWidth: '',
+        roofLength: null,
+        roofWidth: null,
+        
 roofSquareFootage: '',
 
 
@@ -333,7 +334,7 @@ roofSquareFootage: '',
 
 
                 {/* Photos Section */}
-<h3 className="text-lg font-bold">Upload Defect Photos</h3>
+<h3 className="text-lg font-bold">Upload Defect Photos (Keep Defect Text Boxes Brief)</h3>
 
 
 {/* Upload Defect (General) Photos */}
@@ -435,7 +436,7 @@ roofSquareFootage: '',
             className="w-full h-48 object-cover rounded"
           />
           <div className="mt-2 space-y-1">
-            {["section", "area", "caption", "description", "cause", "impact", "solution"].map((field) => (
+          {["section", "area", "caption"].map((field) => (
               <React.Fragment key={field}>
                 {field === "caption" ? (
                   <input
@@ -507,7 +508,7 @@ roofSquareFootage: '',
             className="w-full h-48 object-cover rounded"
           />
           <div className="mt-2 space-y-1">
-            {["section", "area", "caption", "description", "cause", "impact", "solution"].map((field) => (
+          {["section", "area", "caption", "description"].map((field) => (
               <React.Fragment key={field}>
                 {field === "caption" ? (
                   <input

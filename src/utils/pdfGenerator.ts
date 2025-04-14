@@ -22,7 +22,7 @@ const chunkImages = (images, size = 2) => {
   return chunks;
 };
 
-const truncateText = (text = "", maxChars = 250) => {
+const truncateText = (text = "", maxChars = 500) => {
   if (typeof text !== "string") return "";
 
   if (text.length > maxChars) {
@@ -81,6 +81,13 @@ const splitLongImageText = (image, threshold = 400) => {
   return { firstHalf, secondHalf };
 };
 
+
+
+const handleSectionChange = (index, updatedSection) => {
+  const updatedSections = [...formData.roofSections];
+  updatedSections[index] = updatedSection;
+  setFormData({ ...formData, roofSections: updatedSections });
+};
 
 
 
@@ -164,7 +171,7 @@ export const generatePDF = (formData) => {
     const imagePages = chunkImages(formData.images || []);
     const overviewPages = chunkImages(formData.overviewImages || []);
     const droneImages = chunkImages(formData.droneImages || []);
-    const basePageOffset = 6 + imagePages.length + overviewPages.length + droneImages.length + 1;
+    const basePageOffset = 6 + imagePages.length + overviewPages.length + droneImages.length + 2;
 
 
 
@@ -212,11 +219,12 @@ const createAdditionalElementsPage = (sectionNumber, sectionData = {}, pageNumbe
       table: {
         widths: ["60%", "*"],
         body: [
-          ["Wall Flashing - Length x Height", String(sectionData.wallFlashing ?? "N/A")],
-          ["East Wall (L x H)", String(sectionData.eastWall ?? "N/A")],
-          ["West Wall (L x H)", String(sectionData.westWall ?? "N/A")],
-          ["North Wall (L x H)", String(sectionData.northWall ?? "N/A")],
-          ["South Wall (L x H)", String(sectionData.southWall ?? "N/A")],
+
+          ["East Wall (L x H)", sectionData.wallFlashingEast || "N/A"],
+["West Wall (L x H)", sectionData.wallFlashingWest || "N/A"],
+["North Wall (L x H)", sectionData.wallFlashingNorth || "N/A"],
+["South Wall (L x H)", sectionData.wallFlashingSouth || "N/A"],
+
           ["Curb Size", String(sectionData.curbSize ?? "N/A")],
           ["Curb Count", String(sectionData.curbCount ?? "N/A")],
           ["Linear Feet of Curb", String(sectionData.curbLinearFeet ?? "N/A")],
@@ -293,59 +301,22 @@ const createAdditionalElementsPage = (sectionNumber, sectionData = {}, pageNumbe
 
 // =================== PAGE 5: PENETRATIONS + PARAPET ===================
 
+
+
+
+
 const createPenetrationsAndParapetPage = (sectionNumber, sectionData = {}, pageNumber) => ({
   pageBreak: "before",
   stack: [
     // Header
     ...createStandardHeader(`Section ${sectionNumber} Roof Condition Summary`),
 
-    // === Penetrations & Vents Section ===
-    {
-      text: "Penetrations & Vents",
-      fontSize: 16,
-      bold: true,
-      margin: [0, 30, 0, 10]
-    },
-    {
-      table: {
-        widths: ["60%", "*"],
-        body: [
-          ["Pipes Condition", String(sectionData.pipesCondition ?? "N/A")],
-          ["Vents Condition", String(sectionData.ventsCondition ?? "N/A")],
-          ["HVAC Units Condition", String(sectionData.hvacCondition ?? "N/A")],
-          ["Skylights Condition", String(sectionData.skylightsCondition ?? "N/A")],
-          ["Chimneys Condition", String(sectionData.chimneysCondition ?? "N/A")]
-        ]
-      },
-      layout: "lightHorizontalLines",
-      margin: [0, 0, 0, 30]
-    },
-
-    // === Parapet Walls Section ===
-    {
-      text: "Parapet Walls",
-      fontSize: 16,
-      bold: true,
-      margin: [0, 10, 0, 10]
-    },
-    {
-      table: {
-        widths: ["60%", "*"],
-        body: [
-          ["Condition of Parapet Walls", String(sectionData.parapetWallCondition ?? "N/A")],
-          ["Coping Condition", String(sectionData.copingCondition ?? "N/A")]
-        ]
-      },
-      layout: "lightHorizontalLines",
-      margin: [0, 0, 0, 30]
-    },
-
-    // === Wall and Curb Square Footage ===
+    // === Wall and Curb Square Footage (MOVED TO TOP) ===
     {
       text: "Wall and Curb Square Footage",
       fontSize: 16,
       bold: true,
-      margin: [0, 10, 0, 10]
+      margin: [0, 30, 0, 10]
     },
     {
       table: {
@@ -360,21 +331,67 @@ const createPenetrationsAndParapetPage = (sectionNumber, sectionData = {}, pageN
             String(
               sectionData.wallAndCurbSquareFootage ??
               (
-                ((Number(sectionData.wallLength) || 0) * (Number(sectionData.wallHeight) || 0))
- +
+                ((Number(sectionData.wallLength) || 0) * (Number(sectionData.wallHeight) || 0)) +
                 ((Number(sectionData.curbLength) || 0) * (Number(sectionData.curbHeight) || 0))
               )
             ) || "N/A"
           ]
-          
-          
         ]
       },
       layout: "lightHorizontalLines",
-      margin: [0, 0, 0, 40]
+      margin: [0, 0, 0, 30]
     },
 
-    // === Footer ===
+    // === Penetrations & Vents Section ===
+    {
+      text: "Penetrations & Vents",
+      fontSize: 16,
+      bold: true,
+      margin: [0, 10, 0, 10]
+    },
+    ...[
+      ["Pipes Condition", "pipesCondition"],
+      ["Vents Condition", "ventsCondition"],
+      ["HVAC Units Condition", "hvacCondition"],
+      ["Skylights Condition", "skylightsCondition"],
+      ["Chimneys Condition", "chimneysCondition"]
+    ].map(([label, key]) => ({
+      columns: [
+        {
+          width: "50%",
+          stack: [
+            { text: label, bold: true, margin: [0, 0, 0, 2] },
+            { text: sectionData?.[key] || "N/A", fontSize: 10, margin: [0, 0, 0, 10] }
+          ]
+        },
+        { width: "50%", text: "" }
+      ]
+    })),
+
+    // === Parapet Walls Section ===
+    {
+      text: "Parapet Walls",
+      fontSize: 16,
+      bold: true,
+      margin: [0, 25, 0, 10]
+    },
+    ...[
+      ["Condition of Parapet Walls", "parapetWallCondition"],
+      ["Coping Condition", "copingCondition"]
+    ].map(([label, key]) => ({
+      columns: [
+        {
+          width: "50%",
+          stack: [
+            { text: label, bold: true, margin: [0, 0, 0, 2] },
+            { text: sectionData?.[key] || "N/A", fontSize: 10, margin: [0, 0, 0, 10] }
+          ]
+        },
+        { width: "50%", text: "" }
+      ]
+    })),
+
+    // Footer
     {
       canvas: [
         { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
@@ -387,8 +404,6 @@ const createPenetrationsAndParapetPage = (sectionNumber, sectionData = {}, pageN
         { text: "", width: "*" },
         {
           text: `Page ${pageNumber}`,
-
-
           fontSize: 10,
           alignment: "right",
           margin: [0, 10, 40, 0],
@@ -399,6 +414,11 @@ const createPenetrationsAndParapetPage = (sectionNumber, sectionData = {}, pageN
     }
   ]
 });
+
+
+
+
+
 
 
 
@@ -415,77 +435,85 @@ const createPenetrationsAndParapetPage = (sectionNumber, sectionData = {}, pageN
 
 // =================== PAGE 4: INSULATION + DECK/STRUCTURE ===================
 
-
 const createInsulationAndDeckPage = (sectionNumber, sectionData = {}, pageNumber) => ({
   pageBreak: "before",
   stack: [
- // Header
- ...createStandardHeader(`Section ${sectionNumber} Roof Condition Summary`),
+    ...createStandardHeader(`Section ${sectionNumber} Roof Condition Summary`),
 
-    // Insulation Section
+    // === Insulation Section
     {
       text: "Insulation",
       fontSize: 16,
       bold: true,
       margin: [0, 30, 0, 10]
     },
-    {
-      table: {
-        widths: ["60%", "*"],
-        body: [
-          ["Insulation Type", sectionData.insulationType || "N/A"],
-          ["Insulation Thickness (inches)", sectionData.insulationThickness || "N/A"],
-          ["General Condition of Insulation", sectionData.insulationCondition || "N/A"],
-          ["Evidence of Wet Insulation?", sectionData.wetInsulation || "N/A"]
-        ]
-      },
-      layout: "lightHorizontalLines",
-      margin: [0, 0, 0, 30]
-    },
+    ...[
+      ["Insulation Type", "insulationType"],
+      ["Insulation Thickness (inches)", "insulationThickness"],
+      ["General Condition of Insulation", "insulationCondition"],
+      ["Evidence of Wet Insulation?", "wetInsulation"]
+    ].map(([label, key]) => ({
+      columns: [
+        {
+          width: "50%",
+          stack: [
+            { text: label, bold: true, margin: [0, 0, 0, 2] },
+            { text: sectionData?.[key] || "N/A", fontSize: 10, margin: [0, 0, 0, 10] }
+          ]
+        },
+        { width: "50%", text: "" }
+      ]
+    })),
 
-    // Deck / Structure Section
+    // === Deck / Structure Section
     {
       text: "Deck / Structure",
       fontSize: 16,
       bold: true,
-      margin: [0, 10, 0, 10]
+      margin: [0, 25, 0, 10]
     },
+    ...[
+      ["Evidence of Structural Issues?", "structuralIssues"],
+      ["Location & Extent of Issues", "structuralIssueDetails"],
+      ["Plywood/Sheathing Condition", "sheathingCondition"]
+    ].map(([label, key]) => ({
+      columns: [
+        {
+          width: "50%",
+          stack: [
+            { text: label, bold: true, margin: [0, 0, 0, 2] },
+            { text: sectionData?.[key] || "N/A", fontSize: 10, margin: [0, 0, 0, 10] }
+          ]
+        },
+        { width: "50%", text: "" }
+      ]
+    })),
+
+    // === Safety Section
     {
-      table: {
-        widths: ["60%", "*"],
-        body: [
-          ["Evidence of Structural Issues?", sectionData.structuralIssues || "N/A"],
-          ["Location & Extent of Issues", sectionData.structuralIssueDetails || "N/A"],
-          ["Plywood/Sheathing Condition", sectionData.sheathingCondition || "N/A"]
-        ]
-      },
-      layout: "lightHorizontalLines",
-      margin: [0, 0, 0, 40]
+      text: "Safety",
+      fontSize: 16,
+      bold: true,
+      margin: [0, 25, 0, 10]
     },
+    ...[
+      ["Is safe roof access available?", "safeAccess"],
+      ["Condition of guardrails or parapets", "guardrailCondition"],
+      ["Trip hazards on roof", "tripHazards"]
+    ].map(([label, key]) => ({
+      columns: [
+        {
+          width: "50%",
+          stack: [
+            { text: label, bold: true, margin: [0, 0, 0, 2] },
+            { text: sectionData?.[key] || "N/A", fontSize: 10, margin: [0, 0, 0, 10] }
+          ]
+        },
+        { width: "50%", text: "" }
+      ]
+    })),
 
-
-    // === SAFETY Section ===
-{
-  text: "Safety",
-  fontSize: 16,
-  bold: true,
-  margin: [0, 10, 0, 10]
-},
-{
-  table: {
-    widths: ["60%", "*"],
-    body: [
-      ["Is safe roof access available?", sectionData.safeAccess || "N/A"],
-      ["Condition of guardrails or parapets", sectionData.guardrailCondition || "N/A"],
-      ["Trip hazards on roof", sectionData.tripHazards || "N/A"]
-    ]
-  },
-  layout: "lightHorizontalLines",
-  margin: [0, 0, 0, 30]
-},
-
-
-    // Footer
+    // === Footer
     {
       canvas: [
         { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
@@ -498,7 +526,6 @@ const createInsulationAndDeckPage = (sectionNumber, sectionData = {}, pageNumber
         { text: "", width: "*" },
         {
           text: `Page ${pageNumber}`,
-
           fontSize: 10,
           alignment: "right",
           margin: [0, 10, 40, 0],
@@ -509,6 +536,7 @@ const createInsulationAndDeckPage = (sectionNumber, sectionData = {}, pageNumber
     }
   ]
 });
+
 
 
 
@@ -524,242 +552,83 @@ const createInsulationAndDeckPage = (sectionNumber, sectionData = {}, pageNumber
 
 
 // ====== PAGE 3 of ROOF SECTION CONDITION SUMMARY ==============
-
-
-
-const createBlankSummaryPage = (sectionNumber, labelText, sectionData = {}, pageNumber) => {
-  const isFlashingPage = labelText.toLowerCase().includes("flashing");
-
-  const content = isFlashingPage
-    ? [
-        {
-          text: "Flashings",
-          fontSize: 16,
-          bold: true,
-          margin: [0, 20, 0, 10]
-        },
-        {
-          table: {
-            widths: ["60%", "*"],
-            body: [
-              ["Flashing Material", sectionData.flashingMaterial || "N/A"],
-              ["Flashing Condition", sectionData.flashingCondition || "N/A"],
-              ["Length of Damaged Flashing (ft)", sectionData.flashingDamageLength || "N/A"],
-              ["Flashing Locations", sectionData.flashingLocations || "N/A"]
-            ]
-          },
-          layout: "lightHorizontalLines",
-          margin: [0, 0, 0, 20]
-        },
-
-        {
-          text: "Sealants",
-          fontSize: 16,
-          bold: true,
-          margin: [0, 10, 0, 10]
-        },
-        {
-          table: {
-            widths: ["60%", "*"],
-            body: [
-              ["Sealants Condition", sectionData.sealantsCondition || "N/A"],
-              ["Length of Cracked/Deteriorated Sealant (ft)", sectionData.sealantsLength || "N/A"]
-            ]
-          },
-          layout: "lightHorizontalLines",
-          margin: [0, 0, 0, 20]
-        },
-
-        {
-          text: "Drainage Systems",
-          fontSize: 16,
-          bold: true,
-          margin: [0, 10, 0, 10]
-        },
-        {
-          table: {
-            widths: ["60%", "*"],
-            body: [
-              ["Gutters Condition", sectionData.guttersCondition || "N/A"],
-              ["Gutter Size", sectionData.gutterSize || "N/A"]
-            ]
-          },
-          layout: "lightHorizontalLines",
-          margin: [0, 0, 0, 10]
-        },
-        {
-          table: {
-            widths: ["60%", "*"],
-            body: [
-              ["Downspouts Condition", sectionData.downspoutsCondition || "N/A"],
-              ["Number of Downspouts", sectionData.downspoutsNumber || "N/A"],
-              ["Downspouts Size", sectionData.downspoutsSize || "N/A"]
-            ]
-          },
-          layout: "lightHorizontalLines",
-          margin: [0, 0, 0, 10]
-        },
-        {
-          table: {
-            widths: ["60%", "*"],
-            body: [
-              ["Drains Condition", sectionData.drainsCondition || "N/A"],
-              ["Scuppers Condition", sectionData.scuppersCondition || "N/A"]
-            ]
-          },
-          layout: "lightHorizontalLines",
-          margin: [0, 0, 0, 20]
-        }
-      ]
-    : [];
-
-  return {
-    pageBreak: "before",
-    stack: [
-      // Header
-      ...createStandardHeader(`Section ${sectionNumber} Roof Condition Summary`),
-      {
-        canvas: [
-          { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
-          { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
-        ],
-        absolutePosition: { x: 0, y: 755 }
-      },
-      {
-        columns: [
-          { text: "", width: "*" },
-          {
-            text: `Page ${pageNumber}`,
-
-            fontSize: 10,
-            alignment: "right",
-            margin: [0, 10, 40, 0],
-            color: "white"
-          }
-        ],
-        absolutePosition: { x: 0, y: 760 }
-      }
-    ]
-  };
-};
-
-
-
-
-
-
-
-
-
-
-// ============ PAGE 2 of ROOF SECTION CONDITION SUMMARY ============
-
-
-
-
-
-
-
-
-const createMembranePage = (sectionNumber, sectionData = {}, pageNumber) => ({
+const createFlashingAndDrainagePage = (sectionNumber, sectionData = {}, pageNumber) => ({
   pageBreak: "before",
   stack: [
-    // Header
     ...createStandardHeader(`Section ${sectionNumber} Roof Condition Summary`),
 
-
-    // === Core Sample Description ===
+    // === Flashing & Sealants Header ===
     {
-      text: "Core Sample Description",
-      fontSize: 14,
+      text: "Flashing & Sealants",
+      fontSize: 16,
       bold: true,
-      margin: [0, 10, 0, 6]
-    },
-    {
-      table: {
-        widths: ["60%", "*"],
-        body: [
-          ["Roof Cover", sectionData.roofCover || "N/A"],
-          ["Cover Board", sectionData.coverBoard || "N/A"],
-          ["Insulation (Top)", sectionData.insulationTop || "N/A"],
-          ["Insulation (Bottom)", sectionData.insulationBottom || "N/A"],
-          ["Deck Type", sectionData.deckType || "N/A"]
-        ]
-      },
-      layout: "lightHorizontalLines",
-      margin: [0, 0, 0, 20] // was 30
+      margin: [0, 30, 0, 10],
+      color: "#000"
     },
 
-    // === Membrane Section ===
+    ...[
+      ["Flashing Material", "flashingMaterial"],
+      ["Flashing Condition", "flashingCondition"],
+      ["Length of Damaged Flashing (ft)", "flashingDamageLength"],
+      ["Flashing Locations", "flashingLocations"],
+      ["Sealants Condition", "sealantsCondition"],
+      ["Length of Cracked/Deteriorated Sealant (ft)", "sealantsLength"]
+    ].map(([label, key]) => ({
+      columns: [
+        {
+          width: "40%",
+          text: label,
+          bold: true,
+          fontSize: 10,
+          margin: [0, 2, 0, 2]
+        },
+        {
+          width: "*",
+          text: sectionData?.[key] || "N/A",
+          fontSize: 10,
+          margin: [0, 2, 0, 2]
+        }
+      ]
+    })),
+
+    { text: "", margin: [0, 10] },
+
+    // === Drainage System Header ===
     {
-      text: "Membrane",
-      fontSize: 14,
+      text: "Drainage System",
+      fontSize: 16,
       bold: true,
-      margin: [0, 10, 0, 6]
-    },
-    {
-      table: {
-        widths: ["60%", "*"],
-        body: [
-          ["Membrane Material", sectionData.membraneMaterial || "N/A"],
-          ["Membrane Condition", sectionData.membraneCondition || "N/A"],
-          ["Seams Condition", sectionData.seamsCondition || "N/A"],
-          ["Membrane Length (ft)", sectionData.roofLength || "N/A"],
-          ["Membrane Width (ft)", sectionData.roofWidth || "N/A"],
-          [
-            "Total Square Footage of Membrane",
-            sectionData.roofSquareFootage ||
-              ((sectionData.roofLength || 0) * (sectionData.roofWidth || 0)) ||
-              "N/A"
-          ]
-        ]
-      },
-      layout: "lightHorizontalLines",
-      margin: [0, 0, 0, 20]
+      margin: [0, 10, 0, 10],
+      color: "#000"
     },
 
-    {
-      text: "Fasteners",
-      fontSize: 14,
-      bold: true,
-      margin: [0, 10, 0, 10]
-    },
+    ...[
+      ["Gutters Condition", "guttersCondition"],
+      ["Gutter Size", "gutterSize"],
+      ["Downspouts Condition", "downspoutsCondition"],
+      ["Number of Downspouts", "downspoutsNumber"],
+      ["Downspouts Size", "downspoutsSize"],
+      ["Drains Condition", "drainsCondition"],
+      ["Scuppers Condition", "scuppersCondition"]
+    ].map(([label, key]) => ({
+      columns: [
+        {
+          width: "40%",
+          text: label,
+          bold: true,
+          fontSize: 10,
+          margin: [0, 2, 0, 2]
+        },
+        {
+          width: "*",
+          text: sectionData?.[key] || "N/A",
+          fontSize: 10,
+          margin: [0, 2, 0, 2]
+        }
+      ]
+    })),
 
-    // === Surface & Fastener Details Table ===
-    {
-      table: {
-        widths: ["60%", "*"],
-        body: [
-          ["Fasteners Condition", sectionData.fastenersCondition || "N/A"],
-          ["Rusted Fasteners", sectionData.rustedFasteners || "N/A"],
-          ["Loose Fasteners", sectionData.looseFasteners || "N/A"],
-          ["Missing Fasteners", sectionData.missingFasteners || "N/A"]
-        ]
-      },
-      layout: "lightHorizontalLines",
-      margin: [0, 10, 0, 30]
-    },
-    {
-      text: "Granules & Coating",
-      fontSize: 14,
-      bold: true,
-      margin: [0, 10, 0, 10]
-    },
-
-    // === Granules / Coating Table ===
-    {
-      table: {
-        widths: ["60%", "*"],
-        body: [
-          ["Granules Condition", sectionData.granulesCondition || "N/A"],
-          ["Coating Condition", sectionData.coatingCondition || "N/A"]
-        ]
-      },
-      layout: "lightHorizontalLines",
-      margin: [0, 10, 0, 40]
-    },
-
-    // === Red Footer ===
+    // === Footer ===
     {
       canvas: [
         { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
@@ -772,8 +641,6 @@ const createMembranePage = (sectionNumber, sectionData = {}, pageNumber) => ({
         { text: "", width: "*" },
         {
           text: `Page ${pageNumber}`,
-
-
           fontSize: 10,
           alignment: "right",
           margin: [0, 10, 40, 0],
@@ -790,9 +657,129 @@ const createMembranePage = (sectionNumber, sectionData = {}, pageNumber) => ({
 
 
 
+// ============ PAGE 2 of ROOF SECTION CONDITION SUMMARY ============
 
 
 
+
+
+const createMembranePage = (sectionNumber, sectionData = {}, pageNumber) => ({
+  pageBreak: "before",
+  stack: [
+    // Header
+    ...createStandardHeader(`Section ${sectionNumber} Roof Condition Summary`),
+
+    // === General Observations Section Header ===
+    {
+      text: "General Observations",
+      fontSize: 16,
+      bold: true,
+      margin: [0, 30, 0, 15]
+    },
+
+    // === QA Blocks (Label + Value) ===
+    ...[
+      ["Evidence of Leaks/Water Damage?", "leaks", "leaksDescription"],
+      ["Ponding Water?", "pondingWater", "pondingWaterDescription"],
+      ["Debris Accumulation?", "debrisAccumulation", "debrisDescription"],
+      ["Vegetation Growth?", "vegetationGrowth", "vegetationDescription"],
+      ["Accessibility Issues?", "accessibilityIssues", "accessibilityDescription"]
+    ].map(([label, valueKey, descKey]) => ({
+      columns: [
+        {
+          width: "50%",
+          stack: [
+            { text: label, bold: true, margin: [0, 0, 0, 2] },
+            { text: sectionData?.[valueKey] || "N/A", fontSize: 10, margin: [0, 0, 0, 10] }
+          ]
+        },
+        {
+          width: "50%",
+          stack: [
+            { text: "Description:", bold: true, margin: [0, 0, 0, 2] },
+            { text: sectionData?.[descKey] || "N/A", fontSize: 10, margin: [0, 0, 0, 10] }
+          ]
+        }
+      ]
+    })),
+// === Interior Evaluation Section (styled like General Observations) ===
+
+
+
+{
+  text: "Interior Evaluation",
+  fontSize: 16,
+  bold: true,
+  margin: [0, 25, 0, 10]
+},
+...[
+  {
+    label: "Underside Accessible?",
+    key: "undersideAccessible",
+    descKey: null
+  },
+  {
+    label: "Deck Condition",
+    key: "deckCondition",
+    descKey: null
+  },
+  {
+    label: "Deck Damage?",
+    key: "deckDamage",
+    descKey: "deckDamageDescription"
+  },
+  {
+    label: "Moisture or Water Damage?",
+    key: "deckMoisture",
+    descKey: "deckMoistureDescription"
+  }
+].map(({ label, key, descKey }) => ({
+  columns: [
+    {
+      width: "50%",
+      stack: [
+        { text: label, bold: true, margin: [0, 5, 0, 0] },
+        { text: sectionData?.[key] || "N/A", fontSize: 10, margin: [0, 0, 0, 10] }
+      ]
+    },
+    descKey
+      ? {
+          width: "50%",
+          stack: [
+            { text: "Description:", bold: true, margin: [0, 5, 0, 0] },
+            { text: sectionData?.[descKey] || "N/A", fontSize: 10, margin: [0, 0, 0, 10] }
+          ]
+        }
+      : { width: "50%", text: "" }
+  ]
+}))
+,
+
+
+
+    // === Red Footer ===
+    {
+      canvas: [
+        { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
+        { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
+      ],
+      absolutePosition: { x: 0, y: 755 }
+    },
+    {
+      columns: [
+        { text: "", width: "*" },
+        {
+          text: `Page ${pageNumber}`,
+          fontSize: 10,
+          alignment: "right",
+          margin: [0, 10, 40, 0],
+          color: "white"
+        }
+      ],
+      absolutePosition: { x: 0, y: 760 }
+    }
+  ]
+});
 
 
 
@@ -833,34 +820,70 @@ const createSummaryPage = (sectionNumber, sectionData, pageNumber) => ({
       layout: "lightHorizontalLines",
       margin: [0, 10, 0, 30]
     },
-    
-
-    // === General Observations Section ===
+    // === Core Sample Description ===
     {
-      text: "General Observations",
+      text: "Core Sample Description",
       fontSize: 14,
       bold: true,
-      margin: [0, 0, 0, 15]
+      margin: [0, 10, 0, 6]
+    },
+    {
+      table: {
+        widths: ["60%", "*"],
+        body: [
+          ["Roof Cover", sectionData.coreSampleRoofCover || "N/A"],
+          ["Cover Board", sectionData.coreSampleCoverBoard || "N/A"],
+          ["Insulation (Top)", sectionData.coreSampleTopInsulation || "N/A"],
+          ["Insulation (Bottom)", sectionData.coreSampleBottomInsulation || "N/A"],
+          ["Deck Type", sectionData.coreSampleDeckType || "N/A"],
+        ]
+      },
+      layout: "lightHorizontalLines",
+      margin: [0, 0, 0, 20]
     },
 
-    // Each QA block individually, vertically spaced
-    ...[
-      ["Evidence of Leaks/Water Damage?", "leaks"],
-      ["Leak Description", "leaksDescription"],
-      ["Ponding Water?", "pondingWater"],
-      ["Ponding Water Description", "pondingWaterDescription"],
-      ["Debris Accumulation?", "debrisAccumulation"],
-      ["Debris Description", "debrisDescription"],
-      ["Vegetation Growth?", "vegetationGrowth"],
-      ["Vegetation Description", "vegetationDescription"],
-      ["Accessibility Issues?", "accessibilityIssues"],
-      ["Accessibility Description", "accessibilityDescription"]
-    ].map(([label, key]) => ({
+    // === Membrane Section ===
+    {
+      text: "Membrane",
+      fontSize: 14,
+      bold: true,
+      margin: [0, 10, 0, 6]
+    },
+    {
       stack: [
-        { text: `${label}:`, bold: true, margin: [0, 5, 0, 0] },
-        { text: sectionData?.[key] || "N/A", margin: [0, 0, 0, 10] }
+        {
+          text: `Membrane Material: ${sectionData.membraneMaterial || "not specified"}.`,
+          margin: [0, 0, 0, 5]
+        },
+        {
+          text: `Condition Membrane ${sectionData.membraneCondition || "N/A"}.`,
+          margin: [0, 0, 0, 5]
+        },
+        {
+          text: `Seams and overlaps description: ${sectionData.seamsCondition || "N/A"}.`,
+          margin: [0, 0, 0, 5]
+        },
+       
+        {
+          text: `Fasteners condition: ${sectionData.fastenersCondition || "N/A"}.`,
+          margin: [0, 0, 0, 5]
+        },
+        {
+          text: `Rusted Fasteners: ${sectionData.rustedFasteners ?? "N/A"}, Loose Fasteners: ${sectionData.looseFasteners ?? "N/A"}, Missing Fasteners: ${sectionData.missingFasteners ?? "N/A"}.`,
+          margin: [0, 0, 0, 10]
+        },
+        {
+          text: `Granules Condition: ${sectionData.granulesCondition || "N/A"}.`,
+          margin: [0, 0, 0, 5]
+        },
+        {
+          text: `Coating Condition: ${sectionData.coatingCondition || "N/A"}.`,
+          margin: [0, 0, 0, 20]
+        }
       ]
-    }))
+    }
+    
+
 ,
 
   
@@ -910,6 +933,7 @@ const createSummaryPage = (sectionNumber, sectionData, pageNumber) => ({
 
 
 
+console.log("🧠 formData.roofSections = ", formData.roofSections);
 
 
 if (!Array.isArray(formData.roofSections) || formData.roofSections.length === 0) {
@@ -1540,7 +1564,8 @@ const roofSections = Array.isArray(formData.roofSections) ? formData.roofSection
                             { text: formData.clientName || "______________", margin: [0, 0, 0, 10] },
                       
                             { text: "Client Contact Info:", bold: true },
-                            { text: formData.contactInfo || "______________", margin: [0, 0, 0, 10] },
+{ text: formData.clientcontactinfo || "______________", margin: [0, 0, 0, 10] },
+
                       
                             { text: "Property Name:", bold: true },
                             { text: formData.propertyName || "______________", margin: [0, 0, 0, 10] },
@@ -1577,7 +1602,8 @@ const roofSections = Array.isArray(formData.roofSections) ? formData.roofSection
                             { text: formData.inspectorCompany || "______________", margin: [0, 0, 0, 10] },
                       
                             { text: "Inspector Contact Info:", bold: true },
-                            { text: formData.contactInfo || "______________", margin: [0, 0, 0, 10] }
+{ text: formData.inspectorcontactinfo || "______________", margin: [0, 0, 0, 10] }
+
                           ],
                           margin: [60, 30, 0, 0]
                         }
@@ -2348,25 +2374,6 @@ docDefinition.content.push({
       margin: [0, 30, 0, 30]
     },
 
-    // === Warranty Info Section ===
-    {
-      text: "Warranty Information",
-      fontSize: 12,
-      bold: true,
-      margin: [0, 10, 0, 6]
-    },
-    ...[
-      ["Is the current roof still under warranty?", "roofWarranty"],
-      ["Warranty Term (Years)", "warrantyTerm"],
-      ["Warranty Type", "warrantyType"],
-      ["Is the Building FM Insured?", "buildingFMInsured"]
-    ].map(([label, key]) => ({
-      stack: [
-        { text: label + ":", bold: true, fontSize: 9, margin: [0, 3, 0, 0] },
-        { text: formData?.[key] || "N/A", fontSize: 8, margin: [0, 0, 0, 6] }
-      ]
-    })),
-
     // === Weather Info Section ===
     {
       text: "Weather Information",
@@ -2469,21 +2476,93 @@ docDefinition.content.push({
 });
 
 
-roofSections.forEach((section, index) => {
-  if (!section) return; // <-- ⛑️ Prevents crashing on undefined
 
-  const pageStart = basePageOffset + index * 5;
+// === Roof Summary Overview - Page 2: Warranty Only ===
+docDefinition.content.push({
+  pageBreak: "before",
+  stack: [
+    ...createStandardHeader("Roof Summary Overview"),
 
-  const pages = [
-    createSummaryPage(index + 1, section, pageStart + 0),
-    createMembranePage(index + 1, section, pageStart + 1),
-    createInsulationAndDeckPage(index + 1, section, pageStart + 2),
-    createPenetrationsAndParapetPage(index + 1, section, pageStart + 3),
-    createAdditionalElementsPage(index + 1, section, pageStart + 4),
-  ].filter(Boolean);
+    {
+      text: "Warranty Information",
+      fontSize: 12,
+      bold: true,
+      margin: [0, 30, 0, 6]
+    },
+    ...[
+      ["Is the current roof still under warranty?", "roofWarranty"],
+      ["Warranty Term (Years)", "warrantyTerm"],
+      ["Warranty Type", "warrantyType"],
+      ["Is the Building FM Insured?", "buildingFMInsured"]
+    ].map(([label, key]) => ({
+      stack: [
+        { text: label + ":", bold: true, fontSize: 9, margin: [0, 3, 0, 0] },
+        { text: formData?.[key] || "N/A", fontSize: 8, margin: [0, 0, 0, 6] }
+      ]
+    })),
 
-  docDefinition.content.push(...pages);
+    {
+      canvas: [
+        { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
+        { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
+      ],
+      absolutePosition: { x: 0, y: 755 }
+    },
+    {
+      columns: [
+        { text: "", width: "*" },
+        {
+          text:
+            "Page " +
+            (6 + imagePages.length + overviewPages.length + droneImages.length + 1),
+          fontSize: 10,
+          alignment: "right",
+          margin: [0, 10, 40, 0],
+          color: "white"
+        }
+      ],
+      absolutePosition: { x: 0, y: 760 }
+    }
+  ]
 });
+
+
+
+
+
+
+
+
+
+
+//============= Loop for roof sections !!!!!!
+
+
+
+
+
+
+roofSections.forEach((section, index) => {
+  try {
+    if (!section) throw new Error("Missing section");
+
+    const pageStart = basePageOffset + index * 6;
+    const pages = [
+      createSummaryPage(index + 1, section, pageStart + 0),
+      createMembranePage(index + 1, section, pageStart + 1),
+      createFlashingAndDrainagePage(index + 1, section, pageStart + 2), // ✅ this line!
+      createInsulationAndDeckPage(index + 1, section, pageStart + 3),
+      createPenetrationsAndParapetPage(index + 1, section, pageStart + 4),
+      createAdditionalElementsPage(index + 1, section, pageStart + 5)
+    ];
+    
+
+    docDefinition.content.push(...pages);
+  } catch (err) {
+    console.error(`Error creating roof section ${index + 1}:`, err);
+  }
+});
+
 
 
 
