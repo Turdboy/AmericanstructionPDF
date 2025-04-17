@@ -1,14 +1,77 @@
+const getWordCount = (text: string) => text.trim().split(/\s+/).filter(Boolean).length;
+
+const SECTION_NAME_LIMIT = 2;
+const SECTION_AGE_LIMIT = 1;
+const GENERAL_DESCRIPTION_LIMIT = 21;
+const FINAL_SECTION_LIMIT = 14;
+
+const WORD_LIMITS = {
+  sectionName: SECTION_NAME_LIMIT,
+  sectionAge: SECTION_AGE_LIMIT,
+  leaksDescription: GENERAL_DESCRIPTION_LIMIT,
+  pondingWaterDescription: GENERAL_DESCRIPTION_LIMIT,
+  debrisDescription: GENERAL_DESCRIPTION_LIMIT,
+  vegetationDescription: GENERAL_DESCRIPTION_LIMIT,
+  accessibilityDescription: GENERAL_DESCRIPTION_LIMIT,
+  deckDamageDescription: GENERAL_DESCRIPTION_LIMIT,
+  deckMoistureDescription: GENERAL_DESCRIPTION_LIMIT,
+
+  membraneMaterial: 2,
+  membraneCondition: 20,
+  seamsCondition: 20,
+  granulesCondition: 20,
+  coatingCondition: 20,
+
+  // Flashing & Sealants (previously done)
+  flashingMaterial: 2,
+  flashingCondition: 32,
+  flashingLocations: 32,
+  sealantsCondition: 32,
+
+  // Final 5 Sections (apply 14-word limit across the board)
+  guttersCondition: FINAL_SECTION_LIMIT,
+  downspoutsCondition: FINAL_SECTION_LIMIT,
+  drainsCondition: FINAL_SECTION_LIMIT,
+  scuppersCondition: FINAL_SECTION_LIMIT,
+  pipesCondition: FINAL_SECTION_LIMIT,
+  ventsCondition: FINAL_SECTION_LIMIT,
+  hvacCondition: FINAL_SECTION_LIMIT,
+  skylightsCondition: FINAL_SECTION_LIMIT,
+  chimneysCondition: FINAL_SECTION_LIMIT,
+  parapetWallCondition: FINAL_SECTION_LIMIT,
+  copingCondition: FINAL_SECTION_LIMIT,
+safeAccess: FINAL_SECTION_LIMIT,
+guardrailCondition: FINAL_SECTION_LIMIT,
+tripHazards: FINAL_SECTION_LIMIT,
+structuralIssueDetails: FINAL_SECTION_LIMIT,
+sheathingCondition: FINAL_SECTION_LIMIT,
+
+};
+
+
+
+
+
 
 const RoofSection = ({ section, index, onChange }) => {
   
     
 
-    const handleChange = (e) => {
-        const { name, value, type } = e.target;
-        const val = type === "number" && value !== "" ? Number(value) : value;
-        onChange(index, { ...section, [name]: val });
-      };
-      
+  const handleChange = (e) => {
+    const { name, value, type } = e.target;
+    const val = type === "number" && value !== "" ? Number(value) : value;
+  
+    // Word limit enforcement (if any)
+    const limit = WORD_LIMITS[name];
+    if (limit && getWordCount(val) > limit) return;
+  
+    onChange(index, { ...section, [name]: val });
+  };
+  
+  
+
+
+
       
 
   return (
@@ -17,29 +80,37 @@ const RoofSection = ({ section, index, onChange }) => {
       {/* SECTION NAME + AUTO SQ. FOOTAGE CALC */}
 <div className="grid grid-cols-2 gap-4 mb-4">
   <div>
-    <label className="block font-semibold">Section Name</label>
-    <input
-      type="text"
-      name="sectionName"
-      placeholder="e.g. Section 3: Canopy A"
+  <label className="block font-semibold">Section Name</label>
+<input
+  type="text"
+  name="sectionName"
+  placeholder=""
+  value={section.sectionName}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.sectionName)} / {SECTION_NAME_LIMIT} words
+</p>
 
-      onChange={handleChange}
-      className="w-full border p-2 rounded"
-    />
 
     
 
 
 
 <label className="block font-semibold">Section Age</label>
-    <input
-      type="text"
-      name="sectionAge"
-      placeholder="Section Age (Approx.)"
+<input
+  type="text"
+  name="sectionAge"
+  placeholder="Approximate Age (Years)"
+  value={section.sectionAge || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.sectionAge || "")} / {SECTION_AGE_LIMIT} word
+</p>
 
-      onChange={handleChange}
-      className="w-full border p-2 rounded"
-    />
 
 
   </div>
@@ -68,6 +139,7 @@ const RoofSection = ({ section, index, onChange }) => {
 <input
   type="number"
   name="roofLength"
+  placeholder="Length (ft)"
   value={section.roofLength ?? ""}
   onChange={handleChange}
   className="w-full border p-2 rounded"
@@ -77,6 +149,7 @@ const RoofSection = ({ section, index, onChange }) => {
 <input
   type="number"
   name="roofWidth"
+  placeholder="width (ft)"
   value={section.roofWidth ?? ""}
   onChange={handleChange}
   className="w-full border p-2 rounded"
@@ -93,6 +166,10 @@ const RoofSection = ({ section, index, onChange }) => {
 
 
                  {/* General Observations Section */}
+
+
+
+
 <h3 className="text-lg font-bold">General Observations</h3>
 
 {/* Overall Roof Condition */}
@@ -112,13 +189,22 @@ const RoofSection = ({ section, index, onChange }) => {
     <option value="Yes">Yes</option>
     <option value="No">No</option>
 </select>
-<textarea 
-    name="leaksDescription" 
-    placeholder="If yes, describe location and extent" 
-    onChange={handleChange} 
-    className="w-full border p-2 rounded"
-    rows={3}
+<textarea
+  name="leaksDescription"
+  placeholder="If yes, describe location and extent"
+  value={section.leaksDescription || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+  rows={3}
 />
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.leaksDescription || "")} / {GENERAL_DESCRIPTION_LIMIT} words
+</p>
+
+
+
+
+
 
 {/* Ponding Water */}
 <label className="block mt-2">Ponding Water?</label>
@@ -127,13 +213,21 @@ const RoofSection = ({ section, index, onChange }) => {
     <option value="Yes">Yes</option>
     <option value="No">No</option>
 </select>
-<textarea 
-    name="pondingWaterDescription" 
-    placeholder="If yes, describe location and extent" 
-    onChange={handleChange} 
-    className="w-full border p-2 rounded"
-    rows={3}
+<textarea
+  name="pondingWaterDescription"
+  placeholder="If yes, describe location and extent"
+  value={section.pondingWaterDescription || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+  rows={3}
 />
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.pondingWaterDescription || "")} / {GENERAL_DESCRIPTION_LIMIT} words
+</p>
+
+
+
+
 
 {/* Debris Accumulation */}
 <label className="block mt-2">Debris Accumulation?</label>
@@ -142,12 +236,21 @@ const RoofSection = ({ section, index, onChange }) => {
     <option value="Yes">Yes</option>
     <option value="No">No</option>
 </select>
-<textarea 
-    name="debrisDescription" 
-    placeholder="If yes, describe location and type of debris" 
-    onChange={handleChange} 
-    className="w-full border p-2 rounded"
-    rows={3}/>
+<textarea
+  name="debrisDescription"
+  placeholder="If yes, describe location and type of debris"
+  value={section.debrisDescription || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+  rows={3}
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.debrisDescription || "")} / {GENERAL_DESCRIPTION_LIMIT} words
+</p>
+
+
+
+
 
 {/* Vegetation Growth */}
 <label className="block mt-2">Vegetation Growth?</label>
@@ -156,12 +259,20 @@ const RoofSection = ({ section, index, onChange }) => {
     <option value="Yes">Yes</option>
     <option value="No">No</option>
 </select>
-<textarea 
-    name="vegetationDescription" 
-    placeholder="If yes, describe location and type of vegetation" 
-    onChange={handleChange} 
-    className="w-full border p-2 rounded"
-    rows={3}/>
+<textarea
+  name="vegetationDescription"
+  placeholder="If yes, describe location and type of vegetation"
+  value={section.vegetationDescription || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+  rows={3}
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.vegetationDescription || "")} / {GENERAL_DESCRIPTION_LIMIT} words
+</p>
+
+
+
 
 {/* Accessibility Issues */}
 <label className="block mt-2">Accessibility Issues?</label>
@@ -170,12 +281,18 @@ const RoofSection = ({ section, index, onChange }) => {
     <option value="Yes">Yes</option>
     <option value="No">No</option>
 </select>
-<textarea 
-    name="accessibilityDescription" 
-    placeholder="If yes, describe" 
-    onChange={handleChange} 
-    className="w-full border p-2 rounded"
-    rows={3}/>
+<textarea
+  name="accessibilityDescription"
+  placeholder="If yes, describe"
+  value={section.accessibilityDescription || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+  rows={3}
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.accessibilityDescription || "")} / {GENERAL_DESCRIPTION_LIMIT} words
+</p>
+
 
                 
                 {/* Interior Evaluation Section */}
@@ -206,12 +323,18 @@ const RoofSection = ({ section, index, onChange }) => {
     <option value="Yes">Yes</option>
     <option value="No">No</option>
 </select>
-<textarea 
-    name="deckDamageDescription" 
-    placeholder="If yes, provide their location and brief description" 
-    onChange={handleChange} 
-    className="w-full border p-2 rounded"
-    rows={3}/>
+<textarea
+  name="deckDamageDescription"
+  placeholder="If yes, provide their location and brief description"
+  value={section.deckDamageDescription || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+  rows={3}
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.deckDamageDescription || "")} / {GENERAL_DESCRIPTION_LIMIT} words
+</p>
+
 
 {/* Signs of Moisture Intrusion or Water Damage */}
 <label className="block mt-2">Signs of Moisture Intrusion or Water Damage?</label>
@@ -220,12 +343,18 @@ const RoofSection = ({ section, index, onChange }) => {
     <option value="Yes">Yes</option>
     <option value="No">No</option>
 </select>
-<textarea 
-    name="deckMoistureDescription" 
-    placeholder="If yes, provide their location and brief description" 
-    onChange={handleChange} 
-    className="w-full border p-2 rounded"
-    rows={3}/>
+<textarea
+  name="deckMoistureDescription"
+  placeholder="If yes, provide their location and brief description"
+  value={section.deckMoistureDescription || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+  rows={3}
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.deckMoistureDescription || "")} / {GENERAL_DESCRIPTION_LIMIT} words
+</p>
+
 
    
                 
@@ -234,29 +363,70 @@ const RoofSection = ({ section, index, onChange }) => {
 
 {/* Roofing Material */}
 <label className="block">Material (TPO, EPDM, Modified Bitumen, BUR, Metal, Shingle, etc.)</label>
-<input type="text" name="membraneMaterial" placeholder="Enter Membrane Material" onChange={handleChange} className="w-full border p-2 rounded" />
+<input
+  type="text"
+  name="membraneMaterial"
+  placeholder="Enter Membrane Material"
+  value={section.membraneMaterial || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.membraneMaterial || "")} / 2 words
+</p>
+
+
+
 
 {/* Condition of Membrane */}
 <label className="block mt-2">Condition of Membrane (Punctures, Tears, Blisters, Wrinkles, etc.)</label>
-<textarea name="membraneCondition" placeholder="Describe the condition" onChange={handleChange} className="w-full border p-2 rounded"></textarea>
+<textarea
+  name="membraneCondition"
+  placeholder="Describe the condition"
+  value={section.membraneCondition || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+  rows={3}
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.membraneCondition || "")} / 27 words
+</p>
+
+
+
 
 {/* Seams/Overlaps Condition */}
 <label className="block mt-2">Seams/Overlaps Condition (Secure, Separated, Damaged, etc.)</label>
-<input type="text" name="seamsCondition" placeholder="Enter condition of seams/overlaps" onChange={handleChange} className="w-full border p-2 rounded" />
-
-
-<input 
-    type="number" 
-    name="membraneLength" 
-    placeholder="Enter Roof Length" 
-    value={section.membraneLength} 
-    onChange={handleChange} 
-    className="w-full border p-2 rounded" 
+<input
+  type="text"
+  name="seamsCondition"
+  placeholder="Enter condition of seams/overlaps"
+  value={section.seamsCondition || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
 />
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.seamsCondition || "")} / 27 words
+</p>
+
+
+
 
 {/* Fasteners Condition */}
 <label className="block mt-2">Fasteners Condition (Rusted, Loose, Missing, etc.)</label>
-<input type="text" name="fastenersCondition" placeholder="Enter fasteners condition" onChange={handleChange} className="w-full border p-2 rounded" />
+<input
+  type="text"
+  name="fastenersCondition"
+  placeholder="Enter fasteners condition"
+  value={section.fastenersCondition || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
+
+
+
+
+
 
 {/* Fasteners Count */}
 <div className="grid grid-cols-3 gap-4">
@@ -276,97 +446,273 @@ const RoofSection = ({ section, index, onChange }) => {
 
 {/* Granules Condition */}
 <label className="block mt-2">Granules Condition (Loss, Wear, etc.)</label>
-<textarea name="granulesCondition" placeholder="Describe the condition of granules" onChange={handleChange} className="w-full border p-2 rounded"></textarea>
+<textarea
+  name="granulesCondition"
+  placeholder="Describe the condition of granules"
+  value={section.granulesCondition || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+  rows={3}
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.granulesCondition || "")} / 27 words
+</p>
+
+
+
 
 {/* Coating Condition */}
 <label className="block mt-2">Coating Condition (Peeling, Cracking, etc.)</label>
-<textarea name="coatingCondition" placeholder="Describe the condition of coating" onChange={handleChange} className="w-full border p-2 rounded"></textarea>
+<textarea
+  name="coatingCondition"
+  placeholder="Describe the condition of coating"
+  value={section.coatingCondition || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+  rows={3}
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.coatingCondition || "")} / 27 words
+</p>
 
 
-                {/* Flashing & Sealants Section */}
+
 <h3 className="text-lg font-bold">Flashing & Sealants</h3>
 
-{/* Flashing Material */}
+{/* Flashing Material - 2 word limit */}
 <label className="block">Flashing Material</label>
-<input type="text" name="flashingMaterial" placeholder="Enter type of flashing material" onChange={handleChange} className="w-full border p-2 rounded" />
+<input
+  type="text"
+  name="flashingMaterial"
+  placeholder="Enter type of flashing material"
+  value={section.flashingMaterial || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.flashingMaterial || "")} / 2 words
+</p>
 
-{/* Flashing Condition */}
+{/* Flashing Condition - 32 word limit */}
 <label className="block mt-2">Flashing Condition (Cracked, Torn, Deteriorated, etc.)</label>
-<textarea name="flashingCondition" placeholder="Describe the condition of the flashing" onChange={handleChange} className="w-full border p-2 rounded"></textarea>
+<textarea
+  name="flashingCondition"
+  placeholder="Describe the condition of the flashing"
+  value={section.flashingCondition || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+  rows={3}
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.flashingCondition || "")} / 32 words
+</p>
 
 {/* Length of Damaged Flashing */}
 <label className="block mt-2">Length of Damaged Flashing (in feet)</label>
-<input type="number" name="flashingDamageLength" placeholder="Enter length in feet" onChange={handleChange} className="w-full border p-2 rounded" />
+<input
+  type="number"
+  name="flashingDamageLength"
+  placeholder="Enter length in feet"
+  value={section.flashingDamageLength || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
 
-{/* Flashing Locations */}
+{/* Flashing Locations - 32 word limit */}
 <label className="block mt-2">Flashing Locations (Around vents, chimneys, skylights, parapet walls, etc.)</label>
-<textarea name="flashingLocations" placeholder="Describe locations of flashing" onChange={handleChange} className="w-full border p-2 rounded"></textarea>
+<textarea
+  name="flashingLocations"
+  placeholder="Describe locations of flashing"
+  value={section.flashingLocations || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+  rows={3}
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.flashingLocations || "")} / 32 words
+</p>
 
-{/* Sealants Condition */}
+{/* Sealants Condition - 32 word limit */}
 <label className="block mt-2">Sealants Condition (Cracked, Dried Out, Missing, etc.)</label>
-<textarea name="sealantsCondition" placeholder="Describe the condition of sealants" onChange={handleChange} className="w-full border p-2 rounded"></textarea>
+<textarea
+  name="sealantsCondition"
+  placeholder="Describe the condition of sealants"
+  value={section.sealantsCondition || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+  rows={3}
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.sealantsCondition || "")} / 32 words
+</p>
 
 {/* Length of Cracked/Deteriorated Sealant */}
 <label className="block mt-2">Length of Cracked/Deteriorated Sealant (in feet)</label>
-<input type="number" name="sealantsLength" placeholder="Enter length in feet" onChange={handleChange} className="w-full border p-2 rounded" />
+<input
+  type="number"
+  name="sealantsLength"
+  placeholder="Enter length in feet"
+  value={section.sealantsLength || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
 
-{/* Drainage System Section */}
-<h3 className="text-lg font-bold">Drainage System</h3>
+{/* ===================== Drainage System ===================== */}
+<h3 className="text-lg font-bold mt-6">Drainage System</h3>
 
-{/* Gutters Condition */}
+{/* Gutters Condition - 32 word limit */}
 <label className="block">Gutters Condition (Clean, Clogged, Damaged, etc.)</label>
-<textarea name="guttersCondition" placeholder="Describe the condition of the gutters" onChange={handleChange} className="w-full border p-2 rounded"></textarea>
+<textarea
+  name="guttersCondition"
+  placeholder="Describe the condition of the gutters"
+  value={section.guttersCondition || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+  rows={3}
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.guttersCondition || "")} / 32 words
+</p>
 
 {/* Gutter Size */}
 <label className="block mt-2">Gutter Size (6", 7", etc.)</label>
-<input type="text" name="gutterSize" placeholder="Enter gutter size" onChange={handleChange} className="w-full border p-2 rounded" />
+<input
+  type="text"
+  name="gutterSize"
+  placeholder="Enter gutter size"
+  value={section.gutterSize || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
 
-{/* Downspouts Condition */}
+{/* Downspouts Condition - 32 word limit */}
 <label className="block mt-2">Downspouts Condition (Secure, Damaged, Missing, etc.)</label>
-<textarea name="downspoutsCondition" placeholder="Describe the condition of downspouts" onChange={handleChange} className="w-full border p-2 rounded"></textarea>
+<textarea
+  name="downspoutsCondition"
+  placeholder="Describe the condition of downspouts"
+  value={section.downspoutsCondition || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+  rows={3}
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.downspoutsCondition || "")} / 32 words
+</p>
 
 {/* Downspouts Count */}
 <label className="block mt-2">Number of Downspouts</label>
-<input type="number" name="downspoutsNumber" placeholder="Enter total number of downspouts" onChange={handleChange} className="w-full border p-2 rounded" />
+<input
+  type="number"
+  name="downspoutsNumber"
+  placeholder="Enter total number of downspouts"
+  value={section.downspoutsNumber || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
 
 {/* Downspouts Size */}
 <label className="block mt-2">Downspouts Size</label>
-<input type="text" name="downspoutsSize" placeholder="Enter size of downspouts" onChange={handleChange} className="w-full border p-2 rounded" />
+<input
+  type="text"
+  name="downspoutsSize"
+  placeholder="Enter size of downspouts"
+  value={section.downspoutsSize || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
 
-{/* Drains Condition */}
+{/* Drains Condition - 32 word limit */}
 <label className="block mt-2">Drains Condition (Clear, Clogged, etc.)</label>
-<textarea name="drainsCondition" placeholder="Describe the condition of the drains" onChange={handleChange} className="w-full border p-2 rounded"></textarea>
+<textarea
+  name="drainsCondition"
+  placeholder="Describe the condition of the drains"
+  value={section.drainsCondition || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+  rows={3}
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.drainsCondition || "")} / 32 words
+</p>
 
-{/* Scuppers Condition */}
+{/* Scuppers Condition - 32 word limit */}
 <label className="block mt-2">Scuppers Condition (Clear, Damaged, etc.)</label>
-<textarea name="scuppersCondition" placeholder="Describe the condition of the scuppers" onChange={handleChange} className="w-full border p-2 rounded"></textarea>
-
-
+<textarea
+  name="scuppersCondition"
+  placeholder="Describe the condition of the scuppers"
+  value={section.scuppersCondition || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+  rows={3}
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.scuppersCondition || "")} / 32 words
+</p>
 
 
 
 {/* Penetrations & Vents Section */}
 <h3 className="text-lg font-bold">Penetrations & Vents</h3>
 
-{/* Pipes Condition */}
 <label className="block">Pipes Condition (Seals, Integrity, etc.)</label>
-<textarea name="pipesCondition" placeholder="Describe the condition of pipe penetrations and seals" onChange={handleChange} className="w-full border p-2 rounded"></textarea>
+<textarea
+  name="pipesCondition"
+  placeholder="Describe the condition of pipe penetrations and seals"
+  value={section.pipesCondition || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+></textarea>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.pipesCondition || "")} / 14 words
+</p>
 
-{/* Vents Condition */}
 <label className="block mt-2">Vents Condition (Secure, Damaged, etc.)</label>
-<textarea name="ventsCondition" placeholder="Describe the condition of vents" onChange={handleChange} className="w-full border p-2 rounded"></textarea>
+<textarea
+  name="ventsCondition"
+  placeholder="Describe the condition of vents"
+  value={section.ventsCondition || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+></textarea>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.ventsCondition || "")} / 14 words
+</p>
 
-{/* HVAC Units Condition */}
 <label className="block mt-2">HVAC Units Condition (Leaks, Damage, etc.)</label>
-<textarea name="hvacCondition" placeholder="Describe the condition of the roof around HVAC units" onChange={handleChange} className="w-full border p-2 rounded"></textarea>
+<textarea
+  name="hvacCondition"
+  placeholder="Describe the condition of the roof around HVAC units"
+  value={section.hvacCondition || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+></textarea>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.hvacCondition || "")} / 14 words
+</p>
 
-{/* Skylights Condition */}
 <label className="block mt-2">Skylights Condition (Cracked, Leaking, Sealed, etc.)</label>
-<textarea name="skylightsCondition" placeholder="Describe the condition of skylights" onChange={handleChange} className="w-full border p-2 rounded"></textarea>
+<textarea
+  name="skylightsCondition"
+  placeholder="Describe the condition of skylights"
+  value={section.skylightsCondition || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+></textarea>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.skylightsCondition || "")} / 14 words
+</p>
 
-{/* Chimneys Condition */}
 <label className="block mt-2">Chimneys Condition (Flashing, Cap, etc.)</label>
-<textarea name="chimneysCondition" placeholder="Describe the condition of chimney flashing and cap" onChange={handleChange} className="w-full border p-2 rounded"></textarea>
+<textarea
+  name="chimneysCondition"
+  placeholder="Describe the condition of chimney flashing and cap"
+  value={section.chimneysCondition || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+></textarea>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.chimneysCondition || "")} / 14 words
+</p>
 
 
 
@@ -376,32 +722,55 @@ const RoofSection = ({ section, index, onChange }) => {
 {/* Parapet Walls Section */}
 <h3 className="text-lg font-bold">Parapet Walls</h3>
 
-{/* Parapet Walls Condition */}
 <label className="block">Condition of Parapet Walls (Cracks, Loose Masonry, etc.)</label>
-<textarea name="parapetWallCondition" placeholder="Describe the condition of the parapet walls" onChange={handleChange} className="w-full border p-2 rounded"></textarea>
+<textarea
+  name="parapetWallCondition"
+  placeholder="Describe the condition of the parapet walls"
+  value={section.parapetWallCondition || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+></textarea>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.parapetWallCondition || "")} / 14 words
+</p>
 
-{/* Coping Condition */}
 <label className="block mt-2">Coping Condition (Cracked, Loose, Missing, etc.)</label>
-<textarea name="copingCondition" placeholder="Describe the condition of coping" onChange={handleChange} className="w-full border p-2 rounded"></textarea>
+<textarea
+  name="copingCondition"
+  placeholder="Describe the condition of coping"
+  value={section.copingCondition || ""}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+></textarea>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.copingCondition || "")} / 14 words
+</p>
+
+
 
 
 {/* Insulation Section */}
-<h3 className="text-lg font-bold">Insulation</h3>
+<h3 className="text-lg font-bold mt-6">Insulation</h3>
 
 <label className="block">Insulation Type</label>
 <input
   type="text"
   name="insulationType"
   placeholder="e.g., Rigid Board, Loose Fill"
+  value={section.insulationType || ""}
   onChange={handleChange}
   className="w-full border p-2 rounded"
 />
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.insulationType || "")} / {FINAL_SECTION_LIMIT} words
+</p>
 
 <label className="block mt-2">Insulation Thickness (inches)</label>
 <input
   type="text"
   name="insulationThickness"
   placeholder="e.g., 2.5"
+  value={section.insulationThickness || ""}
   onChange={handleChange}
   className="w-full border p-2 rounded"
 />
@@ -411,13 +780,18 @@ const RoofSection = ({ section, index, onChange }) => {
   type="text"
   name="insulationCondition"
   placeholder="e.g., Good, Poor"
+  value={section.insulationCondition || ""}
   onChange={handleChange}
   className="w-full border p-2 rounded"
 />
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(section.insulationCondition || "")} / {FINAL_SECTION_LIMIT} words
+</p>
 
 <label className="block mt-2">Evidence of Wet Insulation?</label>
 <select
   name="wetInsulation"
+  value={section.wetInsulation || ""}
   onChange={handleChange}
   className="w-full border p-2 rounded"
 >
@@ -427,13 +801,17 @@ const RoofSection = ({ section, index, onChange }) => {
 </select>
 
 
-{/* Deck/Structure Section */}
+
+
+
+
 <h3 className="text-lg font-bold mt-6">Deck / Structure</h3>
 
 <label className="block">Evidence of Structural Issues?</label>
 <select
   name="structuralIssues"
   onChange={handleChange}
+  value={section.structuralIssues || ""}
   className="w-full border p-2 rounded"
 >
   <option value="">Select</option>
@@ -446,6 +824,7 @@ const RoofSection = ({ section, index, onChange }) => {
   type="text"
   name="structuralIssueDetails"
   placeholder="Describe location and extent"
+  value={section.structuralIssueDetails || ""}
   onChange={handleChange}
   className="w-full border p-2 rounded"
 />
@@ -455,9 +834,16 @@ const RoofSection = ({ section, index, onChange }) => {
   type="text"
   name="sheathingCondition"
   placeholder="e.g., Rotting, Delamination"
+  value={section.sheathingCondition || ""}
   onChange={handleChange}
   className="w-full border p-2 rounded"
 />
+
+
+
+
+
+
 
 
 {/* Safety Section */}
@@ -468,6 +854,7 @@ const RoofSection = ({ section, index, onChange }) => {
   type="text"
   name="safeAccess"
   placeholder="e.g., Hatch, Ladder Access"
+  value={section.safeAccess || ""}
   onChange={handleChange}
   className="w-full border p-2 rounded"
 />
@@ -477,6 +864,7 @@ const RoofSection = ({ section, index, onChange }) => {
   type="text"
   name="guardrailCondition"
   placeholder="e.g., Missing guardrails on west side"
+  value={section.guardrailCondition || ""}
   onChange={handleChange}
   className="w-full border p-2 rounded"
 />
@@ -486,9 +874,11 @@ const RoofSection = ({ section, index, onChange }) => {
   type="text"
   name="tripHazards"
   placeholder="e.g., Loose cable, uneven membrane"
+  value={section.tripHazards || ""}
   onChange={handleChange}
   className="w-full border p-2 rounded"
 />
+
 
 
 

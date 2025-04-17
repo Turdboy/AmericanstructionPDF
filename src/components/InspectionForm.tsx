@@ -7,6 +7,16 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { User } from "firebase/auth"; // Add this if needed
 
+const DEFECT_IMAGE_FIELDS = [
+  "section",
+  "area",
+  "caption",
+  "description",
+  "cause",
+  "impact",
+  "solution",
+];
+
 
 interface InspectionFormProps {
   onSubmit: (data: any) => void;
@@ -21,7 +31,26 @@ const convertToBase64 = (file: File): Promise<string> =>
     reader.onerror = (err) => reject(err);
   });
 
+  const getWordCount = (text: string) => text.trim().split(/\s+/).filter(Boolean).length;
 
+  // Optional: customize limits per field
+  const wordLimits: Record<string, number> = {
+    propertyName: 5,
+    propertyAddress: 5,
+    clientName: 5,
+    clientcontactinfo: 5,
+    inspectionDate: 5,
+    inspectorName: 5,
+    inspectorCompany: 5,
+    inspectorcontactinfo: 5,
+    temperature: 1, // 👈 Add this line
+    
+
+  };
+  DEFECT_IMAGE_FIELDS.forEach((field) => {
+    wordLimits[field] = 14;
+  });
+  
 
   const InspectionForm: React.FC<InspectionFormProps> = ({ onSubmit }) => {
 
@@ -30,8 +59,8 @@ const convertToBase64 = (file: File): Promise<string> =>
         // Property Details
         propertyName: '',
         propertyAddress: '',
-        clientname:'first and last',
-        clientcontactinfo: 'phone number / email',
+        clientname:'',
+        clientcontactinfo: '',
         inspectionDate: '',
         inspectorName: '',
         inspectorCompany: '',
@@ -170,11 +199,19 @@ roofSquareFootage: '',
     
     const handleChange = (e) => {
       const { name, value } = e.target;
+      const wordLimit = wordLimits[name];
+    
+      // Prevent typing if word count is over the limit
+      if (wordLimit && getWordCount(value) > wordLimit) {
+        return; // Block input
+      }
+    
       setFormData((prevData) => ({
         ...prevData,
         [name]: value,
       }));
     };
+    
 
     
     const uploadImagesAndGetUrls = async (images: any[], folder: string) => {
@@ -334,8 +371,7 @@ roofSquareFootage: '',
 
 
                 {/* Photos Section */}
-<h3 className="text-lg font-bold">Upload Defect Photos (Keep Defect Text Boxes Brief)</h3>
-
+<h3 className="text-lg font-bold">Upload Defect Photos</h3>
 
 {/* Upload Defect (General) Photos */}
 <div className="border-2 border-dashed p-4 rounded-lg text-center cursor-pointer mt-2">
@@ -363,18 +399,23 @@ roofSquareFootage: '',
             alt={`Upload ${index + 1}`}
             className="w-full h-48 object-cover rounded"
           />
+
           <div className="mt-2 space-y-1">
-            {["section", "area", "caption", "description", "cause", "impact", "solution"].map((field) => (
-              <React.Fragment key={field}>
+            {DEFECT_IMAGE_FIELDS.map((field) => (
+              <div key={field} className="mb-2">
                 {field === "caption" ? (
                   <input
                     type="text"
                     placeholder="Caption"
                     value={image[field] || ""}
                     onChange={(e) => {
-                      const updatedImages = [...formData.images];
-                      updatedImages[index][field] = e.target.value;
-                      setFormData({ ...formData, images: updatedImages });
+                      const value = e.target.value;
+                      const limit = wordLimits[field];
+                      if (limit && getWordCount(value) > limit) return;
+
+                      const imgs = [...formData.images];
+                      imgs[index][field] = value;
+                      setFormData({ ...formData, images: imgs });
                     }}
                     className="w-full border p-1 rounded"
                   />
@@ -383,16 +424,24 @@ roofSquareFootage: '',
                     placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
                     value={image[field] || ""}
                     onChange={(e) => {
-                      const updatedImages = [...formData.images];
-                      updatedImages[index][field] = e.target.value;
-                      setFormData({ ...formData, images: updatedImages });
+                      const value = e.target.value;
+                      const limit = wordLimits[field];
+                      if (limit && getWordCount(value) > limit) return;
+
+                      const imgs = [...formData.images];
+                      imgs[index][field] = value;
+                      setFormData({ ...formData, images: imgs });
                     }}
                     className="w-full border p-1 rounded"
                   />
                 )}
-              </React.Fragment>
+                <p className="text-xs text-gray-500 mt-1">
+                  {getWordCount(image[field] || "")} / {wordLimits[field]} words
+                </p>
+              </div>
             ))}
           </div>
+
           <button
             className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1"
             onClick={() => {
@@ -409,6 +458,9 @@ roofSquareFootage: '',
 )}
 
 
+
+
+{/* Upload Overview Photos */}
 <h3 className="text-lg font-bold mt-6">Upload Overview Photos</h3>
 <div className="border-2 border-dashed p-4 rounded-lg text-center cursor-pointer">
   <input
@@ -424,7 +476,7 @@ roofSquareFootage: '',
   </label>
 </div>
 
-{formData.overviewImages && formData.overviewImages.length > 0 && (
+{formData.overviewImages?.length > 0 && (
   <div className="mt-4">
     <h4 className="text-md font-semibold mb-2">Overview Pictures</h4>
     <div className="grid grid-cols-2 gap-4">
@@ -435,18 +487,23 @@ roofSquareFootage: '',
             alt={`Overview ${index + 1}`}
             className="w-full h-48 object-cover rounded"
           />
+
           <div className="mt-2 space-y-1">
-          {["section", "area", "caption"].map((field) => (
-              <React.Fragment key={field}>
+            {["section", "area", "caption"].map((field) => (
+              <div key={field} className="mb-2">
                 {field === "caption" ? (
                   <input
                     type="text"
                     placeholder="Caption"
                     value={image[field] || ""}
                     onChange={(e) => {
-                      const updatedImages = [...formData.overviewImages];
-                      updatedImages[index][field] = e.target.value;
-                      setFormData({ ...formData, overviewImages: updatedImages });
+                      const value = e.target.value;
+                      // 30‑word guard
+                      if (getWordCount(value) > 30) return;
+
+                      const imgs = [...formData.overviewImages];
+                      imgs[index][field] = value;
+                      setFormData({ ...formData, overviewImages: imgs });
                     }}
                     className="w-full border p-1 rounded"
                   />
@@ -455,16 +512,23 @@ roofSquareFootage: '',
                     placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
                     value={image[field] || ""}
                     onChange={(e) => {
-                      const updatedImages = [...formData.overviewImages];
-                      updatedImages[index][field] = e.target.value;
-                      setFormData({ ...formData, overviewImages: updatedImages });
+                      const value = e.target.value;
+                      if (getWordCount(value) > 30) return;
+
+                      const imgs = [...formData.overviewImages];
+                      imgs[index][field] = value;
+                      setFormData({ ...formData, overviewImages: imgs });
                     }}
                     className="w-full border p-1 rounded"
                   />
                 )}
-              </React.Fragment>
+                <p className="text-xs text-gray-500 mt-1">
+                  {getWordCount(image[field] || "")} / 30 words
+                </p>
+              </div>
             ))}
           </div>
+
           <button
             className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1"
             onClick={() => {
@@ -481,6 +545,13 @@ roofSquareFootage: '',
 )}
 
 
+
+
+
+
+
+
+{/* Upload Drone Overview Photos */}
 <h3 className="text-lg font-bold mt-6">Upload Drone Overview Photos</h3>
 <div className="border-2 border-dashed p-4 rounded-lg text-center cursor-pointer">
   <input
@@ -496,7 +567,7 @@ roofSquareFootage: '',
   </label>
 </div>
 
-{formData.droneImages && formData.droneImages.length > 0 && (
+{formData.droneImages?.length > 0 && (
   <div className="mt-4">
     <h4 className="text-md font-semibold mb-2">Drone Overview Pictures</h4>
     <div className="grid grid-cols-2 gap-4">
@@ -507,18 +578,22 @@ roofSquareFootage: '',
             alt={`Drone ${index + 1}`}
             className="w-full h-48 object-cover rounded"
           />
+
           <div className="mt-2 space-y-1">
-          {["section", "area", "caption", "description"].map((field) => (
-              <React.Fragment key={field}>
+            {["section", "area", "caption", "description"].map((field) => (
+              <div key={field} className="mb-2">
                 {field === "caption" ? (
                   <input
                     type="text"
                     placeholder="Caption"
                     value={image[field] || ""}
                     onChange={(e) => {
-                      const updatedImages = [...formData.droneImages];
-                      updatedImages[index][field] = e.target.value;
-                      setFormData({ ...formData, droneImages: updatedImages });
+                      const value = e.target.value;
+                      if (getWordCount(value) > 30) return;
+
+                      const imgs = [...formData.droneImages];
+                      imgs[index][field] = value;
+                      setFormData({ ...formData, droneImages: imgs });
                     }}
                     className="w-full border p-1 rounded"
                   />
@@ -527,16 +602,23 @@ roofSquareFootage: '',
                     placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
                     value={image[field] || ""}
                     onChange={(e) => {
-                      const updatedImages = [...formData.droneImages];
-                      updatedImages[index][field] = e.target.value;
-                      setFormData({ ...formData, droneImages: updatedImages });
+                      const value = e.target.value;
+                      if (getWordCount(value) > 30) return;
+
+                      const imgs = [...formData.droneImages];
+                      imgs[index][field] = value;
+                      setFormData({ ...formData, droneImages: imgs });
                     }}
                     className="w-full border p-1 rounded"
                   />
                 )}
-              </React.Fragment>
+                <p className="text-xs text-gray-500 mt-1">
+                  {getWordCount(image[field] || "")} / 30 words
+                </p>
+              </div>
             ))}
           </div>
+
           <button
             className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1"
             onClick={() => {
@@ -557,30 +639,123 @@ roofSquareFootage: '',
 
 
 
+
+
+
+
+
+
+
+
+
+
                 
                 {/* Property Details Section */}
-                <h3 className="text-lg font-bold">Property Details</h3>
-                <input type="text" name="propertyName" placeholder="Property Name" onChange={handleChange} className="w-full border p-2 rounded" />
-                <input type="text" name="propertyAddress" placeholder="Property Address" onChange={handleChange} className="w-full border p-2 rounded" />
-                <input 
-    type="text" 
-    name="clientName" 
-    placeholder="Client First and Last Name"
-    onChange={handleChange} 
-    className="w-full border p-2 rounded" 
-/>
 
-<input 
-    type="text" 
-    name="clientcontactinfo"
-    placeholder="Client Contact Info"
-    onChange={handleChange} 
-    className="w-full border p-2 rounded" 
+
+
+                <h3 className="text-lg font-bold">Property Details</h3>
+
+<input
+  type="text"
+  name="propertyName"
+  placeholder="Property Name"
+  value={formData.propertyName}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
 />
-                <input type="date" name="inspectionDate" onChange={handleChange} className="w-full border p-2 rounded" />
-                <input type="text" name="inspectorName" placeholder="Inspector Name" onChange={handleChange} className="w-full border p-2 rounded" />
-                <input type="text" name="inspectorCompany" placeholder="Inspector Company" onChange={handleChange} className="w-full border p-2 rounded" />
-                <input type="text" name="inspectorcontactinfo"  placeholder="Inspector contact info"onChange={handleChange} className="w-full border p-2 rounded" />
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(formData.propertyName)} / {wordLimits.propertyName} words
+</p>
+
+<input
+  type="text"
+  name="propertyAddress"
+  placeholder="Property Address"
+  value={formData.propertyAddress}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(formData.propertyAddress)} / {wordLimits.propertyAddress} words
+</p>
+
+<input
+  type="text"
+  name="clientname"
+  placeholder="Client First and Last Name"
+  value={formData.clientname}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(formData.clientname)} / {wordLimits.clientName} words
+</p>
+
+<input
+  type="text"
+  name="clientcontactinfo"
+  placeholder="Client Contact Info"
+  value={formData.clientcontactinfo}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(formData.clientcontactinfo)} / {wordLimits.clientcontactinfo} words
+</p>
+
+<input
+  type="date"
+  name="inspectionDate"
+  value={formData.inspectionDate}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(formData.inspectionDate)} / {wordLimits.inspectionDate} words
+</p>
+
+<input
+  type="text"
+  name="inspectorName"
+  placeholder="Inspector Name"
+  value={formData.inspectorName}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(formData.inspectorName)} / {wordLimits.inspectorName} words
+</p>
+
+<input
+  type="text"
+  name="inspectorCompany"
+  placeholder="Inspector Company"
+  value={formData.inspectorCompany}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(formData.inspectorCompany)} / {wordLimits.inspectorCompany} words
+</p>
+
+<input
+  type="text"
+  name="inspectorcontactinfo"
+  placeholder="Inspector contact info"
+  value={formData.inspectorcontactinfo}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(formData.inspectorcontactinfo)} / {wordLimits.inspectorcontactinfo} words
+</p>
+
+
+
+
+
+
                 {/* Weather Conditions */}
                 <h3 className="text-lg font-bold">Weather Conditions</h3>
                 <select name="weatherCondition" onChange={handleChange} className="w-full border p-2 rounded">
@@ -590,7 +765,18 @@ roofSquareFootage: '',
                     <option value="Rainy">Rainy</option>
                     <option value="Snowy">Snowy</option>
                 </select>
-                <input type="text" name="temperature" placeholder="Temperature (°F)" onChange={handleChange} className="w-full border p-2 rounded" />
+                <input
+  type="text"
+  name="temperature"
+  placeholder="Temperature (°F)"
+  value={formData.temperature}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(formData.temperature)} / {wordLimits.temperature} word
+</p>
+
                 
 
                 

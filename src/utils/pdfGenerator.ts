@@ -13,6 +13,10 @@ import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 pdfMake.vfs = pdfFonts.vfs;
 
+export const countWords = (text: string) =>
+  text?.trim().split(/\s+/).filter(Boolean).length || 0;
+
+
 const chunkImages = (images, size = 2) => {
   const validImages = (images || []).filter(img => img && img.base64);
   const chunks = [];
@@ -801,25 +805,44 @@ const createSummaryPage = (sectionNumber, sectionData, pageNumber) => ({
 
 
     
+// === Section Mini Summary Table (Improved Format) ===
+{
+  table: {
+    widths: ["40%", "*"],
+    body: [
+      [
+        { text: "Section Name", bold: true },
+        sectionData?.sectionName || `Section ${sectionNumber}`
+      ],
+      [
+        { text: "Section Material", bold: true },
+        sectionData?.roofMaterial || "N/A"
+      ],
+      [
+        { text: "Overall Condition", bold: true },
+        sectionData?.overallCondition || "N/A"
+      ],
+      [
+        { text: "Section Age (approx.)", bold: true },
+        sectionData?.sectionAge || "N/A"
+      ],
+      [
+        { text: "Section Square Footage", bold: true },
+        safeText(
+          sectionData.roofSquareFootage ??
+          (sectionData.roofLength || 0) * (sectionData.roofWidth || 0)
+        ).text
+      ]
+    ]
+  },
+  layout: "lightHorizontalLines",
+  margin: [0, 10, 0, 30]
+},
 
-    // === Section Mini Summary Table ===
-    {
-      table: {
-        widths: ["40%", "*"],
-        body: [
-          [
-            [{ text: sectionData?.sectionName || `Section ${sectionNumber}`, bold: true }],
-            ["Section Square Footage", safeText(sectionData.roofSquareFootage ?? (sectionData.roofLength * sectionData.roofWidth))]
-          ],
-          
-          [{ text: "Section Material", bold: true }, sectionData?.roofMaterial || "N/A"],
-          [{ text: "Overall Condition", bold: true }, sectionData?.overallCondition || "N/A"],
-          [{ text: "Section Age (approx.)", bold: true }, sectionData?.roofAge || "N/A"]
-        ]
-      },
-      layout: "lightHorizontalLines",
-      margin: [0, 10, 0, 30]
-    },
+
+
+
+
     // === Core Sample Description ===
     {
       text: "Core Sample Description",
@@ -2340,7 +2363,6 @@ margin: [0, 0, 0, 8]
 
 
 
-// Roof Summary Overview 
 
 // Roof Summary Overview 
 docDefinition.content.push({
@@ -2361,8 +2383,9 @@ docDefinition.content.push({
             { text: "Square Footage", bold: true }
           ],
           ...roofSections.map((section, i) => [
-            "Section " + (i + 1),
-            section.roofMaterial || "N/A",
+            section.sectionName || `Section ${i + 1}`,
+
+            section.membraneMaterial || "N/A",
             section.overallCondition || "N/A",
             section.roofSquareFootage ||
               ((section.roofLength || 0) * (section.roofWidth || 0)) ||
