@@ -180,30 +180,24 @@ roofSquareFootage: '',
 
 
     useEffect(() => {
-      const storedEstimate = localStorage.getItem("pushedFinalEstimate");
-if (storedEstimate) {
-  setFinalEstimate(parseFloat(storedEstimate));
-  localStorage.removeItem("pushedFinalEstimate"); // optional cleanup
-}
-
       const saved = localStorage.getItem("activeInspectionDraft");
       if (saved) {
         const parsed = JSON.parse(saved);
-        
-        // Only update if values exist
-        setFormData((prev) => ({
-          ...prev,
-          ...parsed,
-        }));
-    
-        if (parsed.roofSections && parsed.roofSections.length > 0) {
+        setFormData((prev) => ({ ...prev, ...parsed }));
+        if (parsed.roofSections?.length > 0) {
           setRoofSections(parsed.roofSections);
         }
-    
-        // Optional: Clear the draft after loading
         localStorage.removeItem("activeInspectionDraft");
       }
+    
+      // ✅ Load final estimate from localStorage
+      const estimateFromStorage = localStorage.getItem("finalEstimate");
+      if (estimateFromStorage) {
+        const parsedEstimate = Number(JSON.parse(estimateFromStorage));
+        setFinalEstimate(parsedEstimate);
+      }
     }, []);
+    
     
 
     

@@ -106,14 +106,16 @@ const EstimatorPage = () => {
     </div>
 
     <button
-      onClick={() => {
-        localStorage.setItem("pushedFinalEstimate", finalEstimate.toString());
-        window.location.href = "/inspection"; // 🔁 Change route as needed
-      }}
-      className="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition"
-    >
-      Push to Inspection Form
-    </button>
+  onClick={() => {
+    if (finalEstimate !== null) {
+      localStorage.setItem("finalEstimate", JSON.stringify(finalEstimate));
+      window.location.href = "/inspection";
+    }
+  }}
+  className="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition"
+>
+  Push to Inspection Form
+</button>
   </>
 )}
 
