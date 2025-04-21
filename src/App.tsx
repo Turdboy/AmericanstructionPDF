@@ -13,6 +13,8 @@ import EditProposalPage from "./components/EditProposalPage";
 import LoginPage from "./components/LoginPage";
 import CreateAccountPage from "./components/CreateAccountPage";
 import AccountPage from "./components/AccountPage"; // Add this at the top
+import EstimatorPage from "./components/EstimatorPage";
+
 
 
 
@@ -56,6 +58,12 @@ function App() {
   >
     Edit Proposal Format
   </Link>
+  <Link
+  to="/estimator"
+  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
+>
+  Estimate Calculator
+</Link>
 </div>
 
     <div>
@@ -65,6 +73,9 @@ function App() {
       >
         Account
       </Link>
+
+
+
     </div>
   </div>
 </header>
@@ -80,6 +91,8 @@ function App() {
             <Route path="/projects/:id" element={<ProjectAnalysisPage />} />
             <Route path="/projects/:id/report" element={<ProjectReportPage />} />
             <Route path="/revisit" element={<RevisitPage />} />
+            <Route path="/estimator" element={<EstimatorPage />} />
+
             <Route path="/edit-proposal" element={<EditProposalPage />} />
 
 

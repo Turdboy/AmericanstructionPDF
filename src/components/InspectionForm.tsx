@@ -136,6 +136,10 @@ roofSquareFootage: '',
       }
     ]);
 
+
+
+    const [finalEstimate, setFinalEstimate] = useState<number | null>(null);
+
     const emptyRoofSection = {
 
       sectionName: '',
@@ -176,6 +180,12 @@ roofSquareFootage: '',
 
 
     useEffect(() => {
+      const storedEstimate = localStorage.getItem("pushedFinalEstimate");
+if (storedEstimate) {
+  setFinalEstimate(parseFloat(storedEstimate));
+  localStorage.removeItem("pushedFinalEstimate"); // optional cleanup
+}
+
       const saved = localStorage.getItem("activeInspectionDraft");
       if (saved) {
         const parsed = JSON.parse(saved);
@@ -245,7 +255,7 @@ roofSquareFootage: '',
       onSubmit(completeFormData);
     
       // 🔵 Then generate the PDF as usual
-      generatePDF(completeFormData);
+      generatePDF({ ...completeFormData, finalEstimate });
     };
     
     
@@ -367,6 +377,14 @@ roofSquareFootage: '',
 
 
 
+
+
+
+            {finalEstimate !== null && (
+  <div className="bg-yellow-100 border border-yellow-400 text-yellow-800 px-4 py-3 rounded relative mb-4">
+    💡 Final pricing estimate loaded from spreadsheet: <strong>${finalEstimate.toLocaleString()}</strong>
+  </div>
+)}
 
 
 

@@ -2587,6 +2587,85 @@ roofSections.forEach((section, index) => {
 });
 
 
+const finalPageNumber =
+  6 + // first 6 pages before images
+  imagePages.length +
+  overviewPages.length +
+  droneImages.length +
+  1 + // roof condition summary overview
+  roofSections.length * 6 +
+  1; // final pricing page itself
+
+
+
+
+// ================= FINAL PRICING SUMMARY PAGE =================
+docDefinition.content.push({
+  pageBreak: "before",
+  stack: [
+    ...createStandardHeader("Final Pricing Summary"),
+
+    {
+      text: "Executive Pricing Summary",
+      fontSize: 18,
+      bold: true,
+      margin: [0, 40, 0, 20]
+    },
+
+    {
+      table: {
+        widths: ["60%", "*"],
+        body: [
+          [
+            { text: "Total Estimate for Scope of Work", bold: true, fontSize: 14 },
+            {
+              text:
+  formData.finalEstimate !== null && formData.finalEstimate !== undefined
+    ? `$${Number(formData.finalEstimate).toLocaleString()}`
+    : "N/A",
+
+              fontSize: 14,
+              bold: true,
+              color: "#2e3192"
+            }
+          ]
+        ]
+      },
+      layout: "lightHorizontalLines",
+      margin: [0, 0, 0, 50]
+    },
+
+    {
+      text: "* This pricing is based on information available at the time of inspection. Any unforeseen conditions may result in pricing adjustments.",
+      italics: true,
+      fontSize: 10,
+      margin: [0, 0, 0, 30]
+    },
+
+    // Footer
+    {
+      canvas: [
+        { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
+        { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
+      ],
+      absolutePosition: { x: 0, y: 755 }
+    },
+    {
+      columns: [
+        { text: "", width: "*" },
+        {
+          text: "Page " + finalPageNumber,
+
+          fontSize: 10,
+          alignment: "right",
+          margin: [0, 10, 40, 0],
+          color: "white"
+        }
+      ],
+      absolutePosition: { x: 0, y: 760 }
+    }
+  ]
+});
 
 
 
