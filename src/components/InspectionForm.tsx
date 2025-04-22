@@ -7,6 +7,12 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { User } from "firebase/auth"; // Add this if needed
 import { getDocs, query, orderBy, limit } from "firebase/firestore";
+import * as XLSX from "xlsx";
+
+
+
+
+
 
 
 const DEFECT_IMAGE_FIELDS = [
@@ -58,6 +64,8 @@ const convertToBase64 = (file: File): Promise<string> =>
 
     // State to store form data
     const [formData, setFormData] = useState({
+
+      
         // Property Details
         propertyName: '',
         propertyAddress: '',
@@ -77,6 +85,11 @@ const convertToBase64 = (file: File): Promise<string> =>
         roofAge: '',
         
     });
+
+
+    const [tableData, setTableData] = useState<any[][]>([]);
+const [showPrice, setShowPrice] = useState(false);
+
 
     const handleRoofSectionChange = (index, updatedSection) => {
       const updatedSections = [...roofSections];
@@ -142,6 +155,10 @@ roofSquareFootage: '',
 
     const [finalEstimate, setFinalEstimate] = useState<number | null>(null);
 
+
+
+    
+
     const emptyRoofSection = {
 
       sectionName: '',
@@ -191,28 +208,7 @@ roofSquareFootage: '',
         }
         localStorage.removeItem("activeInspectionDraft");
       }
-    
-      const fetchFinalEstimate = async () => {
-        try {
-          const q = query(collection(db, "estimates"), orderBy("createdAt", "desc"), limit(1));
-          const snapshot = await getDocs(q);
-    
-          if (!snapshot.empty) {
-            const latest = snapshot.docs[0].data();
-            if (latest.value) {
-              setFinalEstimate(latest.value);
-            } else {
-              console.warn("Estimate found but no 'value' field.");
-            }
-          } else {
-            console.warn("No estimates found in Firestore.");
-          }
-        } catch (err) {
-          console.error("Error fetching estimate from Firestore:", err);
-        }
-      };
-    
-      fetchFinalEstimate();
+
     }, []); // ✅ This closes the useEffect
     
       
@@ -253,10 +249,48 @@ roofSquareFootage: '',
       return uploaded;
     };
     
+    const handleSpreadsheetUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+    
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        const data = new Uint8Array(event.target?.result as ArrayBuffer);
+        const workbook = XLSX.read(data, { type: "array" });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as any[][];
+    
+        setTableData(jsonData);
+    
+        const estimateCell = worksheet["J35"];
+        if (estimateCell && typeof estimateCell.v === "number") {
+          const final = estimateCell.v;
+          setFinalEstimate(final);
+          localStorage.setItem("finalEstimate", JSON.stringify(final));
+          setShowPrice(false);
+    
+          try {
+            await addDoc(collection(db, "estimates"), {
+              value: final,
+              createdAt: serverTimestamp(),
+            });
+            console.log("✅ Final estimate saved to Firestore:", final);
+          } catch (error) {
+            console.error("❌ Firestore save error:", error);
+          }
+        }
+      };
+    
+      reader.readAsArrayBuffer(file);
+    };
     
 
     const handleSubmit = (e) => {
       e.preventDefault();
+
+
+      
     
       const completeFormData = {
         ...formData,
@@ -390,16 +424,6 @@ roofSquareFootage: '',
 
 
 
-
-
-
-
-
-            {finalEstimate !== null && (
-  <div className="bg-yellow-100 border border-yellow-400 text-yellow-800 px-4 py-3 rounded relative mb-4">
-    💡 Final pricing estimate loaded from spreadsheet: <strong>${finalEstimate.toLocaleString()}</strong>
-  </div>
-)}
 
 
 
@@ -882,6 +906,10 @@ roofSquareFootage: '',
 </select>
 
 
+
+
+
+
 {/* Disclaimer */}
 <p className="text-gray-600 text-sm mt-2">
     <strong>Disclaimer:</strong> This inspection is visual only and does not include destructive (invasive) testing or thermal scans unless otherwise noted.
@@ -890,6 +918,53 @@ roofSquareFootage: '',
 
 
 
+<hr className="my-6" />
+<h3 className="text-lg font-bold">Upload Estimating Spreadsheet</h3>
+
+<input
+  type="file"
+  accept=".xlsx, .xls"
+  onChange={handleSpreadsheetUpload}
+  className="mb-4 block"
+/>
+
+{tableData.length > 0 && (
+  <div className="overflow-auto max-h-[60vh] border rounded">
+    <table className="min-w-full text-sm text-left border-collapse">
+      <tbody>
+        {tableData.map((row, i) => (
+          <tr key={i} className="border-b">
+            {row.map((cell, j) => (
+              <td key={j} className="border px-2 py-1 whitespace-nowrap">
+                {typeof cell === "number" ? cell.toFixed(2) : cell}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+)}
+
+{finalEstimate !== null && !showPrice && (
+  <button
+    onClick={() => setShowPrice(true)}
+    type="button"
+    className="mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded transition"
+  >
+    Generate Final Prices
+  </button>
+)}
+
+{showPrice && finalEstimate !== null && (
+  <div className="mt-4 border border-green-400 bg-green-50 text-green-800 rounded p-4">
+    <h2 className="text-xl font-bold mb-2">Final Estimate Summary</h2>
+    <p className="text-lg">
+      <span className="font-semibold">Final Estimate Total:</span>{" "}
+      ${finalEstimate.toLocaleString()}
+    </p>
+  </div>
+)}
 
 
 
