@@ -95,29 +95,8 @@ const EstimatorPage = () => {
           </p>
         </div>
       )}
-      {showPrice && finalEstimate !== null && (
-  <>
-    <div className="mt-4 border border-green-400 bg-green-50 text-green-800 rounded p-4">
-      <h2 className="text-xl font-bold mb-2">Final Estimate Summary</h2>
-      <p className="text-lg">
-        <span className="font-semibold">Final Estimate Total:</span>{" "}
-        ${finalEstimate.toLocaleString()}
-      </p>
-    </div>
 
-    <button
-  onClick={() => {
-    if (finalEstimate !== null) {
-      localStorage.setItem("finalEstimate", JSON.stringify(finalEstimate));
-      window.location.href = "/inspection";
-    }
-  }}
-  className="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition"
->
-  Push to Inspection Form
-</button>
-  </>
-)}
+
 
     </div>
   );
