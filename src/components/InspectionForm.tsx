@@ -6,6 +6,8 @@ import { db, storage, auth } from "../firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { User } from "firebase/auth"; // Add this if needed
+import { getDocs, query, orderBy, limit } from "firebase/firestore";
+
 
 const DEFECT_IMAGE_FIELDS = [
   "section",
@@ -190,13 +192,32 @@ roofSquareFootage: '',
         localStorage.removeItem("activeInspectionDraft");
       }
     
-      // ✅ Load final estimate from localStorage
-      const estimateFromStorage = localStorage.getItem("finalEstimate");
-      if (estimateFromStorage) {
-        const parsedEstimate = Number(JSON.parse(estimateFromStorage));
-        setFinalEstimate(parsedEstimate);
-      }
-    }, []);
+      const fetchFinalEstimate = async () => {
+        try {
+          const q = query(collection(db, "estimates"), orderBy("createdAt", "desc"), limit(1));
+          const snapshot = await getDocs(q);
+    
+          if (!snapshot.empty) {
+            const latest = snapshot.docs[0].data();
+            if (latest.value) {
+              setFinalEstimate(latest.value);
+            } else {
+              console.warn("Estimate found but no 'value' field.");
+            }
+          } else {
+            console.warn("No estimates found in Firestore.");
+          }
+        } catch (err) {
+          console.error("Error fetching estimate from Firestore:", err);
+        }
+      };
+    
+      fetchFinalEstimate();
+    }, []); // ✅ This closes the useEffect
+    
+      
+
+
     
     
 

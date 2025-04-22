@@ -27,6 +27,8 @@ const EstimatorPage = () => {
       if (estimateCell && typeof estimateCell.v === "number") {
         const final = estimateCell.v;
         setFinalEstimate(final);
+        localStorage.setItem("finalEstimate", JSON.stringify(final));
+
         setShowPrice(false);
 
         try {
