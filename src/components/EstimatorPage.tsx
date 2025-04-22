@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import * as XLSX from "xlsx";
 import { db } from "../firebase";
 import { collection, addDoc } from "firebase/firestore";
+import { serverTimestamp } from "firebase/firestore";
 
 const EstimatorPage = () => {
   const [tableData, setTableData] = useState<any[][]>([]);
@@ -34,7 +35,7 @@ const EstimatorPage = () => {
         try {
           await addDoc(collection(db, "estimates"), {
             value: final,
-            createdAt: new Date().toISOString()
+            createdAt: serverTimestamp()  // 🔥 Proper Firestore timestamp
           });
           console.log("✅ Final estimate saved to Firestore:", final);
         } catch (error) {
