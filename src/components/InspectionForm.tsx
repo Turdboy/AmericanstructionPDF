@@ -8,6 +8,9 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { User } from "firebase/auth"; // Add this if needed
 import { getDocs, query, orderBy, limit } from "firebase/firestore";
 import * as XLSX from "xlsx";
+import { useLocation } from "react-router-dom";
+
+
 
 
 
@@ -29,6 +32,24 @@ const DEFECT_IMAGE_FIELDS = [
 interface InspectionFormProps {
   onSubmit: (data: any) => void;
 }
+
+
+const uploadImagesAndGetDownloadUrls = async (images, folder) => {
+  const uploaded = [];
+  for (const img of images) {
+    if (!img.base64) continue;
+
+    const blob = await fetch(img.base64).then((res) => res.blob());
+    const filename = `${Date.now()}-${Math.random().toString(36).substring(2)}.jpg`;
+    const storageRef = ref(storage, `${folder}/${filename}`);
+
+    await uploadBytes(storageRef, blob);
+    const url = await getDownloadURL(storageRef);
+
+    uploaded.push({ ...img, url });
+  }
+  return uploaded;
+};
 
 
 const convertToBase64 = (file: File): Promise<string> =>
@@ -61,6 +82,8 @@ const convertToBase64 = (file: File): Promise<string> =>
   
 
   const InspectionForm: React.FC<InspectionFormProps> = ({ onSubmit }) => {
+    const location = useLocation();
+
 
     // State to store form data
     const [formData, setFormData] = useState({
@@ -199,17 +222,37 @@ roofSquareFootage: '',
 
 
     useEffect(() => {
-      const saved = localStorage.getItem("activeInspectionDraft");
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        setFormData((prev) => ({ ...prev, ...parsed }));
-        if (parsed.roofSections?.length > 0) {
-          setRoofSections(parsed.roofSections);
-        }
-        localStorage.removeItem("activeInspectionDraft");
+      if (location.state?.data) {
+        const { formData: savedFormData, roofSections: savedRoofSections } = location.state.data;
+    
+        setFormData((prev) => ({ ...prev, ...savedFormData }));
+        setRoofSections(savedRoofSections || []);
+        console.log("✅ Inspection draft loaded from resume:", location.state.data);
       }
-
-    }, []); // ✅ This closes the useEffect
+    
+      const fetchFinalEstimate = async () => {
+        try {
+          const q = query(collection(db, "estimates"), orderBy("createdAt", "desc"), limit(1));
+          const snapshot = await getDocs(q);
+    
+          if (!snapshot.empty) {
+            const latest = snapshot.docs[0].data();
+            if (latest.value) {
+              setFinalEstimate(latest.value);
+            } else {
+              console.warn("Estimate found but no 'value' field.");
+            }
+          } else {
+            console.warn("No estimates found in Firestore.");
+          }
+        } catch (err) {
+          console.error("Error fetching estimate from Firestore:", err);
+        }
+      };
+    
+      fetchFinalEstimate();
+    }, [location.state]);
+    
     
       
 
@@ -235,19 +278,7 @@ roofSquareFootage: '',
     
 
     
-    const uploadImagesAndGetUrls = async (images: any[], folder: string) => {
-      const uploaded = [];
-      for (const image of images) {
-        const response = await fetch(image.url); // get image blob
-        const blob = await response.blob();
-        const filename = `${Date.now()}-${Math.random().toString(36).substring(2)}.jpg`;
-        const imageRef = ref(storage, `${folder}/${filename}`);
-        await uploadBytes(imageRef, blob);
-        const url = await getDownloadURL(imageRef);
-        uploaded.push({ ...image, url }); // keep other fields (caption, etc.)
-      }
-      return uploaded;
-    };
+  
     
     const handleSpreadsheetUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
@@ -970,8 +1001,53 @@ roofSquareFootage: '',
 
 
                 
-                {/* Submit Button */}
-                <button type="submit" className="bg-blue-500 text-white p-2 rounded w-full">Submit Inspection</button>
+                {/* Submit and Save Buttons */}
+<div className="flex justify-between mt-6">
+  <button
+    type="submit"
+    className="bg-blue-500 text-white p-2 rounded w-[48%]"
+  >
+    Submit Inspection
+  </button>
+
+  <button
+    type="button"
+    onClick={async () => {
+      const user = auth.currentUser;
+      if (!user) return alert("Must be logged in to save drafts.");
+    
+      try {
+        // Upload images to Firebase Storage and get download URLs
+        const [defectUrls, overviewUrls, droneUrls] = await Promise.all([
+          uploadImagesAndGetDownloadUrls(formData.images || [], "defect"),
+          uploadImagesAndGetDownloadUrls(formData.overviewImages || [], "overview"),
+          uploadImagesAndGetDownloadUrls(formData.droneImages || [], "drone"),
+        ]);
+    
+        const inspection = {
+          userId: user.uid,
+          formData,
+          roofSections,
+          images: defectUrls,
+          overviewImages: overviewUrls,
+          droneImages: droneUrls,
+          timestamp: serverTimestamp(),
+        };
+    
+        await addDoc(collection(db, "inspections"), inspection);
+        alert("Draft saved with images!");
+      } catch (error) {
+        console.error("❌ Error saving with images:", error);
+        alert("Failed to save draft.");
+      }
+    }}
+    
+    className="bg-black text-white p-2 rounded w-[48%]"
+  >
+    Save Draft
+  </button>
+</div>
+
             </form>
         </div>
     );
