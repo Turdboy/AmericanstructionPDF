@@ -37,7 +37,7 @@ function App() {
     to="/revisit"
     className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
   >
-    Home
+    Revisit Inspections
   </Link>
   <Link
     to="/inspection"
@@ -45,12 +45,7 @@ function App() {
   >
     Start Inspection
   </Link>
-  <Link
-    to="/edit-proposal"
-    className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
-  >
-    Edit Proposal Format
-  </Link>
+
   <Link
     to="/estimator"
     className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
@@ -58,12 +53,7 @@ function App() {
     Estimate Calculator
   </Link>
 </div>
-<Link
-  to="/revisit"
-  className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
->
-  Revisit Inspections
-</Link>
+
 
 <div>
   <Link
