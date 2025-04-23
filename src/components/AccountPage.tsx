@@ -13,12 +13,12 @@ const AccountPage = () => {
       if (user) {
         setUserData(user);
       } else {
-        navigate("/"); // redirect to login if not logged in
+        navigate("/create-account");
       }
     });
 
     return () => unsubscribe();
-  }, [navigate]);
+  }, [navigate]); // ✅ Only one useEffect here
 
   const handleLogout = async () => {
     await auth.signOut();

@@ -17,6 +17,7 @@ import LandingPage from "./components/LandingPage";
 import SavedInspectionPage from "./components/SavedInspectionPage";
 
 
+
 function MainPage() {
   return (
     <div className="flex flex-col items-center space-y-4 min-h-[60vh]"></div>
@@ -33,6 +34,12 @@ function App() {
 
           <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex space-x-4">
+          <Link
+                to="/"
+                className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
+              >
+                Home
+              </Link>
   <Link
     to="/revisit"
     className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
@@ -69,51 +76,39 @@ function App() {
 
         {/* Routes */}
         <Routes>
-          {/* 🖤 Hero Landing */}
-          <Route path="/" element={<LandingPage />} />
-
-          {/* 📦 Remaining App Pages */}
-          <Route
-            path="*"
-            element={
-              <main className="container mx-auto px-4 py-8">
-                <Routes>
-                  <Route path="/loginPage" element={<LoginPage />} />
-                  <Route path="/account" element={<AccountPage />} />
-                  <Route path="/create-account" element={<CreateAccountPage />} />
-                  <Route path="/projects" element={<ProjectsPage />} />
-                  <Route path="/projects/:id" element={<ProjectAnalysisPage />} />
-                  <Route path="/projects/:id/report" element={<ProjectReportPage />} />
-                  <Route path="/revisit" element={<SavedInspectionPage />} />
-                  <Route path="/estimator" element={<EstimatorPage />} />
-                  <Route path="/edit-proposal" element={<EditProposalPage />} />
-                  <Route
-                    path="/inspection"
-                    element={
-                      <InspectionForm
-                        onSubmit={(data) => {
-                          const existing = JSON.parse(localStorage.getItem("savedInspections") || "[]");
-                          const { images, overviewImages, droneImages, ...textOnlyData } = data;
-                          const newInspection = {
-                            ...textOnlyData,
-                            id: crypto.randomUUID(),
-                            date: new Date().toISOString(),
-                          };
-                          localStorage.setItem(
-                            "savedInspections",
-                            JSON.stringify([newInspection, ...existing])
-                          );
-                          console.log("📝 Saved inspection (text only):", newInspection);
-                        }}
-                      />
-                    }
-                  />
-                  <Route path="/v1/*" element={<MainPage />} />
-                </Routes>
-              </main>
-            }
-          />
-        </Routes>
+  <Route path="/" element={<LandingPage />} />
+  <Route path="/loginPage" element={<LoginPage />} />
+  <Route path="/account" element={<AccountPage />} />
+  <Route path="/create-account" element={<CreateAccountPage />} />
+  <Route path="/projects" element={<ProjectsPage />} />
+  <Route path="/projects/:id" element={<ProjectAnalysisPage />} />
+  <Route path="/projects/:id/report" element={<ProjectReportPage />} />
+  <Route path="/revisit" element={<SavedInspectionPage />} />
+  <Route path="/estimator" element={<EstimatorPage />} />
+  <Route path="/edit-proposal" element={<EditProposalPage />} />
+  <Route
+    path="/inspection"
+    element={
+      <InspectionForm
+        onSubmit={(data) => {
+          const existing = JSON.parse(localStorage.getItem("savedInspections") || "[]");
+          const { images, overviewImages, droneImages, ...textOnlyData } = data;
+          const newInspection = {
+            ...textOnlyData,
+            id: crypto.randomUUID(),
+            date: new Date().toISOString(),
+          };
+          localStorage.setItem(
+            "savedInspections",
+            JSON.stringify([newInspection, ...existing])
+          );
+          console.log("📝 Saved inspection (text only):", newInspection);
+        }}
+      />
+    }
+  />
+  <Route path="/v1/*" element={<MainPage />} />
+</Routes>
       </div>
     </Router>
   );
