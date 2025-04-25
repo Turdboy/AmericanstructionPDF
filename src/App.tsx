@@ -15,6 +15,8 @@ import AccountPage from "./components/AccountPage";
 import EstimatorPage from "./components/EstimatorPage";
 import LandingPage from "./components/LandingPage";
 import SavedInspectionPage from "./components/SavedInspectionPage";
+import AuthGatewayPage from "./components/AuthGatewayPage";
+
 
 
 
@@ -76,39 +78,40 @@ function App() {
 
         {/* Routes */}
         <Routes>
+  {/* 🌟 Landing/Home */}
   <Route path="/" element={<LandingPage />} />
-  <Route path="/loginPage" element={<LoginPage />} />
-  <Route path="/account" element={<AccountPage />} />
+
+  {/* 🔐 Authentication */}
+  <Route path="/account" element={<AuthGatewayPage />} />
+  <Route path="/login" element={<LoginPage />} />
   <Route path="/create-account" element={<CreateAccountPage />} />
+
+  {/* ✅ Protected (after login) */}
   <Route path="/projects" element={<ProjectsPage />} />
   <Route path="/projects/:id" element={<ProjectAnalysisPage />} />
   <Route path="/projects/:id/report" element={<ProjectReportPage />} />
-  <Route path="/revisit" element={<SavedInspectionPage />} />
-  <Route path="/estimator" element={<EstimatorPage />} />
+  <Route path="/inspection" element={
+    <InspectionForm
+      onSubmit={(data) => {
+        const existing = JSON.parse(localStorage.getItem("savedInspections") || "[]");
+        const { images, overviewImages, droneImages, ...textOnlyData } = data;
+        const newInspection = {
+          ...textOnlyData,
+          id: crypto.randomUUID(),
+          date: new Date().toISOString(),
+        };
+        localStorage.setItem("savedInspections", JSON.stringify([newInspection, ...existing]));
+        console.log("📝 Saved inspection (text only):", newInspection);
+      }}
+    />
+  } />
   <Route path="/edit-proposal" element={<EditProposalPage />} />
-  <Route
-    path="/inspection"
-    element={
-      <InspectionForm
-        onSubmit={(data) => {
-          const existing = JSON.parse(localStorage.getItem("savedInspections") || "[]");
-          const { images, overviewImages, droneImages, ...textOnlyData } = data;
-          const newInspection = {
-            ...textOnlyData,
-            id: crypto.randomUUID(),
-            date: new Date().toISOString(),
-          };
-          localStorage.setItem(
-            "savedInspections",
-            JSON.stringify([newInspection, ...existing])
-          );
-          console.log("📝 Saved inspection (text only):", newInspection);
-        }}
-      />
-    }
-  />
+  <Route path="/revisit" element={<SavedInspectionPage />} />
+
+  {/* 🛠 Other */}
   <Route path="/v1/*" element={<MainPage />} />
 </Routes>
+
       </div>
     </Router>
   );

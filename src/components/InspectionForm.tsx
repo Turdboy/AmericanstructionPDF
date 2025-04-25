@@ -1,5 +1,6 @@
 
 import { generatePDF } from "../utils/pdfGenerator";
+import { prepareImages } from "../utils/pdfGenerator";
 import RoofSection from './RoofSection';
 import React, { useEffect, useState } from 'react';
 import { db, storage, auth } from "../firebase";
@@ -9,6 +10,11 @@ import { User } from "firebase/auth"; // Add this if needed
 import { getDocs, query, orderBy, limit } from "firebase/firestore";
 import * as XLSX from "xlsx";
 import { useLocation } from "react-router-dom";
+import { saveInspectionDraftToFirestore } from "../services/inspectionService";
+import { fetchImageAsBase64 } from "../utils/pdfGenerator"; // make sure this is imported
+
+
+
 
 
 
@@ -111,7 +117,6 @@ const convertToBase64 = (file: File): Promise<string> =>
 
 
     const [tableData, setTableData] = useState<any[][]>([]);
-const [showPrice, setShowPrice] = useState(false);
 
 
     const handleRoofSectionChange = (index, updatedSection) => {
@@ -179,6 +184,13 @@ roofSquareFootage: '',
     const [finalEstimate, setFinalEstimate] = useState<number | null>(null);
 
 
+    const [spreadsheetUploaded, setSpreadsheetUploaded] = useState(false);
+
+    const [spreadsheetUrl, setSpreadsheetUrl] = useState<string | null>(null);
+
+
+
+
 
     
 
@@ -223,10 +235,77 @@ roofSquareFootage: '',
 
     useEffect(() => {
       if (location.state?.data) {
-        const { formData: savedFormData, roofSections: savedRoofSections } = location.state.data;
+        const {
+          formData: savedFormData,
+          roofSections: savedRoofSections,
+          images = [],
+          overviewImages = [],
+          droneImages = [],
+          spreadsheetUrl: savedSpreadsheetUrl, // ✅ Add this line
+        } = location.state.data;
+      
     
-        setFormData((prev) => ({ ...prev, ...savedFormData }));
-        setRoofSections(savedRoofSections || []);
+        const convert = async (images) =>
+          await Promise.all(
+            images.map(async (img) => ({
+              ...img,
+              url: img.url,
+              base64: await fetchImageAsBase64(img.url),
+            }))
+          );
+    
+        const loadAllImages = async () => {
+          const [defects, overview, drone] = await Promise.all([
+            convert(images),
+            convert(overviewImages),
+            convert(droneImages),
+          ]);
+    
+          setFormData((prev) => ({
+            ...prev,
+            ...savedFormData,
+            images: defects,
+            overviewImages: overview,
+            droneImages: drone,
+          }));
+
+
+
+          if (savedSpreadsheetUrl) {
+            try {
+              const response = await fetch(savedSpreadsheetUrl);
+              const buffer = await response.arrayBuffer();
+              const workbook = XLSX.read(buffer, { type: "array" });
+              const sheet = workbook.Sheets[workbook.SheetNames[0]];
+              const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 }) as any[][];
+              setTableData(jsonData);
+              setSpreadsheetUrl(savedSpreadsheetUrl);
+              setSpreadsheetUploaded(true);
+          
+              const estimateCell = sheet["J35"];
+              if (estimateCell && typeof estimateCell.v === "number") {
+                setFinalEstimate(estimateCell.v);
+              } else if (location.state?.data?.finalEstimate) {
+                setFinalEstimate(location.state.data.finalEstimate); // ✅ fallback
+              }
+            } catch (err) {
+              console.error("❌ Failed to load spreadsheet from URL:", err);
+              if (location.state?.data?.finalEstimate) {
+                setFinalEstimate(location.state.data.finalEstimate); // ✅ fallback
+              }
+            }
+          }
+          
+          
+
+
+
+    
+          setRoofSections(savedRoofSections || []);
+          console.log("📸 Loaded and converted images to base64");
+        };
+    
+        loadAllImages();
         console.log("✅ Inspection draft loaded from resume:", location.state.data);
       }
     
@@ -252,6 +331,8 @@ roofSquareFootage: '',
     
       fetchFinalEstimate();
     }, [location.state]);
+    
+    
     
     
       
@@ -284,6 +365,16 @@ roofSquareFootage: '',
       const file = e.target.files?.[0];
       if (!file) return;
     
+      // Upload the file to Firebase Storage
+      const storageRef = ref(storage, `spreadsheets/${Date.now()}-${file.name}`);
+      await uploadBytes(storageRef, file);
+      const spreadsheetUrl = await getDownloadURL(storageRef);
+      console.log("📁 Uploaded XLSX file URL:", spreadsheetUrl);
+    
+      // Save spreadsheet URL to state so it can be saved to Firestore
+      setSpreadsheetUrl(spreadsheetUrl); // <-- ✅ Add this state if it's not already declared
+    
+      // Read file for display & final estimate
       const reader = new FileReader();
       reader.onload = async (event) => {
         const data = new Uint8Array(event.target?.result as ArrayBuffer);
@@ -298,8 +389,8 @@ roofSquareFootage: '',
         if (estimateCell && typeof estimateCell.v === "number") {
           const final = estimateCell.v;
           setFinalEstimate(final);
+          setSpreadsheetUploaded(true);
           localStorage.setItem("finalEstimate", JSON.stringify(final));
-          setShowPrice(false);
     
           try {
             await addDoc(collection(db, "estimates"), {
@@ -316,12 +407,10 @@ roofSquareFootage: '',
       reader.readAsArrayBuffer(file);
     };
     
+    
 
     const handleSubmit = (e) => {
       e.preventDefault();
-
-
-      
     
       const completeFormData = {
         ...formData,
@@ -331,12 +420,24 @@ roofSquareFootage: '',
         droneImages: formData.droneImages || [],
       };
     
-      // 🔴 Call the onSubmit handler passed down from App.tsx
+      // Determine correct final estimate
+      const isResumedInspection = !!location.state?.data;
+      const finalPriceToUse = isResumedInspection
+        ? location.state.data.finalEstimate ?? null
+        : finalEstimate;
+    
+      console.log("📄 PDF generated using:", {
+        source: isResumedInspection ? "Saved Resume" : "Fresh Upload",
+        finalEstimate: finalPriceToUse,
+      });
+    
+      // 🔴 Call onSubmit (optional)
       onSubmit(completeFormData);
     
-      // 🔵 Then generate the PDF as usual
-      generatePDF({ ...completeFormData, finalEstimate });
+      // 🔵 Generate PDF with correct data
+      generatePDF({ ...completeFormData, finalEstimate: finalPriceToUse });
     };
+    
     
     
     
@@ -977,18 +1078,11 @@ roofSquareFootage: '',
   </div>
 )}
 
-{finalEstimate !== null && !showPrice && (
-  <button
-    onClick={() => setShowPrice(true)}
-    type="button"
-    className="mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded transition"
-  >
-    Generate Final Prices
-  </button>
-)}
 
-{showPrice && finalEstimate !== null && (
+
+{spreadsheetUploaded && finalEstimate !== null && (
   <div className="mt-4 border border-green-400 bg-green-50 text-green-800 rounded p-4">
+
     <h2 className="text-xl font-bold mb-2">Final Estimate Summary</h2>
     <p className="text-lg">
       <span className="font-semibold">Final Estimate Total:</span>{" "}
@@ -1000,8 +1094,9 @@ roofSquareFootage: '',
 
 
 
+
                 
-                {/* Submit and Save Buttons */}
+  {/* Submit and Save Buttons */}
 <div className="flex justify-between mt-6">
   <button
     type="submit"
@@ -1015,38 +1110,54 @@ roofSquareFootage: '',
     onClick={async () => {
       const user = auth.currentUser;
       if (!user) return alert("Must be logged in to save drafts.");
-    
+
       try {
-        // Upload images to Firebase Storage and get download URLs
         const [defectUrls, overviewUrls, droneUrls] = await Promise.all([
           uploadImagesAndGetDownloadUrls(formData.images || [], "defect"),
           uploadImagesAndGetDownloadUrls(formData.overviewImages || [], "overview"),
           uploadImagesAndGetDownloadUrls(formData.droneImages || [], "drone"),
         ]);
-    
+
+        // Remove base64 + url from each image object before saving
+        const clean = (images) =>
+          images.map(({ base64, ...rest }) => rest); // KEEP url!
+        
+
+        // Clean formData by omitting undefined fields (Firestore-safe)
+        const {
+          images: _images,
+          overviewImages: _overviewImages,
+          droneImages: _droneImages,
+          ...cleanFormData
+        } = formData;
+
         const inspection = {
-          userId: user.uid,
-          formData,
+          formData: cleanFormData,
           roofSections,
-          images: defectUrls,
-          overviewImages: overviewUrls,
-          droneImages: droneUrls,
-          timestamp: serverTimestamp(),
+          images: clean(defectUrls),
+          overviewImages: clean(overviewUrls),
+          droneImages: clean(droneUrls),
+          spreadsheetUrl,
+          finalEstimate, // ✅ Add this
         };
-    
-        await addDoc(collection(db, "inspections"), inspection);
-        alert("Draft saved with images!");
+        
+        
+        await saveInspectionDraftToFirestore({
+  ...inspection,
+  propertyName: formData.propertyName, // ← add this if it’s not already there
+});
+        alert("✅ Inspection draft saved to your account!");
       } catch (error) {
-        console.error("❌ Error saving with images:", error);
-        alert("Failed to save draft.");
+        console.error("❌ Failed to save draft:", error);
+        alert("Error saving draft. See console for details.");
       }
     }}
-    
     className="bg-black text-white p-2 rounded w-[48%]"
   >
     Save Draft
   </button>
 </div>
+
 
             </form>
         </div>

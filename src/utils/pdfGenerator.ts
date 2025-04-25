@@ -13,18 +13,35 @@ import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 pdfMake.vfs = pdfFonts.vfs;
 
+export const fetchImageAsBase64 = async (url: string): Promise<string> => {
+  const res = await fetch(url);
+  const blob = await res.blob();
+  return await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+};
+
+
 export const countWords = (text: string) =>
   text?.trim().split(/\s+/).filter(Boolean).length || 0;
 
 
 const chunkImages = (images, size = 2) => {
-  const validImages = (images || []).filter(img => img && img.base64);
+  const validImages = (images || []).filter(img => img && (img.base64 || img.url));
+  const normalizedImages = validImages.map(img => ({
+    ...img,
+    base64: img.base64 || img.url, // use base64 if available, else fallback to url
+  }));
   const chunks = [];
-  for (let i = 0; i < validImages.length; i += size) {
-    chunks.push(validImages.slice(i, i + size));
+  for (let i = 0; i < normalizedImages.length; i += size) {
+    chunks.push(normalizedImages.slice(i, i + size));
   }
   return chunks;
 };
+
 
 const truncateText = (text = "", maxChars = 500) => {
   if (typeof text !== "string") return "";
@@ -160,6 +177,28 @@ const createStandardHeader = (titleText = "") => ([
 ]);
 
 
+export const prepareImages = async (images: any[]) => {
+  return await Promise.all(
+    images.map(async (img) => {
+      if (img.base64) return img;
+
+      const response = await fetch(img.url);
+      const blob = await response.blob();
+      const reader = new FileReader();
+
+      return await new Promise((resolve, reject) => {
+        reader.onloadend = () => {
+          resolve({
+            ...img,
+            base64: reader.result,
+          });
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    })
+  );
+};
 
 
 
@@ -167,6 +206,9 @@ const createStandardHeader = (titleText = "") => ([
 
 // === PDF Generator Function ===
 export const generatePDF = (formData) => {
+
+
+  
   
 
 

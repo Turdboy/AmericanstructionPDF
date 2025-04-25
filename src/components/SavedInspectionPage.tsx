@@ -1,26 +1,45 @@
 import React, { useEffect, useState } from "react";
-import { db } from "../firebase";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { db, auth } from "../firebase";
+import { collection, getDocs, query, where, orderBy } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
+interface InspectionData {
+  id: string;
+  propertyName?: string;
+  formData?: {
+    propertyName?: string;
+  };
+  timestamp?: {
+    seconds: number;
+    nanoseconds: number;
+  };
+  [key: string]: any;
+}
+
 const SavedInspectionPage = () => {
-  const [inspections, setInspections] = useState([]);
+  const [inspections, setInspections] = useState<InspectionData[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchInspections = async () => {
-      const q = query(collection(db, "inspections"), orderBy("timestamp", "desc"));
+    const fetchUserInspections = async () => {
+      const user = auth.currentUser;
+      if (!user) return alert("You must be logged in to see saved inspections.");
+
+      const q = query(
+        collection(db, "inspections"),
+        where("userId", "==", user.uid),
+        orderBy("timestamp", "desc")
+      );
       const snapshot = await getDocs(q);
-      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as InspectionData[];
       setInspections(data);
     };
 
-    fetchInspections();
+    fetchUserInspections();
   }, []);
 
-  const handleResume = (inspection) => {
+  const handleResume = (inspection: InspectionData) => {
     navigate("/inspection", { state: { data: inspection } });
-
   };
 
   return (
@@ -36,8 +55,16 @@ const SavedInspectionPage = () => {
               className="p-4 border rounded shadow flex justify-between items-center"
             >
               <div>
-                <p className="font-bold">{insp.propertyName || "Unnamed Property"}</p>
-                <p className="text-gray-500 text-sm">{new Date(insp.timestamp?.seconds * 1000).toLocaleString()}</p>
+                <p className="font-bold">
+                  {insp.propertyName ||
+                   insp.formData?.propertyName ||
+                   "Unnamed Property"}
+                </p>
+                <p className="text-gray-500 text-sm">
+                  {insp.timestamp?.seconds
+                    ? new Date(insp.timestamp.seconds * 1000).toLocaleString()
+                    : "Unknown time"}
+                </p>
               </div>
               <button
                 onClick={() => handleResume(insp)}
