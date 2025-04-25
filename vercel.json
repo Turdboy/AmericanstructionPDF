@@ -1,4 +1,7 @@
 {
+  "redirects": [
+    { "source": "http://vpaiproposaltool.com", "destination": "https://vpaiproposaltool.com", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/" }
   ]
