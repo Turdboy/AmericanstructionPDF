@@ -16,6 +16,8 @@ import EstimatorPage from "./components/EstimatorPage";
 import LandingPage from "./components/LandingPage";
 import SavedInspectionPage from "./components/SavedInspectionPage";
 import AuthGatewayPage from "./components/AuthGatewayPage";
+import MobileLandingPage from './components/MobileLandingPage';
+
 
 
 
@@ -110,6 +112,8 @@ function App() {
 
   {/* 🛠 Other */}
   <Route path="/v1/*" element={<MainPage />} />
+  <Route path="/mobile" element={<MobileLandingPage />} />
+
 </Routes>
 
       </div>
