@@ -18,6 +18,9 @@ import SavedInspectionPage from "./components/SavedInspectionPage";
 import AuthGatewayPage from "./components/AuthGatewayPage";
 import MobileLandingPage from './components/MobileLandingPage';
 import InspectionTypePage from "./components/InspectionTypePage";
+import VpaiLogo from './images/vpai-logo.png';
+import landingPageImage from './images/preview.png';
+
 
 
 

@@ -1,8 +1,8 @@
 {
-  "redirects": [
-    { "source": "http://vpaiproposaltool.com", "destination": "https://vpaiproposaltool.com", "permanent": true }
+  "builds": [
+    { "src": "vite.config.ts", "use": "@vercel/static-build", "config": { "distDir": "dist" } }
   ],
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
+  "routes": [
+    { "src": "/(.*)", "dest": "/" }
   ]
 }
