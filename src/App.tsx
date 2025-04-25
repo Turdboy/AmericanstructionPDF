@@ -91,6 +91,8 @@ function App() {
   {/* ✅ Protected (after login) */}
   <Route path="/projects" element={<ProjectsPage />} />
   <Route path="/projects/:id" element={<ProjectAnalysisPage />} />
+  <Route path="/estimator" element={<EstimatorPage />} />
+
   <Route path="/projects/:id/report" element={<ProjectReportPage />} />
   <Route path="/inspection" element={
     <InspectionForm

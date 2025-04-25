@@ -12,6 +12,17 @@ import * as XLSX from "xlsx";
 import { useLocation } from "react-router-dom";
 import { saveInspectionDraftToFirestore } from "../services/inspectionService";
 import { fetchImageAsBase64 } from "../utils/pdfGenerator"; // make sure this is imported
+import { ImageEditorPopup } from "./ImageEditorPopup"; // adjust the path if needed
+
+
+
+const base64ToObjectUrl = async (base64: string): Promise<string> => {
+  const res = await fetch(base64);
+  const blob = await res.blob();
+  return URL.createObjectURL(blob);
+};
+
+
 
 
 
@@ -187,6 +198,12 @@ roofSquareFootage: '',
     const [spreadsheetUploaded, setSpreadsheetUploaded] = useState(false);
 
     const [spreadsheetUrl, setSpreadsheetUrl] = useState<string | null>(null);
+
+    const [editorOpen, setEditorOpen] = useState(false);
+const [editorImage, setEditorImage] = useState(null);
+const [editorIndex, setEditorIndex] = useState<number | null>(null);
+const [editorType, setEditorType] = useState<'images' | 'overviewImages' | 'droneImages' | null>(null);
+
 
 
 
@@ -445,100 +462,164 @@ roofSquareFootage: '',
 
 
     const handleImageUpload = async (event) => {
-        const files = event.target.files;
-        if (!files.length) return;
+      const files = event.target.files;
+      if (!files.length) return;
+    
+      const readFileAsBase64 = (file) =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+    
+      const newImages = await Promise.all(
+        Array.from(files).map(async (file) => ({
+          url: URL.createObjectURL(file),
+          base64: await readFileAsBase64(file),
+          section: "",
+          area: "",
+          caption: "",
+          description: "",
+          cause: "",
+          impact: "",
+          solution: "",
+          annotations: [], // ← ✅ Add annotation field
+        }))
+      );
+    
+      setFormData((prevState) => ({
+        ...prevState,
+        images: [...(prevState.images || []), ...newImages],
+      }));
+    };
+    
       
-        const readFileAsBase64 = (file) =>
-          new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-          });
+    const handleOverviewUpload = async (event) => {
+      const files = event.target.files;
+      if (!files.length) return;
+    
+      const readFileAsBase64 = (file) =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+    
+      const newImages = await Promise.all(
+        Array.from(files).map(async (file) => ({
+          url: URL.createObjectURL(file),
+          base64: await readFileAsBase64(file),
+          section: "",
+          area: "",
+          caption: "",
+          description: "",
+          cause: "",
+          impact: "",
+          solution: "",
+          annotations: [], // ← ✅ Add annotation field
+        }))
+      );
+    
+      setFormData((prevState) => ({
+        ...prevState,
+        overviewImages: [...(prevState.overviewImages || []), ...newImages],
+      }));
+    };
+    
       
-        const newImages = await Promise.all(
-          Array.from(files).map(async (file) => ({
-            url: URL.createObjectURL(file),
-            base64: await readFileAsBase64(file),
-            section: "",
-            area: "",
-            caption: "",
-            description: "",
-            cause: "",
-            impact: "",
-            solution: ""
-          }))
-        );
+    const handleDroneUpload = async (event) => {
+      const files = event.target.files;
+      if (!files.length) return;
+    
+      const readFileAsBase64 = (file) =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+    
+      const newImages = await Promise.all(
+        Array.from(files).map(async (file) => ({
+          url: URL.createObjectURL(file),
+          base64: await readFileAsBase64(file),
+          section: "",
+          area: "",
+          caption: "",
+          description: "",
+          cause: "",
+          impact: "",
+          solution: "",
+          annotations: [], // ← ✅ Add annotation field
+        }))
+      );
+    
+      setFormData((prevState) => ({
+        ...prevState,
+        droneImages: [...(prevState.droneImages || []), ...newImages],
+      }));
+    };
+
+    const openImageEditor = (index: number, type: 'images' | 'overviewImages' | 'droneImages') => {
+      setEditorIndex(index);
+      setEditorType(type);
+      setEditorImage(formData[type][index]);
+      setEditorOpen(true);
+    };
+
+    const handleAnnotationSave = async (newAnnotations: any[], updatedBase64?: string) => {
+      if (editorIndex === null || !editorType) return;
+    
+      // Step 1: Create new URL from updated base64
+      let newUrl = updatedBase64 ? await base64ToObjectUrl(updatedBase64) : formData[editorType][editorIndex].url;
+
+      if (updatedBase64) {
+        const blob = await fetch(updatedBase64).then((res) => res.blob());
+        const filename = `${Date.now()}-annotated.jpg`;
+        const storageRef = ref(storage, `annotated/${filename}`);
+        await uploadBytes(storageRef, blob);
+        const uploadedUrl = await getDownloadURL(storageRef);
+        newUrl = uploadedUrl; // ✅ Works because let newUrl was declared above
+      }
       
-        setFormData((prevState) => ({
-          ...prevState,
-          images: [...(prevState.images || []), ...newImages],
-        }));
+
+      
+
+      
+    
+      // Step 2: Replace the image at [type][index]
+      const updatedImages = [...formData[editorType]];
+      updatedImages[editorIndex] = {
+        ...updatedImages[editorIndex],
+        base64: updatedBase64 || updatedImages[editorIndex].base64,
+        url: newUrl,
+        annotations: newAnnotations,
       };
-      
-      const handleOverviewUpload = async (event) => {
-        const files = event.target.files;
-        if (!files.length) return;
-      
-        const readFileAsBase64 = (file) =>
-          new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-          });
-      
-        const newImages = await Promise.all(
-          Array.from(files).map(async (file) => ({
-            url: URL.createObjectURL(file),
-            base64: await readFileAsBase64(file),
-            section: "",
-            area: "",
-            caption: "",
-            description: "",
-            cause: "",
-            impact: "",
-            solution: "",
-          }))
-        );
-      
-        setFormData((prevState) => ({
-          ...prevState,
-          overviewImages: [...(prevState.overviewImages || []), ...newImages],
-        }));
-      };
-      
-      const handleDroneUpload = async (event) => {
-        const files = event.target.files;
-        if (!files.length) return;
-      
-        const readFileAsBase64 = (file) =>
-          new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-          });
-      
-        const newImages = await Promise.all(
-          Array.from(files).map(async (file) => ({
-            url: URL.createObjectURL(file),
-            base64: await readFileAsBase64(file),
-            section: "",
-            area: "",
-            caption: "",
-            description: "",
-            cause: "",
-            impact: "",
-            solution: "",
-          }))
-        );
-      
-        setFormData((prevState) => ({
-          ...prevState,
-          droneImages: [...(prevState.droneImages || []), ...newImages],
-        }));
-      };
+    
+      // Optional cleanup: revoke old object URL
+      if (formData[editorType][editorIndex]?.url?.startsWith("blob:")) {
+        URL.revokeObjectURL(formData[editorType][editorIndex].url);
+      }
+    
+      // Step 3: Save the updated list back to formData
+      setFormData((prev) => ({
+        ...prev,
+        [editorType]: updatedImages,
+      }));
+      setEditorImage(updatedImages[editorIndex]); // ✅ Fix preview staleness
+
+    
+      setEditorOpen(false);
+      setEditorIndex(null);
+setEditorType(null);
+
+    };
+    
+    
+    
+    
       
 
 
@@ -561,6 +642,8 @@ roofSquareFootage: '',
 
                 {/* Photos Section */}
 <h3 className="text-lg font-bold">Upload Defect Photos</h3>
+
+
 
 {/* Upload Defect (General) Photos */}
 <div className="border-2 border-dashed p-4 rounded-lg text-center cursor-pointer mt-2">
@@ -627,6 +710,17 @@ roofSquareFootage: '',
                 <p className="text-xs text-gray-500 mt-1">
                   {getWordCount(image[field] || "")} / {wordLimits[field]} words
                 </p>
+                {field === "solution" && (
+                  <button
+  type="button"  // ← ✅ ADD THIS LINE
+  onClick={() => openImageEditor(index, "images")}
+  className="mt-2 text-blue-600 underline"
+>
+  Annotate
+</button>
+
+)}
+
               </div>
             ))}
           </div>
@@ -714,6 +808,15 @@ roofSquareFootage: '',
                 <p className="text-xs text-gray-500 mt-1">
                   {getWordCount(image[field] || "")} / 30 words
                 </p>
+                {field === "caption" && (
+  <button
+    onClick={() => openImageEditor(index, "overviewImages")}
+    className="mt-2 text-blue-600 underline"
+  >
+    Annotate
+  </button>
+)}
+
               </div>
             ))}
           </div>
@@ -804,6 +907,15 @@ roofSquareFootage: '',
                 <p className="text-xs text-gray-500 mt-1">
                   {getWordCount(image[field] || "")} / 30 words
                 </p>
+                {field === "description" && (
+  <button
+    onClick={() => openImageEditor(index, "droneImages")}
+    className="mt-2 text-blue-600 underline"
+  >
+    Annotate
+  </button>
+)}
+
               </div>
             ))}
           </div>
@@ -1160,6 +1272,16 @@ roofSquareFootage: '',
 
 
             </form>
+            {editorOpen && editorImage && (
+  <ImageEditorPopup
+    image={editorImage.base64}
+    annotations={editorImage.annotations || []}
+    dimensions={{ width: 800, height: 500 }}
+    onClose={() => setEditorOpen(false)}
+    onSave={handleAnnotationSave}
+  />
+)}
+
         </div>
     );
 };

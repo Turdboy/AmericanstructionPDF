@@ -1,57 +1,67 @@
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
-import { db } from "../firebase";
-import { collection, addDoc } from "firebase/firestore";
-import { serverTimestamp } from "firebase/firestore";
+import { db, storage } from "../firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 const EstimatorPage = () => {
   const [tableData, setTableData] = useState<any[][]>([]);
   const [finalEstimate, setFinalEstimate] = useState<number | null>(null);
-  const [showPrice, setShowPrice] = useState(false);
+  const [spreadsheetUploaded, setSpreadsheetUploaded] = useState(false);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = async (event) => {
-      const data = new Uint8Array(event.target?.result as ArrayBuffer);
-      const workbook = XLSX.read(data, { type: "array" });
-      const sheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[sheetName];
-      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as any[][];
+    try {
+      // Upload to Firebase Storage
+      const storageRef = ref(storage, `spreadsheets/${Date.now()}-${file.name}`);
+      await uploadBytes(storageRef, file);
+      const spreadsheetUrl = await getDownloadURL(storageRef);
+      console.log("📁 Uploaded XLSX file URL:", spreadsheetUrl);
 
-      setTableData(jsonData);
+      // Read file data
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        const data = new Uint8Array(event.target?.result as ArrayBuffer);
+        const workbook = XLSX.read(data, { type: "array" });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as any[][];
+        setTableData(jsonData);
 
-      // ✅ Extract Final Estimate from cell J35
-      const estimateCell = worksheet["J35"];
-      if (estimateCell && typeof estimateCell.v === "number") {
-        const final = estimateCell.v;
-        setFinalEstimate(final);
-        localStorage.setItem("finalEstimate", JSON.stringify(final));
+        // Extract J35 cell
+        const estimateCell = worksheet["J35"];
+        if (estimateCell && typeof estimateCell.v === "number") {
+          const final = estimateCell.v;
+          setFinalEstimate(final);
+          setSpreadsheetUploaded(true);
+          localStorage.setItem("finalEstimate", JSON.stringify(final));
 
-        setShowPrice(false);
-
-        try {
           await addDoc(collection(db, "estimates"), {
             value: final,
-            createdAt: serverTimestamp()  // 🔥 Proper Firestore timestamp
+            createdAt: serverTimestamp(),
           });
-          console.log("✅ Final estimate saved to Firestore:", final);
-        } catch (error) {
-          console.error("❌ Firestore save error:", error);
-        }
-      }
-    };
 
-    reader.readAsArrayBuffer(file);
+          console.log("✅ Final estimate saved to Firestore:", final);
+        }
+      };
+
+      reader.readAsArrayBuffer(file);
+    } catch (err) {
+      console.error("❌ Upload or parsing error:", err);
+    }
   };
 
   return (
-    <div className="max-w-5xl mx-auto mt-10 bg-white shadow-md p-6 rounded">
+    <div className="max-w-5xl mx-auto mt-10 bg-white shadow-md p-6 rounded min-h-[60vh]">
       <h1 className="text-3xl font-bold mb-6 text-[#002147]">Upload Estimating Spreadsheet</h1>
 
-      {/* File Upload */}
+      {tableData.length === 0 && (
+        <div className="text-center text-gray-600 mb-4">
+          Please upload your estimating spreadsheet to begin.
+        </div>
+      )}
+
       <input
         type="file"
         accept=".xlsx, .xls"
@@ -59,7 +69,6 @@ const EstimatorPage = () => {
         className="mb-6 block"
       />
 
-      {/* Table Display */}
       {tableData.length > 0 && (
         <div className="overflow-auto max-h-[60vh] border rounded">
           <table className="min-w-full text-sm text-left border-collapse">
@@ -78,18 +87,7 @@ const EstimatorPage = () => {
         </div>
       )}
 
-      {/* Generate Final Prices Button */}
-      {finalEstimate !== null && !showPrice && (
-        <button
-          onClick={() => setShowPrice(true)}
-          className="mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded transition"
-        >
-          Generate Final Prices
-        </button>
-      )}
-
-      {/* Final Price Display */}
-      {showPrice && finalEstimate !== null && (
+      {spreadsheetUploaded && finalEstimate !== null && (
         <div className="mt-4 border border-green-400 bg-green-50 text-green-800 rounded p-4">
           <h2 className="text-xl font-bold mb-2">Final Estimate Summary</h2>
           <p className="text-lg">
@@ -98,9 +96,6 @@ const EstimatorPage = () => {
           </p>
         </div>
       )}
-
-
-
     </div>
   );
 };
