@@ -94,6 +94,22 @@ export const ImageEditorPopup: React.FC<ImageEditorPopupProps> = ({
         }
   
         ctx.restore(); // ♻️ Restore to original state for next annotation
+        // 🎯 Draw larger blue outline around selected annotation
+if (i === selectedAnnotation) {
+  ctx.save();
+  ctx.translate(x + w / 2, y + h / 2);
+  ctx.rotate((ann.rotation || 0) * Math.PI / 180);
+  ctx.translate(-w / 2, -h / 2);
+
+  ctx.strokeStyle = 'rgba(0, 128, 255, 0.5)';
+  ctx.lineWidth = 6;
+  ctx.setLineDash([5, 3]); // dashed outline for visibility
+
+  ctx.strokeRect(-4, -4, w + 8, h + 8); // slightly larger box
+
+  ctx.restore();
+}
+
       });
     };
     img.src = image;
