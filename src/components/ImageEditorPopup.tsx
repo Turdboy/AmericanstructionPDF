@@ -88,27 +88,15 @@ export const ImageEditorPopup: React.FC<ImageEditorPopupProps> = ({
           ctx.fill();
         }
         else if (ann.type === 'text') {
-          ctx.font = '16px sans-serif';
+          const fontSize = Math.max(10, Math.min(w, h) * 0.6); // 🔥 scale font size to box size
+          ctx.font = `${fontSize}px sans-serif`;
           ctx.fillStyle = ann.color || '#000000';
-          ctx.fillText(ann.text || '', 0, 0);
+          ctx.fillText(ann.text || '', 0, fontSize); // 🔥 start a little down inside the box
         }
+        
   
         ctx.restore(); // ♻️ Restore to original state for next annotation
-        // 🎯 Draw larger blue outline around selected annotation
-if (i === selectedAnnotation) {
-  ctx.save();
-  ctx.translate(x + w / 2, y + h / 2);
-  ctx.rotate((ann.rotation || 0) * Math.PI / 180);
-  ctx.translate(-w / 2, -h / 2);
 
-  ctx.strokeStyle = 'rgba(0, 128, 255, 0.5)';
-  ctx.lineWidth = 6;
-  ctx.setLineDash([5, 3]); // dashed outline for visibility
-
-  ctx.strokeRect(-4, -4, w + 8, h + 8); // slightly larger box
-
-  ctx.restore();
-}
 
       });
     };
@@ -116,62 +104,7 @@ if (i === selectedAnnotation) {
   };
   
 
-  const handleCanvasMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const rect = canvas.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width;
-    const y = (e.clientY - rect.top) / rect.height;
   
-    // If one is already selected, prioritize trying to drag that one
-    if (selectedAnnotation !== null) {
-      const ann = annotations[selectedAnnotation];
-      if (
-        x >= ann.x &&
-        x <= ann.x + ann.width &&
-        y >= ann.y &&
-        y <= ann.y + ann.height
-      ) {
-        setIsDragging(true);
-        setDragOffset({ x: x - ann.x, y: y - ann.y });
-        return;
-      }
-    }
-  
-    // Otherwise fall back to selecting new one
-    const foundIndex = annotations.findIndex((ann) => {
-      return x >= ann.x && x <= ann.x + ann.width && y >= ann.y && y <= ann.y + ann.height;
-    });
-  
-    if (foundIndex !== -1) {
-      const ann = annotations[foundIndex];
-      setSelectedAnnotation(foundIndex);
-      setIsDragging(true);
-      setDragOffset({ x: x - ann.x, y: y - ann.y });
-    }
-  };
-  
-
-  const handleCanvasMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isDragging || selectedAnnotation === null) return;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const rect = canvas.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width;
-    const y = (e.clientY - rect.top) / rect.height;
-
-    const newAnnotations = [...annotations];
-    const ann = newAnnotations[selectedAnnotation];
-    ann.x = Math.max(0, Math.min(x - dragOffset.x, 1 - ann.width));
-    ann.y = Math.max(0, Math.min(y - dragOffset.y, 1 - ann.height));
-    setAnnotations(newAnnotations);
-  };
-
-  const handleCanvasMouseUp = () => {
-    setIsDragging(false);
-  };
-
   const handleAddAnnotation = () => {
     const newAnnotation: DamageAnnotation = {
       type: tool,
@@ -199,6 +132,24 @@ if (i === selectedAnnotation) {
     setAnnotations(annotations.filter((_, i) => i !== index));
     setSelectedAnnotation(null);
   };
+
+
+  const moveSelectedAnnotation = (direction: 'left' | 'right' | 'up' | 'down') => {
+    if (selectedAnnotation === null) return;
+    const amount = 0.02; // 2% move per click
+    setAnnotations(prev =>
+      prev.map((ann, i) =>
+        i === selectedAnnotation
+          ? {
+              ...ann,
+              x: Math.max(0, Math.min(1 - ann.width, direction === 'left' ? ann.x - amount : direction === 'right' ? ann.x + amount : ann.x)),
+              y: Math.max(0, Math.min(1 - ann.height, direction === 'up' ? ann.y - amount : direction === 'down' ? ann.y + amount : ann.y)),
+            }
+          : ann
+      )
+    );
+  };
+  
 
   const resizeAnnotation = (direction: 'in' | 'out') => {
     if (selectedAnnotation === null) return;
@@ -249,20 +200,24 @@ if (i === selectedAnnotation) {
                 <>
                   <button onClick={() => resizeAnnotation('in')} className="px-2 py-1 border rounded text-sm">➕ Enlarge</button>
                   <button onClick={() => resizeAnnotation('out')} className="px-2 py-1 border rounded text-sm">➖ Shrink</button>
+                  <div className="flex gap-2 flex-wrap mt-4">
+  <button onClick={() => moveSelectedAnnotation('left')} className="px-2 py-1 border rounded text-sm">⬅️ Left</button>
+  <button onClick={() => moveSelectedAnnotation('right')} className="px-2 py-1 border rounded text-sm">➡️ Right</button>
+  <button onClick={() => moveSelectedAnnotation('up')} className="px-2 py-1 border rounded text-sm">⬆️ Up</button>
+  <button onClick={() => moveSelectedAnnotation('down')} className="px-2 py-1 border rounded text-sm">⬇️ Down</button>
+</div>
+
                 </>
               )}
             </div>
 
             <canvas
-              ref={canvasRef}
-              width={dimensions.width}
-              height={dimensions.height}
-              className="border rounded w-full"
-              onMouseDown={handleCanvasMouseDown}
-              onMouseMove={handleCanvasMouseMove}
-              onMouseUp={handleCanvasMouseUp}
-              onMouseLeave={handleCanvasMouseUp}
-            />
+  ref={canvasRef}
+  width={dimensions.width}
+  height={dimensions.height}
+  className="border rounded w-full"
+/>
+
           </div>
 
           <div className="space-y-4">
@@ -316,15 +271,17 @@ if (i === selectedAnnotation) {
         <div className="flex justify-end mt-6 space-x-4">
           <button onClick={onClose} className="border px-4 py-2 rounded">Cancel</button>
           <button
-            onClick={() => {
-              const canvas = canvasRef.current;
-              const updatedBase64 = canvas?.toDataURL("image/png");
-              onSave(annotations, updatedBase64);
-            }}
-            className="bg-[#002147] text-white px-4 py-2 rounded hover:bg-[#003167]"
-          >
-            Save Changes
-          </button>
+  onClick={() => {
+    const canvas = canvasRef.current;
+    const updatedBase64 = canvas?.toDataURL("image/png");
+    onSave(annotations, updatedBase64);
+    setSelectedAnnotation(null); // 👈 reset selection when saving!
+  }}
+  className="bg-[#002147] text-white px-4 py-2 rounded hover:bg-[#003167]"
+>
+  Save Changes
+</button>
+
         </div>
       </div>
     </div>
