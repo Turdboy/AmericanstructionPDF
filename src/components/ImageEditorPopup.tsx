@@ -1,4 +1,4 @@
-
+// ImageEditorPopup.tsx
 import React, { useEffect, useRef, useState } from 'react';
 import { DamageAnnotation } from '../types/types';
 
@@ -7,7 +7,7 @@ interface ImageEditorPopupProps {
   annotations: DamageAnnotation[];
   dimensions: { width: number; height: number };
   onClose: () => void;
-  onSave: (annotations: DamageAnnotation[]) => void;
+  onSave: (annotations: DamageAnnotation[], updatedBase64?: string) => void;
 }
 
 export const ImageEditorPopup: React.FC<ImageEditorPopupProps> = ({
@@ -19,297 +19,162 @@ export const ImageEditorPopup: React.FC<ImageEditorPopupProps> = ({
 }) => {
   const [annotations, setAnnotations] = useState<DamageAnnotation[]>(initialAnnotations);
   const [selectedAnnotation, setSelectedAnnotation] = useState<number | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-  const [dragMode, setDragMode] = useState<'move' | 'resize' | null>(null);
-  const [resizeHandle, setResizeHandle] = useState<number | null>(null);
+  const [color, setColor] = useState<string>('#FF0000');
+  const [tool, setTool] = useState<'circle' | 'square' | 'line' | 'arrow' | 'text'>('square');
+  const [textInput, setTextInput] = useState<string>('');
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  const severityColors = {
-    'Low': '#FFD700',
-    'Medium': '#FFA500',
-    'High': '#FF4500',
-    'Critical': '#FF0000'
-  };
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
   useEffect(() => {
     drawCanvas();
   }, [annotations, selectedAnnotation]);
-
   const drawCanvas = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-
-    // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Draw image
+  
     const img = new Image();
     img.onload = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-      // Draw annotations
-      annotations.forEach((annotation, index) => {
-        const isSelected = index === selectedAnnotation;
-        ctx.strokeStyle = isSelected ? '#00FF00' : severityColors[annotation.severity];
-        ctx.lineWidth = isSelected ? 4 : 3;
-
-        const x = annotation.x * canvas.width;
-        const y = annotation.y * canvas.height;
-        const width = annotation.width * canvas.width;
-        const height = annotation.height * canvas.height;
-
-        if (annotation.type === 'square') {
-          ctx.strokeRect(x, y, width, height);
-        } else {
+  
+      annotations.forEach((ann, i) => {
+        ctx.strokeStyle = ann.color || '#000000';
+        ctx.lineWidth = i === selectedAnnotation ? 4 : 2;
+  
+        const x = ann.x * canvas.width;
+        const y = ann.y * canvas.height;
+        const w = ann.width * canvas.width;
+        const h = ann.height * canvas.height;
+  
+        ctx.save(); // 🛟 Save the current canvas state
+  
+        // 🌀 Move to center of annotation and rotate
+        ctx.translate(x + w / 2, y + h / 2);
+        ctx.rotate((ann.rotation || 0) * Math.PI / 180);
+        ctx.translate(-w / 2, -h / 2);
+  
+        // 🖌️ Now draw relative to rotated center
+        if (ann.type === 'square') {
+          ctx.strokeRect(0, 0, w, h);
+        } 
+        else if (ann.type === 'circle') {
           ctx.beginPath();
-          ctx.ellipse(
-            x + width / 2,
-            y + height / 2,
-            width / 2,
-            height / 2,
-            0,
-            0,
-            2 * Math.PI
-          );
+          ctx.ellipse(w / 2, h / 2, w / 2, h / 2, 0, 0, 2 * Math.PI);
           ctx.stroke();
         }
-
-        // Draw handles if selected
-        if (isSelected) {
-          drawResizeHandles(ctx, x, y, width, height);
+        else if (ann.type === 'line') {
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(w, h);
+          ctx.stroke();
         }
-
-        // Add label
-        ctx.font = '14px Arial';
-        ctx.fillStyle = isSelected ? '#00FF00' : severityColors[annotation.severity];
-        ctx.fillText(annotation.severity, x, y - 5);
+        else if (ann.type === 'arrow') {
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(w, h);
+          ctx.stroke();
+  
+          const headlen = 10;
+          const angle = Math.atan2(h, w);
+          ctx.beginPath();
+          ctx.moveTo(w, h);
+          ctx.lineTo(w - headlen * Math.cos(angle - Math.PI / 6), h - headlen * Math.sin(angle - Math.PI / 6));
+          ctx.lineTo(w - headlen * Math.cos(angle + Math.PI / 6), h - headlen * Math.sin(angle + Math.PI / 6));
+          ctx.lineTo(w, h);
+          ctx.fillStyle = ann.color || '#000000';
+          ctx.fill();
+        }
+        else if (ann.type === 'text') {
+          ctx.font = '16px sans-serif';
+          ctx.fillStyle = ann.color || '#000000';
+          ctx.fillText(ann.text || '', 0, 0);
+        }
+  
+        ctx.restore(); // ♻️ Restore to original state for next annotation
       });
     };
     img.src = image;
   };
+  
 
-  const drawResizeHandles = (
-    ctx: CanvasRenderingContext2D,
-    x: number,
-    y: number,
-    width: number,
-    height: number
-  ) => {
-    const handleSize = 8;
-    const handles = [
-      { x, y }, // Top-left
-      { x: x + width / 2, y }, // Top-middle
-      { x: x + width, y }, // Top-right
-      { x, y: y + height / 2 }, // Middle-left
-      { x: x + width, y: y + height / 2 }, // Middle-right
-      { x, y: y + height }, // Bottom-left
-      { x: x + width / 2, y: y + height }, // Bottom-middle
-      { x: x + width, y: y + height }, // Bottom-right
-    ];
-
-    ctx.fillStyle = '#00FF00';
-    handles.forEach(handle => {
-      ctx.fillRect(
-        handle.x - handleSize / 2,
-        handle.y - handleSize / 2,
-        handleSize,
-        handleSize
-      );
-    });
-  };
-
-  const isOverResizeHandle = (
-    x: number,
-    y: number,
-    annotation: DamageAnnotation,
-    handleIndex: number
-  ): boolean => {
-    const canvas = canvasRef.current;
-    if (!canvas) return false;
-
-    const handleSize = 8;
-    const annX = annotation.x * canvas.width;
-    const annY = annotation.y * canvas.height;
-    const annWidth = annotation.width * canvas.width;
-    const annHeight = annotation.height * canvas.height;
-
-    const handles = [
-      { x: annX, y: annY }, // Top-left
-      { x: annX + annWidth / 2, y: annY }, // Top-middle
-      { x: annX + annWidth, y: annY }, // Top-right
-      { x: annX, y: annY + annHeight / 2 }, // Middle-left
-      { x: annX + annWidth, y: annY + annHeight / 2 }, // Middle-right
-      { x: annX, y: annY + annHeight }, // Bottom-left
-      { x: annX + annWidth / 2, y: annY + annHeight }, // Bottom-middle
-      { x: annX + annWidth, y: annY + annHeight }, // Bottom-right
-    ];
-
-    const handle = handles[handleIndex];
-    return (
-      x >= handle.x - handleSize / 2 &&
-      x <= handle.x + handleSize / 2 &&
-      y >= handle.y - handleSize / 2 &&
-      y <= handle.y + handleSize / 2
-    );
-  };
-
-  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleCanvasMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    const x = (e.clientX - rect.left) * scaleX;
-    const y = (e.clientY - rect.top) * scaleY;
-
-    // Check if clicking on a resize handle first
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+  
+    // If one is already selected, prioritize trying to drag that one
     if (selectedAnnotation !== null) {
-      for (let i = 0; i < 8; i++) {
-        if (isOverResizeHandle(x, y, annotations[selectedAnnotation], i)) {
-          setDragMode('resize');
-          setResizeHandle(i);
-          setIsDragging(true);
-          setDragStart({ x: e.clientX, y: e.clientY });
-          return;
-        }
+      const ann = annotations[selectedAnnotation];
+      if (
+        x >= ann.x &&
+        x <= ann.x + ann.width &&
+        y >= ann.y &&
+        y <= ann.y + ann.height
+      ) {
+        setIsDragging(true);
+        setDragOffset({ x: x - ann.x, y: y - ann.y });
+        return;
       }
     }
-
-    // Check if clicking on an existing annotation
-    const clickedIndex = annotations.findIndex(ann => {
-      const annX = ann.x * canvas.width;
-      const annY = ann.y * canvas.height;
-      const annWidth = ann.width * canvas.width;
-      const annHeight = ann.height * canvas.height;
-      return x >= annX && x <= annX + annWidth && y >= annY && y <= annY + annHeight;
+  
+    // Otherwise fall back to selecting new one
+    const foundIndex = annotations.findIndex((ann) => {
+      return x >= ann.x && x <= ann.x + ann.width && y >= ann.y && y <= ann.y + ann.height;
     });
-
-    if (clickedIndex !== -1) {
-      setSelectedAnnotation(clickedIndex);
-      setDragMode('move');
+  
+    if (foundIndex !== -1) {
+      const ann = annotations[foundIndex];
+      setSelectedAnnotation(foundIndex);
       setIsDragging(true);
-      setDragStart({ x: e.clientX, y: e.clientY });
-    } else {
-      setSelectedAnnotation(null);
-      setDragMode(null);
+      setDragOffset({ x: x - ann.x, y: y - ann.y });
     }
   };
+  
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isDragging || selectedAnnotation === null || !dragMode) return;
-
+  const handleCanvasMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isDragging || selectedAnnotation === null) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    const deltaX = ((e.clientX - dragStart.x) * scaleX) / canvas.width;
-    const deltaY = ((e.clientY - dragStart.y) * scaleY) / canvas.height;
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
 
-    setAnnotations(annotations.map((ann, index) => {
-      if (index !== selectedAnnotation) return ann;
-
-      if (dragMode === 'move') {
-        return {
-          ...ann,
-          x: Math.max(0, Math.min(1 - ann.width, ann.x + deltaX)),
-          y: Math.max(0, Math.min(1 - ann.height, ann.y + deltaY))
-        };
-      } else if (dragMode === 'resize' && resizeHandle !== null) {
-        let newX = ann.x;
-        let newY = ann.y;
-        let newWidth = ann.width;
-        let newHeight = ann.height;
-
-        // Update dimensions based on which handle is being dragged
-        switch (resizeHandle) {
-          case 0: // Top-left
-            newX = Math.min(ann.x + deltaX, ann.x + ann.width - 0.1);
-            newY = Math.min(ann.y + deltaY, ann.y + ann.height - 0.1);
-            newWidth = ann.width - deltaX;
-            newHeight = ann.height - deltaY;
-            break;
-          case 1: // Top-middle
-            newY = Math.min(ann.y + deltaY, ann.y + ann.height - 0.1);
-            newHeight = ann.height - deltaY;
-            break;
-          case 2: // Top-right
-            newY = Math.min(ann.y + deltaY, ann.y + ann.height - 0.1);
-            newWidth = ann.width + deltaX;
-            newHeight = ann.height - deltaY;
-            break;
-          case 3: // Middle-left
-            newX = Math.min(ann.x + deltaX, ann.x + ann.width - 0.1);
-            newWidth = ann.width - deltaX;
-            break;
-          case 4: // Middle-right
-            newWidth = ann.width + deltaX;
-            break;
-          case 5: // Bottom-left
-            newX = Math.min(ann.x + deltaX, ann.x + ann.width - 0.1);
-            newWidth = ann.width - deltaX;
-            newHeight = ann.height + deltaY;
-            break;
-          case 6: // Bottom-middle
-            newHeight = ann.height + deltaY;
-            break;
-          case 7: // Bottom-right
-            newWidth = ann.width + deltaX;
-            newHeight = ann.height + deltaY;
-            break;
-        }
-
-        // Ensure minimum size and keep within bounds
-        newWidth = Math.max(0.1, Math.min(1 - newX, newWidth));
-        newHeight = Math.max(0.1, Math.min(1 - newY, newHeight));
-
-        return {
-          ...ann,
-          x: Math.max(0, newX),
-          y: Math.max(0, newY),
-          width: newWidth,
-          height: newHeight
-        };
-      }
-
-      return ann;
-    }));
-
-    setDragStart({ x: e.clientX, y: e.clientY });
+    const newAnnotations = [...annotations];
+    const ann = newAnnotations[selectedAnnotation];
+    ann.x = Math.max(0, Math.min(x - dragOffset.x, 1 - ann.width));
+    ann.y = Math.max(0, Math.min(y - dragOffset.y, 1 - ann.height));
+    setAnnotations(newAnnotations);
   };
 
-  const handleMouseUp = () => {
+  const handleCanvasMouseUp = () => {
     setIsDragging(false);
-    setDragMode(null);
-    setResizeHandle(null);
-  };
-
-  const handleAnnotationUpdate = (index: number, updates: Partial<DamageAnnotation>) => {
-    setAnnotations(annotations.map((ann, i) => 
-      i === index ? { ...ann, ...updates } : ann
-    ));
   };
 
   const handleAddAnnotation = () => {
     const newAnnotation: DamageAnnotation = {
-      type: 'square',
+      type: tool,
       x: 0.1,
       y: 0.1,
       width: 0.2,
       height: 0.2,
-      confidence: 0.8,
-      description: 'New damage area',
+      confidence: 1,
+      description: '',
       severity: 'Medium',
-      repairRecommendation: 'Please assess and provide recommendation',
+      repairRecommendation: '',
       isAdjusted: true,
-      adjustmentReason: 'Manually added annotation'
+      adjustmentReason: 'Manually added',
+      text: tool === 'text' ? textInput : undefined,
+      color,
+      rotation: 0,
     };
+    
+    
     setAnnotations([...annotations, newAnnotation]);
     setSelectedAnnotation(annotations.length);
   };
@@ -319,157 +184,128 @@ export const ImageEditorPopup: React.FC<ImageEditorPopupProps> = ({
     setSelectedAnnotation(null);
   };
 
+  const resizeAnnotation = (direction: 'in' | 'out') => {
+    if (selectedAnnotation === null) return;
+    const factor = direction === 'in' ? 1.1 : 0.9;
+    setAnnotations((prev) =>
+      prev.map((ann, i) =>
+        i === selectedAnnotation
+          ? {
+              ...ann,
+              width: Math.min(1, Math.max(0.01, ann.width * factor)),
+              height: Math.min(1, Math.max(0.01, ann.height * factor)),
+            }
+          : ann
+      )
+    );
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl p-6 max-w-7xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between items-center mb-4">
+      <div className="bg-white rounded-xl p-6 max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="flex justify-between mb-4">
           <h2 className="text-2xl font-bold text-[#002147]">Edit Image Annotations</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
-          >
-            ✕
-          </button>
+          <button onClick={onClose} className="text-gray-500">✕</button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Canvas Side */}
           <div className="space-y-4">
+            <div className="flex items-center gap-2 flex-wrap">
+              <select value={tool} onChange={(e) => setTool(e.target.value as any)} className="border rounded px-2 py-1">
+                <option value="square">Square</option>
+                <option value="circle">Circle</option>
+                <option value="line">Line</option>
+                <option value="arrow">Arrow</option>
+                <option value="text">Text</option>
+              </select>
+              <input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="w-10 h-10 p-1 border rounded" />
+              {tool === 'text' && (
+                <input
+                  type="text"
+                  value={textInput}
+                  onChange={(e) => setTextInput(e.target.value)}
+                  placeholder="Enter text..."
+                  className="border px-2 py-1 rounded"
+                />
+              )}
+              <button onClick={handleAddAnnotation} className="bg-[#002147] text-white px-3 py-1 rounded hover:bg-[#003167]">+ Add</button>
+              {selectedAnnotation !== null && (
+                <>
+                  <button onClick={() => resizeAnnotation('in')} className="px-2 py-1 border rounded text-sm">➕ Enlarge</button>
+                  <button onClick={() => resizeAnnotation('out')} className="px-2 py-1 border rounded text-sm">➖ Shrink</button>
+                </>
+              )}
+            </div>
+
             <canvas
               ref={canvasRef}
               width={dimensions.width}
               height={dimensions.height}
-              className="border rounded-lg shadow-md w-full"
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              onMouseUp={handleMouseUp}
-              onMouseLeave={handleMouseUp}
+              className="border rounded w-full"
+              onMouseDown={handleCanvasMouseDown}
+              onMouseMove={handleCanvasMouseMove}
+              onMouseUp={handleCanvasMouseUp}
+              onMouseLeave={handleCanvasMouseUp}
             />
-            <button
-              onClick={handleAddAnnotation}
-              className="w-full bg-[#002147] text-white py-2 px-4 rounded-lg hover:bg-[#003167] transition-colors"
-            >
-              Add New Annotation
-            </button>
           </div>
 
-          {/* Controls Side */}
           <div className="space-y-4">
             <h3 className="text-xl font-semibold text-[#002147]">Annotations</h3>
-            <div className="space-y-4">
-              {annotations.map((annotation, index) => (
-                <div
-                  key={index}
-                  className={`p-4 rounded-lg border-2 transition-colors ${
-                    index === selectedAnnotation
-                      ? 'border-green-500 bg-green-50'
-                      : 'border-gray-200'
-                  }`}
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <button
-                      onClick={() => setSelectedAnnotation(index)}
-                      className="text-[#002147] font-medium"
-                    >
-                      Damage Area {index + 1}
-                    </button>
-                    <button
-                      onClick={() => handleDeleteAnnotation(index)}
-                      className="text-red-500 hover:text-red-700"
-                    >
-                      Delete
-                    </button>
+            {annotations.length === 0 ? (
+              <p className="text-gray-500 italic">No annotations yet. Use tools above to add shapes or text.</p>
+            ) : (
+              annotations.map((ann, i) => (
+<div
+  key={i}
+  onClick={() => setSelectedAnnotation(i)}
+  className={`p-4 border rounded cursor-pointer ${
+    i === selectedAnnotation ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
+  }`}
+>
+                  <div className="flex justify-between mb-2">
+                    <span className="font-medium text-[#002147]">Annotation {i + 1}</span>
+                    <button onClick={() => handleDeleteAnnotation(i)} className="text-red-500">Delete</button>
                   </div>
+                  <div className="text-sm text-gray-600 space-y-2">
+  <p>Type: <strong>{ann.type}</strong></p>
+  {ann.type === 'text' && <p>Text: <strong>{ann.text}</strong></p>}
+  <p>Color: <span style={{ backgroundColor: ann.color || '#000' }} className="inline-block w-4 h-4 rounded border" /></p>
 
-                  <div className="space-y-2">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Type
-                      </label>
-                      <select
-                        value={annotation.type}
-                        onChange={(e) => handleAnnotationUpdate(index, { type: e.target.value as 'square' | 'circle' })}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#002147] focus:ring-[#002147]"
-                      >
-                        <option value="square">Square</option>
-                        <option value="circle">Circle</option>
-                      </select>
-                    </div>
+  {/* 🎯 Rotation Control */}
+  <div className="flex items-center space-x-2">
+    <label className="text-xs">Rotate:</label>
+    <input
+      type="range"
+      min={-180}
+      max={180}
+      step={1}
+      value={ann.rotation || 0}
+      onChange={(e) => {
+        const newAnnotations = [...annotations];
+        newAnnotations[i].rotation = parseInt(e.target.value);
+        setAnnotations(newAnnotations);
+      }}
+      className="flex-1"
+    />
+    <span className="text-xs">{ann.rotation || 0}°</span>
+  </div>
+</div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Severity
-                      </label>
-                      <select
-                        value={annotation.severity}
-                        onChange={(e) => handleAnnotationUpdate(index, { severity: e.target.value as 'Low' | 'Medium' | 'High' | 'Critical' })}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#002147] focus:ring-[#002147]"
-                      >
-                        <option value="Low">Low</option>
-                        <option value="Medium">Medium</option>
-                        <option value="High">High</option>
-                        <option value="Critical">Critical</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Description
-                      </label>
-                      <textarea
-                        value={annotation.description}
-                        onChange={(e) => handleAnnotationUpdate(index, { description: e.target.value })}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#002147] focus:ring-[#002147]"
-                        rows={2}
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Repair Recommendation
-                      </label>
-                      <textarea
-                        value={annotation.repairRecommendation}
-                        onChange={(e) => handleAnnotationUpdate(index, { repairRecommendation: e.target.value })}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#002147] focus:ring-[#002147]"
-                        rows={2}
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Confidence
-                      </label>
-                      <input
-                        type="range"
-                        min="0"
-                        max="1"
-                        step="0.01"
-                        value={annotation.confidence}
-                        onChange={(e) => handleAnnotationUpdate(index, { confidence: parseFloat(e.target.value) })}
-                        className="mt-1 block w-full"
-                      />
-                      <span className="text-sm text-gray-500">
-                        {Math.round(annotation.confidence * 100)}%
-                      </span>
-                    </div>
-                  </div>
                 </div>
-              ))}
-            </div>
+              ))
+            )}
           </div>
         </div>
 
-        <div className="flex justify-end space-x-4 mt-6">
+        <div className="flex justify-end mt-6 space-x-4">
+          <button onClick={onClose} className="border px-4 py-2 rounded">Cancel</button>
           <button
-            onClick={onClose}
-            className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={() => onSave(annotations)}
-            className="px-4 py-2 bg-[#002147] text-white rounded-lg hover:bg-[#003167] transition-colors"
+            onClick={() => {
+              const canvas = canvasRef.current;
+              const updatedBase64 = canvas?.toDataURL("image/png");
+              onSave(annotations, updatedBase64);
+            }}
+            className="bg-[#002147] text-white px-4 py-2 rounded hover:bg-[#003167]"
           >
             Save Changes
           </button>

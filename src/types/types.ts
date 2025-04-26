@@ -1,32 +1,16 @@
-export interface RoofDamageReport {
-  images: ImageAnalysis[];
-  notes: string;
-  analysis: string;
-  damageTypes: string[];
-  recommendations: string[];
-  estimate: {
-    materialCost: number;
-    laborCost: number;
-    timeEstimate: string;
-    priority: 'Low' | 'Medium' | 'High' | 'Critical';
-    details: string;
-  };
-  risks: {
-    description: string;
-    severity: 'Low' | 'Medium' | 'High' | 'Critical';
-  }[];
-  additionalNotes: string[];
-  timestamp: string;
-}
-
-export interface ImageAnalysis {
-  originalImage: string;  // base64 encoded original image
+export interface DamageAnnotation {
+  type: 'circle' | 'square' | 'line' | 'arrow' | 'text';
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  confidence: number;
   description: string;
-  annotations: DamageAnnotation[];  // Box location data stored separately
-  dimensions: {
-    width: number;
-    height: number;
-  };
-  verificationNotes?: string;  // Present only in second pass analysis
+  severity: 'Low' | 'Medium' | 'High' | 'Critical';
+  repairRecommendation: string;
+  isAdjusted: boolean;
+  adjustmentReason: string;
+  text?: string;
+  color?: string;
+  rotation?: number; // rotation in radians (for canvas transforms)
 }
-

@@ -39,7 +39,7 @@ const SavedInspectionPage = () => {
   }, []);
 
   const handleResume = (inspection: InspectionData) => {
-    navigate("/inspection", { state: { data: inspection } });
+    navigate("/inspection/commercial", { state: { data: inspection } });
   };
 
   return (
