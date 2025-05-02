@@ -20,6 +20,8 @@ import MobileLandingPage from './components/MobileLandingPage';
 import InspectionTypePage from "./components/InspectionTypePage";
 import VpaiLogo from './images/vpai-logo.png';
 import landingPageImage from './images/preview.png';
+import SurveyProposalPage from "./components/SurveyProposalPage";
+
 
 
 
@@ -69,10 +71,32 @@ function App() {
   >
     Estimate Calculator
   </Link>
+
+
+  <Link to="/survey-proposal" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+  Demo our Technology
+</Link>
+
 </div>
 
 
-<div>
+<div className="flex space-x-2 items-center">
+  <a
+    href="https://www.linkedin.com/company/106768017/admin/dashboard/"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+  >
+    LinkedIn
+  </a>
+  <a
+    href="https://www.instagram.com/vpaiproposaltool/"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 transition"
+  >
+    Instagram
+  </a>
   <Link
     to="/account"
     className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
@@ -80,6 +104,9 @@ function App() {
     Account
   </Link>
 </div>
+
+
+
 
           </div>
         </header>
@@ -100,6 +127,8 @@ function App() {
   <Route path="/estimator" element={<EstimatorPage />} />
 
   <Route path="/projects/:id/report" element={<ProjectReportPage />} />
+  <Route path="/survey-proposal" element={<SurveyProposalPage />} />
+
   <Route path="/inspection" element={<InspectionTypePage />} />
   <Route path="/inspection/commercial" element={
   <InspectionForm

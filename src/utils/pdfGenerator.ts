@@ -2722,3 +2722,35 @@ docDefinition.content.push({
 };
 
 export default generatePDF;
+
+
+
+pdfMake.vfs = pdfFonts.vfs;
+
+export const generateSurveyPDF = (data: {
+  clientName: string;
+  projectAddress: string;
+  surveyAnswers: string;
+}) => {
+  const { clientName, projectAddress, surveyAnswers } = data;
+
+  const docDefinition = {
+    content: [
+      { text: "Survey Proposal", style: "header" },
+      { text: `Client Name: ${clientName}`, margin: [0, 10, 0, 0] },
+      { text: `Project Address: ${projectAddress}`, margin: [0, 5, 0, 0] },
+      { text: "Survey Answers:", bold: true, margin: [0, 20, 0, 0] },
+      { text: surveyAnswers, margin: [0, 5, 0, 0] },
+    ],
+    styles: {
+      header: {
+        fontSize: 22,
+        bold: true,
+        alignment: "center",
+        margin: [0, 0, 0, 20],
+      },
+    },
+  };
+
+  pdfMake.createPdf(docDefinition).download("survey_proposal.pdf");
+};

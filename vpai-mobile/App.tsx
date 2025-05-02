@@ -1,19 +1,11 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
-import { WebView } from 'react-native-webview';
-import MobileLandingPage from './components/MobileLandingPage'; // adjust path if needed
-
+import { NavigationContainer } from '@react-navigation/native';
+import StackNavigator from './navigation/StackNavigator'; // match your current file name
 
 export default function App() {
   return (
-    <SafeAreaView style={styles.container}>
-<WebView source={{ uri: 'https://americanstruction-pdf.vercel.app/mobile' }} />
-</SafeAreaView>
+    <NavigationContainer>
+      <StackNavigator />
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
