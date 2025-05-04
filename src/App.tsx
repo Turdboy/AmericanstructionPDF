@@ -65,12 +65,7 @@ function App() {
 </Link>
 
 
-  <Link
-    to="/estimator"
-    className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
-  >
-    Estimate Calculator
-  </Link>
+  
 
 
   <Link to="/survey-proposal" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">

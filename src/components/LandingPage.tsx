@@ -24,7 +24,7 @@ const LandingPage = () => {
                 <span className="block">AI-Generated Competitive Bids</span>
                 <span className="block">& High-Quality, Winning Proposals</span>
                 <span className="block text-purple-400 mt-2">
-                  with <span className="text-white">VPAI</span>
+                  with <span className="text-white">Vysix</span>
                 </span>
               </h1>
 
@@ -41,17 +41,18 @@ const LandingPage = () => {
             </div>
 
             {/* Right Column */}
-            <div className="w-1/2 flex flex-col items-center text-center px-8 pt-32">
-              <p className="text-gray-300 text-lg max-w-md leading-tight mb-4">
-                VPAI turns your data into beautiful, branded proposals — ready to share with clients in seconds.
-              </p>
+            <div className="w-1/2 flex flex-col justify-center items-center text-center px-8">
+  <p className="text-gray-300 text-lg max-w-md leading-tight mb-4">
+    Vysix turns your data into beautiful, branded proposals — ready to share with clients in seconds.
+  </p>
 
-              <img
-                src={landingPageImage}
-                alt="Preview"
-                className="rounded-lg shadow-lg max-w-[90%] h-auto mb-2"
-              />
-            </div>
+  <img
+    src={landingPageImage}
+    alt="Preview"
+    className="rounded-lg shadow-lg max-w-[90%] h-auto mb-2"
+  />
+</div>
+
           </div>
         </div>
 
@@ -62,7 +63,7 @@ const LandingPage = () => {
               Win More Contracts with AI-Generated Competitive Bids
             </h2>
             <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-8">
-              VPAI doesn’t just generate proposals — it crafts{" "}
+              Vysix doesn’t just generate proposals — it crafts{" "}
               <span className="text-purple-400 font-semibold">winning bids</span>{" "}
               designed to outshine competitors, backed by smart pricing, client insights, and razor-sharp positioning.
             </p>
@@ -80,7 +81,7 @@ const LandingPage = () => {
       <div className="sm:hidden bg-black text-white flex flex-col items-center text-center p-6 min-h-[calc(100vh-64px)]">
         <img src={VpaiLogo} alt="VPAI Logo" className="w-32 h-32 mb-4" />
         <h1 className="text-2xl font-bold mb-2">
-          Win More Contracts <br /> with <span className="text-purple-400">VPAI</span>
+          Win More Contracts <br /> with <span className="text-purple-400">Vysix</span>
         </h1>
         <p className="text-gray-400 text-sm max-w-xs mb-4">
           AI-crafted, competitive bids designed to outshine competitors and win you more contracts.
