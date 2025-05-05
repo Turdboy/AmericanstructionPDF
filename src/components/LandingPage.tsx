@@ -14,11 +14,12 @@ const LandingPage = () => {
           <div className="flex flex-row min-h-[calc(100vh-64px)] items-center">
             {/* Left Column */}
             <div className="w-1/2 flex flex-col justify-center items-center text-center p-8">
-              <img
-                src={VpaiLogo}
-                alt="VPAI Logo"
-                className="w-80 h-80 mb-4"
-              />
+            <img
+  src={VpaiLogo}
+  alt="Vysix Logo"
+  className="max-w-[250px] h-auto mb-4"
+/>
+
 
               <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-3">
                 <span className="block">AI-Generated Competitive Bids</span>
