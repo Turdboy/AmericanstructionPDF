@@ -12,11 +12,12 @@ const AIVideoFeedPage: React.FC = () => {
     setVideos([]); // Clear previous results
 
     try {
-      const response = await fetch("http://localhost:5173/api/generateFeed", {
+      const response = await fetch("/api/generateFeed", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userInput }),
-      });
+    });
+    
 
       if (response.ok) {
         const data = await response.json();
