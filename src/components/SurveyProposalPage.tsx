@@ -12,7 +12,8 @@ const AIVideoFeedPage: React.FC = () => {
     setVideos([]); // Clear previous results
 
     try {
-      const response = await fetch("/api/generateFeed", {
+      const response = await fetch("https://vysixvideo-backend.onrender.com/generateFeed", {
+
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userInput }),
