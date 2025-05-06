@@ -1626,7 +1626,7 @@ const roofSections = Array.isArray(formData.roofSections) ? formData.roofSection
                             { text: "Prepared for:", bold: true, fontSize: 14, margin: [0, 0, 0, 10] },
                       
                             { text: "Client Name:", bold: true },
-                            { text: formData.clientName || "______________", margin: [0, 0, 0, 10] },
+                            { text: formData.clientname || "______________", margin: [0, 0, 0, 10] },
                       
                             { text: "Client Contact Info:", bold: true },
 { text: formData.clientcontactinfo || "______________", margin: [0, 0, 0, 10] },
@@ -1797,7 +1797,7 @@ const roofSections = Array.isArray(formData.roofSections) ? formData.roofSection
           ],
           [
             {
-              text: "Dear " + (formData.clientName || "Client") + ",\n\n" +
+              text: "Dear " + (formData.clientname || "Client") + ",\n\n" +
   "Americanstruction is a proudly female-led business founded and operated by Pamela Degregorio. With decades of experience, our company has become a trusted name in the Chicagoland area by delivering top-tier roofing services with integrity, precision, and care. From small repairs to full-scale commercial projects, we bring a commitment to excellence that puts our clients first every step of the way.\n\n" +
   "In partnership with Nick Degregorio and software developer James Tyler, we developed Roof-X, a cutting-edge platform designed to streamline and automate the roof inspection and estimation process. Roof-X enables our inspectors to generate more accurate, consistent, and professional reports in a fraction of the time—bringing innovation and efficiency to an industry that’s long overdue for it.\n\n" +
   "Our broader mission with Roof-X is to empower smaller roofing contractors by leasing out this technology to help them compete with larger commercial firms that have in-house estimating crews. By offering Roof-X as a solution, Americanstruction hopes to level the playing field and support the growth of local businesses in our community and beyond.\n\n" +
@@ -2728,16 +2728,16 @@ export default generatePDF;
 pdfMake.vfs = pdfFonts.vfs;
 
 export const generateSurveyPDF = (data: {
-  clientName: string;
+  clientname: string;
   projectAddress: string;
   surveyAnswers: string;
 }) => {
-  const { clientName, projectAddress, surveyAnswers } = data;
+  const { clientname, projectAddress, surveyAnswers } = data;
 
   const docDefinition = {
     content: [
       { text: "Survey Proposal", style: "header" },
-      { text: `Client Name: ${clientName}`, margin: [0, 10, 0, 0] },
+      { text: `Client Name: ${clientname}`, margin: [0, 10, 0, 0] },
       { text: `Project Address: ${projectAddress}`, margin: [0, 5, 0, 0] },
       { text: "Survey Answers:", bold: true, margin: [0, 20, 0, 0] },
       { text: surveyAnswers, margin: [0, 5, 0, 0] },
