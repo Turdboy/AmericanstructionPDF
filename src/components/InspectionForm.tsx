@@ -810,11 +810,12 @@ setEditorType(null);
                 </p>
                 {field === "caption" && (
   <button
-    onClick={() => openImageEditor(index, "overviewImages")}
-    className="mt-2 text-blue-600 underline"
-  >
-    Annotate
-  </button>
+  type="button"  // ← ✅ ADD THIS LINE
+  onClick={() => openImageEditor(index, "overviewImages")}
+  className="mt-2 text-blue-600 underline"
+>
+  Annotate
+</button>
 )}
 
               </div>
@@ -909,11 +910,12 @@ setEditorType(null);
                 </p>
                 {field === "description" && (
   <button
-    onClick={() => openImageEditor(index, "droneImages")}
-    className="mt-2 text-blue-600 underline"
-  >
-    Annotate
-  </button>
+  type="button"  // ← ✅ ADD THIS LINE
+  onClick={() => openImageEditor(index, "droneImages")}
+  className="mt-2 text-blue-600 underline"
+>
+  Annotate
+</button>
 )}
 
               </div>
