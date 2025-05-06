@@ -155,56 +155,10 @@ const convertToBase64 = (file: File): Promise<string> =>
     
 
 
-
     const [roofSections, setRoofSections] = useState([
-      {
-
-
-        sectionName: '',
-        roofLength: null,
-        roofWidth: null,
-        
-roofSquareFootage: '',
-
-
-
-        // General Observations
-        overallCondition: '',
-        leaks: '',
-        leaksDescription: '',
-        pondingWater: '',
-        pondingWaterDescription: '',
-        debrisAccumulation: '',
-        debrisDescription: '',
-        vegetationGrowth: '',
-        vegetationDescription: '',
-        accessibilityIssues: '',
-        accessibilityDescription: '',
-    
-        // Interior Evaluation
-        undersideAccessible: '',
-        deckCondition: '',
-        deckDamage: '',
-        deckMoisture: '',
-    
-        // Warranty Coverage
-        warrantyCoverage: '',
-        warrantyTerm: '',
-        warrantyType: '',
-        fmInsured: '',
-    
-        // Roofing Membrane/Surface
-        membraneMaterial: '',
-        membraneCondition: '',
-        seamsCondition: '',
-        fastenersCondition: '',
-        rustedFasteners: '',
-        looseFasteners: '',
-        missingFasteners: '',
-        granulesCondition: '',
-        coatingCondition: ''
-      }
+      { ...emptyRoofSection }
     ]);
+    
 
 
 
@@ -227,42 +181,108 @@ const [editorType, setEditorType] = useState<'images' | 'overviewImages' | 'dron
 
     
 
-    const emptyRoofSection = {
-
-      sectionName: '',
-roofLength: '',
-roofWidth: '',
-roofSquareFootage: '',
 
 
-      overallCondition: '',
-      leaks: '',
-      leaksDescription: '',
-      pondingWater: '',
-      pondingWaterDescription: '',
-      debrisAccumulation: '',
-      debrisDescription: '',
-      vegetationGrowth: '',
-      vegetationDescription: '',
-      accessibilityIssues: '',
-      accessibilityDescription: '',
-      undersideAccessible: '',
-      deckCondition: '',
-      deckDamage: '',
-      deckMoisture: '',
-      warrantyCoverage: '',
-      warrantyTerm: '',
-      warrantyType: '',
-      fmInsured: '',
-      membraneMaterial: '',
-      membraneCondition: '',
-      seamsCondition: '',
-      fastenersCondition: '',
-      rustedFasteners: '',
-      looseFasteners: '',
-      missingFasteners: '',
-      granulesCondition: '',
-      coatingCondition: ''
+      const emptyRoofSection = {
+        sectionName: '',
+        sectionAge: '',
+        roofLength: '',
+        roofWidth: '',
+        roofSquareFootage: '',
+        overallCondition: '',
+        leaks: '',
+        leaksDescription: '',
+        pondingWater: '',
+        pondingWaterDescription: '',
+        debrisAccumulation: '',
+        debrisDescription: '',
+        vegetationGrowth: '',
+        vegetationDescription: '',
+        accessibilityIssues: '',
+        accessibilityDescription: '',
+        undersideAccessible: '',
+        deckCondition: '',
+        deckDamage: '',
+        deckDamageDescription: '',
+        deckMoisture: '',
+        deckMoistureDescription: '',
+        membraneMaterial: '',
+        membraneCondition: '',
+        seamsCondition: '',
+        fastenersCondition: '',
+        rustedFasteners: '',
+        looseFasteners: '',
+        missingFasteners: '',
+        granulesCondition: '',
+        coatingCondition: '',
+        flashingMaterial: '',
+        flashingCondition: '',
+        flashingDamageLength: '',
+        flashingLocations: '',
+        sealantsCondition: '',
+        sealantsLength: '',
+        guttersCondition: '',
+        gutterSize: '',
+        downspoutsCondition: '',
+        downspoutsNumber: '',
+        downspoutsSize: '',
+        drainsCondition: '',
+        scuppersCondition: '',
+        pipesCondition: '',
+        ventsCondition: '',
+        hvacCondition: '',
+        skylightsCondition: '',
+        chimneysCondition: '',
+        parapetWallCondition: '',
+        copingCondition: '',
+        insulationType: '',
+        insulationThickness: '',
+        insulationCondition: '',
+        wetInsulation: '',
+        structuralIssues: '',
+        structuralIssueDetails: '',
+        sheathingCondition: '',
+        safeAccess: '',
+        guardrailCondition: '',
+        tripHazards: '',
+        wallFlashingEast: '',
+        wallFlashingWest: '',
+        wallFlashingNorth: '',
+        wallFlashingSouth: '',
+        curbSize: '',
+        curbCount: '',
+        curbLinearFeet: '',
+        curbHeight: '',
+        curbRailSize: '',
+        curbRailCount: '',
+        hotStackDiameter: '',
+        hotStackCount: '',
+        drainCount: '',
+        drainSize: '',
+        woodNailerSize: '',
+        woodNailerCount: '',
+        roofHatchSize: '',
+        roofHatchCount: '',
+        slipFlashingCount: '',
+        copingMetalMeasurements: '',
+        holdDownCleatCount: '',
+        dripEdgeCount: '',
+        pipeBootsCount: '',
+        pitchPansCount: '',
+        gutterLength: '',
+        coreSampleRoofCover: '',
+        coreSampleCoverBoard: '',
+        coreSampleTopInsulation: '',
+        coreSampleBottomInsulation: '',
+        coreSampleDeckType: '',
+        wallLength: '',
+        wallHeight: '',
+        curbLength: '',
+        wallCurbSquareFootage: '',
+      };
+      
+
+      
     };
 
 
