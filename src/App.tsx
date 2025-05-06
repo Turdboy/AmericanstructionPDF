@@ -40,7 +40,7 @@ function App() {
     <Router>
       <div className="min-h-screen bg-white">
         {/* 🌈 Gradient Header based on logo */}
-        <header className="bg-gradient-to-r from-[#FBA504] to-[#E83286] text-white z-50 relative">
+        <header className="hidden sm:block bg-gradient-to-r from-[#FBA504] to-[#E83286] text-white z-50 relative">
 
 
           <div className="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -99,6 +99,22 @@ function App() {
     Account
   </Link>
 </div>
+
+
+
+
+<header className="sm:hidden bg-gradient-to-r from-purple-600 to-pink-500 text-white p-4 flex justify-between items-center">
+  <div className="text-lg font-bold">Vysix Mobile</div>
+  <button
+    className="bg-white text-purple-600 px-3 py-1 rounded"
+    onClick={() => window.location.href = '/survey-proposal'}
+  >
+    Demo
+  </button>
+</header>
+
+
+
 
 
 
