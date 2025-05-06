@@ -13,7 +13,7 @@ import EstimatorPage from "./components/EstimatorPage";
 import LandingPage from "./components/LandingPage";
 import SavedInspectionPage from "./components/SavedInspectionPage";
 import AuthGatewayPage from "./components/AuthGatewayPage";
-import MobileLandingPage from './components/MobileLandingPage';
+import LandingPageMobile from './components/LandingPageMobile';
 import InspectionTypePage from "./components/InspectionTypePage";
 import SurveyProposalPage from "./components/SurveyProposalPage";
 
@@ -42,7 +42,8 @@ function App() {
     return (
       <Router>
         <Routes>
-          <Route path="/" element={<MobileLandingPage />} />
+        <Route path="/" element={<LandingPageMobile />} />
+
           <Route path="/survey-proposal" element={<SurveyProposalPage />} />
           {/* Add more mobile-specific routes here if needed */}
         </Routes>
