@@ -1799,8 +1799,8 @@ const roofSections = Array.isArray(formData.roofSections) ? formData.roofSection
             {
               text: "Dear " + (formData.clientname || "Client") + ",\n\n" +
   "Americanstruction is a proudly female-led business founded and operated by Pamela Degregorio. With decades of experience, our company has become a trusted name in the Chicagoland area by delivering top-tier roofing services with integrity, precision, and care. From small repairs to full-scale commercial projects, we bring a commitment to excellence that puts our clients first every step of the way.\n\n" +
-  "In partnership with Nick Degregorio and software developer James Tyler, we developed Roof-X, a cutting-edge platform designed to streamline and automate the roof inspection and estimation process. Roof-X enables our inspectors to generate more accurate, consistent, and professional reports in a fraction of the time—bringing innovation and efficiency to an industry that’s long overdue for it.\n\n" +
-  "Our broader mission with Roof-X is to empower smaller roofing contractors by leasing out this technology to help them compete with larger commercial firms that have in-house estimating crews. By offering Roof-X as a solution, Americanstruction hopes to level the playing field and support the growth of local businesses in our community and beyond.\n\n" +
+  "Our Head of Commercial Development, Nick Degregorio, sought out developer James Tyler to conceive a practical AI tool that could transform manual operational processes into automated, streamlined workflows. Together, they developed Vysix — a platform that empowers businesses to generate precise, professional proposals and reports in a fraction of the time, delivering innovation and efficiency to industries long overdue for digital transformation. \n\n" +
+  "Our broader mission with Vysix is to help Americanstruction scale its operations and serve more clients without increasing crew size, unlocking new growth by maximizing efficiency and output through technology.\n\n" +
   "Warm regards,\n\nPamela Degregorio\nCEO, Americanstruction",
 fontSize: 10,
 lineHeight: 1.5,
