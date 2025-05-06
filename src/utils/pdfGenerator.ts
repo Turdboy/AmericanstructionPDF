@@ -1170,9 +1170,9 @@ const roofSections = Array.isArray(formData.roofSections) ? formData.roofSection
           },
           {
             image: roofXLogo,
-            width: 150,
+            width: 100,
             alignment: "right",
-            margin: [80, -44, 0, 10]
+            margin: [120, -11, 0, 10]
           }
         ],
         absolutePosition: { x: 0, y: 534 } // position within red bar
@@ -2460,59 +2460,55 @@ docDefinition.content.push({
       ]
     },
 
-    // === Recommendations ===
+ // === Recommendations ===
+{
+  text: "Recommendations",
+  fontSize: 12,
+  bold: true,
+  margin: [0, 25, 0, 6]
+},
+{
+  stack: [
     {
-      text: "Recommendations",
-      fontSize: 12,
+      text: "Detailed Description of Recommended Repairs or Maintenance:",
       bold: true,
-      margin: [0, 25, 0, 6]
+      fontSize: 10,
+      margin: [0, 2, 0, 0]
     },
+    { text: formData.recommendationDetails || "N/A", fontSize: 9, margin: [0, 0, 0, 6] },
+
     {
-      stack: [
-        {
-          text: "Detailed Description of Recommended Repairs or Maintenance:",
-          bold: true,
-          fontSize: 10,
-          margin: [0, 2, 0, 0]
-        },
-        { text: formData.repairRecommendations || "N/A", fontSize: 9, margin: [0, 0, 0, 6] },
-
-        {
-          text: "Prioritization of Repairs:",
-          bold: true,
-          fontSize: 10,
-          margin: [0, 2, 0, 0]
-        },
-        { text: formData.repairPriority || "N/A", fontSize: 9, margin: [0, 0, 0, 6] },
-
-        {
-          text: "Estimated Cost of Repairs ($):",
-          bold: true,
-          fontSize: 10,
-          margin: [0, 2, 0, 0]
-        },
-        { text: formData.repairCost || "N/A", fontSize: 9, margin: [0, 0, 0, 12] }
-      ]
-    },
-
-    // === Summary ===
-    {
-      text: "Overall Roof Summary",
-      fontSize: 12,
+      text: "Prioritization of Repairs:",
       bold: true,
-      margin: [0, 20, 0, 6]
+      fontSize: 10,
+      margin: [0, 2, 0, 0]
     },
+    { text: formData.recommendationPrioritization || "N/A", fontSize: 9, margin: [0, 0, 0, 6] },
+
     {
-      stack: [
-        {
-          text: "Brief Summary of the Overall Roof Condition and Recommendations:",
-          bold: true,
-          fontSize: 10,
-          margin: [0, 2, 0, 0]
-        },
-        { text: formData.roofSummary || "N/A", fontSize: 9, margin: [0, 0, 0, 0] }
-      ]
+      text: "Estimated Cost of Repairs ($):",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 2, 0, 0]
     },
+    { text: formData.recommendationCost ? `$${formData.recommendationCost}` : "N/A", fontSize: 9, margin: [0, 0, 0, 12] }
+  ]
+},
+
+// === Summary ===
+{
+  text: "Overall Roof Summary",
+  fontSize: 12,
+  bold: true,
+  margin: [0, 20, 0, 6]
+},
+{
+  stack: [
+    
+    { text: formData.overallConditionSummary || "N/A", fontSize: 9, margin: [0, 0, 0, 0] }
+  ]
+},
+
 
     // === Footer ===
     {
@@ -2555,11 +2551,16 @@ docDefinition.content.push({
       margin: [0, 30, 0, 6]
     },
     ...[
-      ["Is the current roof still under warranty?", "roofWarranty"],
+      ["Is the current roof still under warranty?", "warrantyCoverage"],
       ["Warranty Term (Years)", "warrantyTerm"],
       ["Warranty Type", "warrantyType"],
-      ["Is the Building FM Insured?", "buildingFMInsured"]
-    ].map(([label, key]) => ({
+      ["Is the Building FM Insured?", "fmInsured"]
+    ]
+    
+    
+    
+    
+    .map(([label, key]) => ({
       stack: [
         { text: label + ":", bold: true, fontSize: 9, margin: [0, 3, 0, 0] },
         { text: formData?.[key] || "N/A", fontSize: 8, margin: [0, 0, 0, 6] }

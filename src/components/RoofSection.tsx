@@ -127,7 +127,25 @@ const RoofSection = ({ section, index, onChange }) => {
       readOnly
       className="w-full border p-2 rounded bg-gray-100"
     />
+    <p className="text-xs text-gray-500 mt-1">
+    Calculated Below
+  </p>
+
+
+
+
   </div>
+
+
+
+
+
+
+
+
+
+
+  
 </div>
 
 

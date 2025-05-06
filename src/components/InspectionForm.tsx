@@ -139,6 +139,14 @@ const convertToBase64 = (file: File): Promise<string> =>
         // Roof Type and Age
         roofType: '',
         roofAge: '',
+
+
+        recommendationDetails: '',
+recommendationPrioritization: '',
+recommendationCost: '',
+overallConditionSummary: '',
+
+
         
     });
 
@@ -316,6 +324,7 @@ const emptyRoofSection = {
   roofLength: null,
   roofWidth: null,
   roofSquareFootage: null,
+  
 
   overallCondition: '',
   leaks: '',
@@ -1384,6 +1393,45 @@ setEditorType(null);
 )}
 
 
+
+<hr className="my-6" />
+<h3 className="text-lg font-bold">Recommendations</h3>
+
+<label className="block mt-2">Detailed Description of Recommended Repairs or Maintenance</label>
+<textarea
+  name="recommendationDetails"
+  value={formData.recommendationDetails}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
+
+<label className="block mt-2">Prioritization of Repairs</label>
+<textarea
+  name="recommendationPrioritization"
+  value={formData.recommendationPrioritization}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
+
+<label className="block mt-2">Estimated Cost of Repairs ($)</label>
+<input
+  type="text"
+  name="recommendationCost"
+  value={formData.recommendationCost}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
+
+
+<h3 className="text-lg font-bold mt-6">Overall Condition Summary</h3>
+
+<label className="block mt-2">Summary of the overall condition across all roof sections</label>
+<textarea
+  name="overallConditionSummary"
+  value={formData.overallConditionSummary}
+  onChange={handleChange}
+  className="w-full border p-2 rounded"
+/>
 
 
 
