@@ -103,15 +103,22 @@ function App() {
 
 
 
-<header className="sm:hidden bg-gradient-to-r from-purple-600 to-pink-500 text-white p-4 flex justify-between items-center">
-  <div className="text-lg font-bold">Vysix Mobile</div>
-  <button
-    className="bg-white text-purple-600 px-3 py-1 rounded"
-    onClick={() => window.location.href = '/survey-proposal'}
-  >
-    Demo
-  </button>
+{/* MOBILE HEADER */}
+<header className="sm:hidden bg-gradient-to-r from-purple-600 to-pink-500 text-white p-2 flex justify-around items-center">
+  <Link to="/revisit" className="flex flex-col items-center text-xs">
+    <span className="material-icons text-lg">history</span>
+    Revisit
+  </Link>
+  <Link to="/inspection" className="flex flex-col items-center text-xs">
+    <span className="material-icons text-lg">edit</span>
+    Start
+  </Link>
+  <Link to="/account" className="flex flex-col items-center text-xs">
+    <span className="material-icons text-lg">person</span>
+    Account
+  </Link>
 </header>
+
 
 
 
