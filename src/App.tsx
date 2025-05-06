@@ -1,12 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { ProjectsPage } from "./components/ProjectsPage";
 import { ProjectAnalysisPage } from "./components/ProjectAnalysisPage";
 import { ProjectReportPage } from "./components/ProjectReportPage";
 import InspectionForm from "./components/InspectionForm";
-import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { generatePDF } from "./utils/pdfGenerator";
 import RevisitPage from "./components/Home";
 import EditProposalPage from "./components/EditProposalPage";
 import LoginPage from "./components/LoginPage";
@@ -18,16 +15,18 @@ import SavedInspectionPage from "./components/SavedInspectionPage";
 import AuthGatewayPage from "./components/AuthGatewayPage";
 import MobileLandingPage from './components/MobileLandingPage';
 import InspectionTypePage from "./components/InspectionTypePage";
-import VpaiLogo from './images/vpai-logo.png';
-import landingPageImage from './images/preview.png';
 import SurveyProposalPage from "./components/SurveyProposalPage";
 
-
-
-
-
-
-
+// Mobile detection hook
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  return isMobile;
+}
 
 function MainPage() {
   return (
@@ -36,120 +35,71 @@ function MainPage() {
 }
 
 function App() {
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    // Mobile-only experience
+    return (
+      <Router>
+        <Routes>
+          <Route path="/" element={<MobileLandingPage />} />
+          <Route path="/survey-proposal" element={<SurveyProposalPage />} />
+          {/* Add more mobile-specific routes here if needed */}
+        </Routes>
+      </Router>
+    );
+  }
+
+  // Desktop/tablet experience
   return (
     <Router>
       <div className="min-h-screen bg-white">
-        {/* 🌈 Gradient Header based on logo */}
         <header className="bg-gradient-to-r from-[#FBA504] to-[#E83286] text-white z-50 relative">
-
-
-          <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex space-x-4">
-          <Link
-                to="/"
-                className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
-              >
-                Home
-              </Link>
-  <Link
-    to="/revisit"
-    className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
-  >
-    Revisit Inspections
-  </Link>
-  <Link
-  to="/inspection"
-  className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
->
-  Start Inspection
-</Link>
-
-
-  
-
-
-  <Link to="/survey-proposal" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
-  Demo our Technology
-</Link>
-
-</div>
-
-
-<div className="flex space-x-2 items-center">
-  <a
-    href="https://www.linkedin.com/company/106768017/admin/dashboard/"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-  >
-    LinkedIn
-  </a>
-  <a
-    href="https://www.instagram.com/vpaiproposaltool/"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 transition"
-  >
-    Instagram
-  </a>
-  <Link
-    to="/account"
-    className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
-  >
-    Account
-  </Link>
-</div>
-
-
-
-
+          <div className="container mx-auto px-4 py-4 flex justify-between items-center overflow-x-auto sm:overflow-x-visible whitespace-nowrap">
+            <div className="flex space-x-4">
+              <Link to="/" className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition">Home</Link>
+              <Link to="/revisit" className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition">Revisit Inspections</Link>
+              <Link to="/inspection" className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition">Start Inspection</Link>
+              <Link to="/survey-proposal" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Demo our Technology</Link>
+            </div>
+            <div className="flex space-x-2 items-center">
+              <a href="https://www.linkedin.com/company/106768017/admin/dashboard/" target="_blank" rel="noopener noreferrer" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">LinkedIn</a>
+              <a href="https://www.instagram.com/vpaiproposaltool/" target="_blank" rel="noopener noreferrer" className="bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 transition">Instagram</a>
+              <Link to="/account" className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition">Account</Link>
+            </div>
           </div>
         </header>
 
-        {/* Routes */}
         <Routes>
-  {/* 🌟 Landing/Home */}
-  <Route path="/" element={<LandingPage />} />
-
-  {/* 🔐 Authentication */}
-  <Route path="/account" element={<AuthGatewayPage />} />
-  <Route path="/login" element={<LoginPage />} />
-  <Route path="/create-account" element={<CreateAccountPage />} />
-
-  {/* ✅ Protected (after login) */}
-  <Route path="/projects" element={<ProjectsPage />} />
-  <Route path="/projects/:id" element={<ProjectAnalysisPage />} />
-  <Route path="/estimator" element={<EstimatorPage />} />
-
-  <Route path="/projects/:id/report" element={<ProjectReportPage />} />
-  <Route path="/survey-proposal" element={<SurveyProposalPage />} />
-
-  <Route path="/inspection" element={<InspectionTypePage />} />
-  <Route path="/inspection/commercial" element={
-  <InspectionForm
-    onSubmit={(data) => {
-      const existing = JSON.parse(localStorage.getItem("savedInspections") || "[]");
-      const { images, overviewImages, droneImages, ...textOnlyData } = data;
-      const newInspection = {
-        ...textOnlyData,
-        id: crypto.randomUUID(),
-        date: new Date().toISOString(),
-      };
-      localStorage.setItem("savedInspections", JSON.stringify([newInspection, ...existing]));
-      console.log("📝 Saved inspection (text only):", newInspection);
-    }}
-  />
-} />
-
-  <Route path="/edit-proposal" element={<EditProposalPage />} />
-  <Route path="/revisit" element={<SavedInspectionPage />} />
-
-  {/* 🛠 Other */}
-  <Route path="/v1/*" element={<MainPage />} />
-  <Route path="/mobile" element={<MobileLandingPage />} />
-
-</Routes>
-
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/account" element={<AuthGatewayPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/create-account" element={<CreateAccountPage />} />
+          <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/projects/:id" element={<ProjectAnalysisPage />} />
+          <Route path="/estimator" element={<EstimatorPage />} />
+          <Route path="/projects/:id/report" element={<ProjectReportPage />} />
+          <Route path="/survey-proposal" element={<SurveyProposalPage />} />
+          <Route path="/inspection" element={<InspectionTypePage />} />
+          <Route path="/inspection/commercial" element={
+            <InspectionForm
+              onSubmit={(data) => {
+                const existing = JSON.parse(localStorage.getItem("savedInspections") || "[]");
+                const { images, overviewImages, droneImages, ...textOnlyData } = data;
+                const newInspection = {
+                  ...textOnlyData,
+                  id: crypto.randomUUID(),
+                  date: new Date().toISOString(),
+                };
+                localStorage.setItem("savedInspections", JSON.stringify([newInspection, ...existing]));
+                console.log("📝 Saved inspection (text only):", newInspection);
+              }}
+            />
+          } />
+          <Route path="/edit-proposal" element={<EditProposalPage />} />
+          <Route path="/revisit" element={<SavedInspectionPage />} />
+          <Route path="/v1/*" element={<MainPage />} />
+        </Routes>
       </div>
     </Router>
   );
