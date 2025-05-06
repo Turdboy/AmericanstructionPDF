@@ -77,6 +77,22 @@ const convertToBase64 = (file: File): Promise<string> =>
     reader.onerror = (err) => reject(err);
   });
 
+  const deepClean = (obj) => {
+    if (Array.isArray(obj)) {
+      return obj.map(deepClean);
+    } else if (obj && typeof obj === 'object') {
+      const cleaned = {};
+      for (const [key, value] of Object.entries(obj)) {
+        if (value !== undefined) {
+          cleaned[key] = deepClean(value);
+        }
+      }
+      return cleaned;
+    }
+    return obj;
+  };
+  
+
   const getWordCount = (text: string) => text.trim().split(/\s+/).filter(Boolean).length;
 
   // Optional: customize limits per field
@@ -1254,12 +1270,16 @@ setEditorType(null);
           spreadsheetUrl,
           finalEstimate, // ✅ Add this
         };
+
+        const cleanedInspection = deepClean({
+          ...inspection,
+          propertyName: formData.propertyName, // ← already here
+        });
         
         
-        await saveInspectionDraftToFirestore({
-  ...inspection,
-  propertyName: formData.propertyName, // ← add this if it’s not already there
-});
+        
+        await saveInspectionDraftToFirestore(cleanedInspection);
+
         alert("✅ Inspection draft saved to your account!");
       } catch (error) {
         console.error("❌ Failed to save draft:", error);
