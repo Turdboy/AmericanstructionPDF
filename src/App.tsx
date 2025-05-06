@@ -40,7 +40,7 @@ function App() {
     <Router>
       <div className="min-h-screen bg-white">
         {/* 🌈 Gradient Header based on logo */}
-        <header className="hidden sm:block bg-gradient-to-r from-[#FBA504] to-[#E83286] text-white z-50 relative">
+        <header className="bg-gradient-to-r from-[#FBA504] to-[#E83286] text-white z-50 relative">
 
 
           <div className="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -99,29 +99,6 @@ function App() {
     Account
   </Link>
 </div>
-
-
-
-
-{/* MOBILE HEADER */}
-<header className="sm:hidden bg-gradient-to-r from-purple-600 to-pink-500 text-white p-2 flex justify-around items-center">
-  <Link to="/revisit" className="flex flex-col items-center text-xs">
-    <span className="material-icons text-lg">history</span>
-    Revisit
-  </Link>
-  <Link to="/inspection" className="flex flex-col items-center text-xs">
-    <span className="material-icons text-lg">edit</span>
-    Start
-  </Link>
-  <Link to="/account" className="flex flex-col items-center text-xs">
-    <span className="material-icons text-lg">person</span>
-    Account
-  </Link>
-</header>
-
-
-
-
 
 
 
