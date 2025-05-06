@@ -191,7 +191,7 @@ const RoofSection = ({ section, index, onChange }) => {
 <h3 className="text-lg font-bold">General Observations</h3>
 
 {/* Overall Roof Condition */}
-<label className="block">Overall Roof Condition:</label>
+<label className="block">Overall Section Condition:</label>
 <select name="overallCondition" onChange={handleChange} className="w-full border p-2 rounded">
     <option value="">Select Condition</option>
     <option value="Excellent">Excellent</option>
