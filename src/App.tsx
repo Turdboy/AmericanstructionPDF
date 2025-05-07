@@ -21,6 +21,8 @@ import InspectionTypePage from "./components/InspectionTypePage";
 import VpaiLogo from './images/vpai-logo.png';
 import landingPageImage from './images/preview.png';
 import SurveyProposalPage from "./components/SurveyProposalPage";
+import MobileHeader from "./components/MobileHeader";
+
 
 
 
@@ -40,71 +42,68 @@ function App() {
     <Router>
       <div className="min-h-screen bg-white">
         {/* 🌈 Gradient Header based on logo */}
-        <header className="bg-gradient-to-r from-[#FBA504] to-[#E83286] text-white z-50 relative">
+        {/* Desktop & Tablet Header */}
+<div className="hidden sm:block">
+  <header className="bg-gradient-to-r from-[#FBA504] to-[#E83286] text-white z-50 relative">
+    <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div className="flex space-x-4">
+        <Link
+          to="/"
+          className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
+        >
+          Home
+        </Link>
+        <Link
+          to="/revisit"
+          className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
+        >
+          Revisit Inspections
+        </Link>
+        <Link
+          to="/inspection"
+          className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
+        >
+          Start Inspection
+        </Link>
+        <Link
+          to="/survey-proposal"
+          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+        >
+          Demo our Technology
+        </Link>
+      </div>
 
-
-          <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex space-x-4">
-          <Link
-                to="/"
-                className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
-              >
-                Home
-              </Link>
-  <Link
-    to="/revisit"
-    className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
-  >
-    Revisit Inspections
-  </Link>
-  <Link
-  to="/inspection"
-  className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
->
-  Start Inspection
-</Link>
-
-
-  
-
-
-  <Link to="/survey-proposal" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
-  Demo our Technology
-</Link>
-
+      <div className="flex space-x-2 items-center">
+        <a
+          href="https://www.linkedin.com/company/106768017/admin/dashboard/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+        >
+          LinkedIn
+        </a>
+        <a
+          href="https://www.instagram.com/vpaiproposaltool/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 transition"
+        >
+          Instagram
+        </a>
+        <Link
+          to="/account"
+          className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
+        >
+          Account
+        </Link>
+      </div>
+    </div>
+  </header>
 </div>
 
+{/* Mobile Header (renders nothing) */}
+<MobileHeader />
 
-<div className="flex space-x-2 items-center">
-  <a
-    href="https://www.linkedin.com/company/106768017/admin/dashboard/"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-  >
-    LinkedIn
-  </a>
-  <a
-    href="https://www.instagram.com/vpaiproposaltool/"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 transition"
-  >
-    Instagram
-  </a>
-  <Link
-    to="/account"
-    className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
-  >
-    Account
-  </Link>
-</div>
-
-
-
-
-          </div>
-        </header>
 
         {/* Routes */}
         <Routes>

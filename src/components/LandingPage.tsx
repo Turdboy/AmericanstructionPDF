@@ -97,14 +97,14 @@ const LandingPage = () => {
 
          {/* NEW MOBILE BUTTONS */}
          <button
-          onClick={() => navigate("/revisit-inspection")}
+          onClick={() => navigate("/revisit")}
           className="bg-purple-500 hover:bg-purple-600 transition text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md mb-2"
         >
           Revisit Inspection
         </button>
 
         <button
-          onClick={() => navigate("/start-inspection")}
+          onClick={() => navigate("/inspection")}
           className="bg-purple-500 hover:bg-purple-600 transition text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md mb-2"
         >
           Start Inspection
@@ -117,7 +117,7 @@ const LandingPage = () => {
           Account
         </button>
 
-        
+
       </div>
     </>
   );
