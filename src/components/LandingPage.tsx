@@ -77,48 +77,49 @@ const LandingPage = () => {
           </div>
         </section>
       </div>
+{/* Mobile-only view */}
+<div className="sm:hidden bg-black text-white flex flex-col items-center text-center px-6 py-8 min-h-screen">
+  <img src={VpaiLogo} alt="VPAI Logo" className="w-32 h-32 mb-6" />
 
-      {/* Mobile-only view */}
-      <div className="sm:hidden bg-black text-white flex flex-col items-center text-center p-6 min-h-[calc(100vh-64px)]">
-        <img src={VpaiLogo} alt="VPAI Logo" className="w-32 h-32 mb-4" />
-        <h1 className="text-2xl font-bold mb-2">
-          Win More Contracts <br /> with <span className="text-purple-400">Vysix</span>
-        </h1>
-        <p className="text-gray-400 text-sm max-w-xs mb-4">
-          AI-crafted, competitive bids designed to outshine competitors and win you more contracts.
-        </p>
-        <button
-          onClick={() => navigate("/survey-proposal")}
-          className="bg-purple-600 hover:bg-purple-700 transition text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md"
-        >
-          Demo our Tech
-        </button>
+  <h1 className="text-2xl font-bold mb-4">
+    Win More Contracts <br /> with <span className="text-purple-400">Vysix</span>
+  </h1>
 
+  <p className="text-gray-400 text-sm max-w-xs mb-6">
+    AI-crafted, competitive bids designed to outshine competitors and win you more contracts.
+  </p>
 
-         {/* NEW MOBILE BUTTONS */}
-         <button
-          onClick={() => navigate("/revisit")}
-          className="bg-purple-500 hover:bg-purple-600 transition text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md mb-2"
-        >
-          Revisit Inspection
-        </button>
+  <div className="flex flex-col space-y-3 w-full max-w-xs">
+    <button
+      onClick={() => navigate("/survey-proposal")}
+      className="bg-purple-600 hover:bg-purple-700 transition text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md"
+    >
+      Demo our Tech
+    </button>
 
-        <button
-          onClick={() => navigate("/inspection")}
-          className="bg-purple-500 hover:bg-purple-600 transition text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md mb-2"
-        >
-          Start Inspection
-        </button>
+    <button
+      onClick={() => navigate("/revisit")}
+      className="bg-purple-500 hover:bg-purple-600 transition text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md"
+    >
+      Revisit Inspection
+    </button>
 
-        <button
-          onClick={() => navigate("/account")}
-          className="bg-purple-500 hover:bg-purple-600 transition text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md"
-        >
-          Account
-        </button>
+    <button
+      onClick={() => navigate("/inspection")}
+      className="bg-purple-500 hover:bg-purple-600 transition text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md"
+    >
+      Start Inspection
+    </button>
 
+    <button
+      onClick={() => navigate("/account")}
+      className="bg-purple-500 hover:bg-purple-600 transition text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md"
+    >
+      Account
+    </button>
+  </div>
+</div>
 
-      </div>
     </>
   );
 };
