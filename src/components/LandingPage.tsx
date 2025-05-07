@@ -93,6 +93,31 @@ const LandingPage = () => {
         >
           Demo our Tech
         </button>
+
+
+         {/* NEW MOBILE BUTTONS */}
+         <button
+          onClick={() => navigate("/revisit-inspection")}
+          className="bg-purple-500 hover:bg-purple-600 transition text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md mb-2"
+        >
+          Revisit Inspection
+        </button>
+
+        <button
+          onClick={() => navigate("/start-inspection")}
+          className="bg-purple-500 hover:bg-purple-600 transition text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md mb-2"
+        >
+          Start Inspection
+        </button>
+
+        <button
+          onClick={() => navigate("/account")}
+          className="bg-purple-500 hover:bg-purple-600 transition text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md"
+        >
+          Account
+        </button>
+
+        
       </div>
     </>
   );
