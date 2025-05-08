@@ -354,6 +354,15 @@ overallConditionSummary: '',
         wallCurbSquareFootage: null,
       }
     ]);
+
+    const [expandedSections, setExpandedSections] = useState<{ [key: number]: boolean }>({});
+
+    const toggleSection = (index: number) => {
+      setExpandedSections((prev) => ({
+        ...prev,
+        [index]: !prev[index],
+      }));
+    };
     
 
 
@@ -1480,13 +1489,24 @@ setEditorType(null);
 
 
 {roofSections.map((section, index) => (
-  <RoofSection
-    key={index}
-    section={section}
-    index={index}
-    onChange={handleRoofSectionChange}
-  />
+  <div key={index} className="border rounded mb-4">
+    <button
+      type="button"
+      onClick={() => toggleSection(index)}
+      className="w-full text-left px-4 py-2 bg-gray-200 font-bold"
+    >
+      {`Roof Section ${index + 1}`} {expandedSections[index] ? "▲" : "▼"}
+    </button>
+    {expandedSections[index] && (
+      <RoofSection
+        section={section}
+        index={index}
+        onChange={handleRoofSectionChange}
+      />
+    )}
+  </div>
 ))}
+
 
 
 
