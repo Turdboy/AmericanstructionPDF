@@ -17,6 +17,7 @@ const TVTrackerPage: React.FC = () => {
     review: "",
   });
 
+  const [selectedShow, setSelectedShow] = useState<any>(null); // <== track full show object
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [randomShows, setRandomShows] = useState<any[]>([]);
@@ -60,6 +61,7 @@ const TVTrackerPage: React.FC = () => {
   };
 
   const handleSelectShow = async (show: any) => {
+    setSelectedShow(show);  // <== store full show object
     setFormData({ ...formData, showName: show.name, seasonNumber: "", episodeNumber: "" });
     try {
       const seasonsRes = await fetch(`https://api.tvmaze.com/shows/${show.id}/seasons`);
@@ -90,6 +92,7 @@ const TVTrackerPage: React.FC = () => {
         episodeNumber: formData.episodeNumber,
         rating: formData.rating,
         review: formData.review,
+        imageUrl: selectedShow?.image?.medium || "",  // <== ADD imageUrl here
         createdAt: serverTimestamp(),
       });
       alert("Review saved!");

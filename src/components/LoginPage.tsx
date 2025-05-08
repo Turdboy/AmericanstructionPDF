@@ -12,7 +12,7 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("/inspection");
+      navigate("/");
     } catch (error) {
       alert("❌ Login failed. Please check your email and password.");
       console.error(error);

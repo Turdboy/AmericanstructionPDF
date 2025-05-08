@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 import { VpaiLogo } from "./images";
 
 const LandingPageTVTracker: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [randomShows, setRandomShows] = useState<any[]>([]);
 
   useEffect(() => {
@@ -21,6 +23,15 @@ const LandingPageTVTracker: React.FC = () => {
 
     fetchRandomShows();
   }, []);
+
+  const handleGetStarted = () => {
+    if (!user) {
+      alert("You must be logged in to continue.");
+      navigate("/login");
+    } else {
+      navigate("/tv-dashboard");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-8 w-full">
@@ -50,7 +61,7 @@ const LandingPageTVTracker: React.FC = () => {
       </p>
 
       <button
-        onClick={() => navigate("/survey-proposal")}
+        onClick={handleGetStarted}
         className="bg-purple-600 hover:bg-purple-700 transition text-white text-lg font-semibold py-3 px-6 rounded-lg shadow-md"
       >
         Get Started — It’s Free

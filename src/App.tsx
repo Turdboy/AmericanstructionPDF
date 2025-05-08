@@ -75,7 +75,7 @@ function App() {
           Start Inspection
         </Link>
         <Link
-          to="/survey-proposal"
+          to="/landingpagetvtracker"
           className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
         >
           TV Tracker
