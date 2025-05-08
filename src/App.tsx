@@ -22,6 +22,14 @@ import VpaiLogo from './images/vpai-logo.png';
 import landingPageImage from './images/preview.png';
 import SurveyProposalPage from "./components/SurveyProposalPage";
 import MobileHeader from "./components/MobileHeader";
+import LandingPageTVTracker from "./components/LandingPageTVTracker";
+import { AuthProvider } from "../contexts/AuthContext";
+import TVDashboardPage from "./components/TVDashboard";
+
+
+
+
+
 
 
 
@@ -39,6 +47,7 @@ function MainPage() {
 
 function App() {
   return (
+    <AuthProvider>
     <Router>
       <div className="min-h-screen bg-white">
         {/* 🌈 Gradient Header based on logo */}
@@ -69,7 +78,7 @@ function App() {
           to="/survey-proposal"
           className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
         >
-          Demo our Technology
+          TV Tracker
         </Link>
       </div>
 
@@ -122,6 +131,9 @@ function App() {
 
   <Route path="/projects/:id/report" element={<ProjectReportPage />} />
   <Route path="/survey-proposal" element={<SurveyProposalPage />} />
+  <Route path="/landingpagetvtracker" element={<LandingPageTVTracker />} />
+  <Route path="/tv-dashboard" element={<TVDashboardPage />} />
+
 
   <Route path="/inspection" element={<InspectionTypePage />} />
   <Route path="/inspection/commercial" element={
@@ -151,6 +163,7 @@ function App() {
 
       </div>
     </Router>
+    </AuthProvider>
   );
 }
 
