@@ -1,36 +1,39 @@
-// src/services/inspectionService.ts
-import { db, auth } from "../firebase";
-import { addDoc, collection, getDocs, query, where, serverTimestamp } from "firebase/firestore";
+import { doc, setDoc, deleteDoc, collection, addDoc } from "firebase/firestore";
+import { auth } from "../firebase";
+import { db } from "../firebase";
+import { serverTimestamp } from "firebase/firestore";
 
-export interface InspectionData {
-  formData: any;
-  roofSections: any[];
-  images: any[];
-  overviewImages: any[];
-  droneImages: any[];
-}
+export const saveInspectionDraftToFirestore = async (inspection) => {
+    const user = auth.currentUser;
+    if (!user) throw new Error("Not logged in");
 
-export const saveInspectionDraftToFirestore = async (inspection: InspectionData) => {
-  const user = auth.currentUser;
-  if (!user) throw new Error("Not logged in");
+    const docRef = doc(db, "inspections", user.uid); // single doc per user
 
-  await addDoc(collection(db, "inspections"), {
-    ...inspection,
-    userId: user.uid,
-    timestamp: serverTimestamp(),
-  });
+    await setDoc(docRef, {
+        ...inspection,
+        userId: user.uid,
+        savedAt: serverTimestamp(),
+    }, { merge: true });
 };
 
 
-export const getUserDraftsFromFirestore = async () => {
+export const clearSavedInspectionDraft = async (userId) => {
+  const docRef = doc(db, "inspections", userId);
+  await deleteDoc(docRef);
+  console.log("🗑️ Cleared saved inspection draft for", userId);
+};
+
+export const saveInspectionToArchive = async (inspection) => {
   const user = auth.currentUser;
   if (!user) throw new Error("Not logged in");
 
-  const userDraftsRef = collection(db, "inspections", user.uid, "drafts");
-  const snapshot = await getDocs(userDraftsRef);
+  const archiveRef = collection(db, "inspectionsArchive");
 
-  return snapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
+  await addDoc(archiveRef, {
+      ...inspection,
+      userId: user.uid,
+      savedAt: serverTimestamp(),
+  });
+
+  console.log("✅ Saved inspection snapshot to archive for revisit.");
 };

@@ -1,4 +1,3 @@
-
 import { generatePDF } from "../utils/pdfGenerator";
 import { prepareImages } from "../utils/pdfGenerator";
 import RoofSection from './RoofSection';
@@ -7,12 +6,23 @@ import { db, storage, auth } from "../firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { User } from "firebase/auth"; // Add this if needed
-import { getDocs, query, orderBy, limit } from "firebase/firestore";
+import { getDocs, query, orderBy, where, limit } from "firebase/firestore";
 import * as XLSX from "xlsx";
 import { useLocation } from "react-router-dom";
-import { saveInspectionDraftToFirestore } from "../services/inspectionService";
+import { saveInspectionDraftToFirestore, saveInspectionToArchive } from "../services/inspectionService";
 import { fetchImageAsBase64 } from "../utils/pdfGenerator"; // make sure this is imported
 import { ImageEditorPopup } from "./ImageEditorPopup"; // adjust the path if needed
+import { useAuth } from "../../hooks/useAuth";
+import { doc, getDoc, deleteDoc } from "firebase/firestore";
+
+
+
+const clearSavedDraft = async (userId) => {
+  const docRef = doc(db, "inspections", userId);
+  await deleteDoc(docRef);
+};
+
+
 
 
 
@@ -116,10 +126,59 @@ const convertToBase64 = (file: File): Promise<string> =>
 
   const InspectionForm: React.FC<InspectionFormProps> = ({ onSubmit }) => {
     const location = useLocation();
+    const { user } = useAuth();
+    const handleClearInspection = async () => {
+      const confirmClear = window.confirm(
+        "Are you sure you want to clear this inspection? This will remove saved data."
+      );
+      if (!confirmClear) return;
+    
+      // Reset local state
+      setFormData({
+        propertyName: '',
+        propertyAddress: '',
+        clientname: '',
+        clientcontactinfo: '',
+        inspectionDate: '',
+        inspectorName: '',
+        inspectorCompany: '',
+        inspectorcontactinfo: '',
+        weatherCondition: '',
+        temperature: '',
+        roofType: '',
+        roofAge: '',
+        recommendationDetails: '',
+        recommendationPrioritization: '',
+        recommendationCost: '',
+        overallConditionSummary: '',
+        images: [],
+        overviewImages: [],
+        droneImages: [],
+      });
+      setRoofSections([ { ...emptyRoofSection } ]);
+      setFinalEstimate(null);
+      setSpreadsheetUrl(null);
+      setSpreadsheetUploaded(false);
+      setTableData([]);
+    
+      // Delete Firestore draft if exists
+      if (user?.uid) {
+        try {
+          await deleteDoc(doc(db, "inspections", user.uid));
+          console.log("✅ Deleted Firestore draft");
+        } catch (error) {
+          console.error("❌ Error deleting draft:", error);
+        }
+      }
+    };
+    
+
 
 
     // State to store form data
     const [formData, setFormData] = useState({
+
+      
 
       
         // Property Details
@@ -310,7 +369,101 @@ overallConditionSummary: '',
 const [editorImage, setEditorImage] = useState(null);
 const [editorIndex, setEditorIndex] = useState<number | null>(null);
 const [editorType, setEditorType] = useState<'images' | 'overviewImages' | 'droneImages' | null>(null);
+const [initialLoadComplete, setInitialLoadComplete] = useState(false);
 
+
+
+useEffect(() => {
+  const loadSavedData = async () => {
+    if (location.state?.data) {
+      // 🎯 Priority 1: load passed-in snapshot (from Revisit page)
+      console.log("✅ Loaded inspection from Revisit snapshot");
+
+      const data = location.state.data;
+      setFormData(data.formData || {});
+      setRoofSections(data.roofSections || []);
+      setSpreadsheetUrl(data.spreadsheetUrl || null);
+      setFinalEstimate(data.finalEstimate || null);
+    } else if (user) {
+      // 🎯 Priority 2: fallback to live auto-save draft
+      try {
+        const docRef = doc(db, "inspections", user.uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          console.log("✅ Loaded live auto-save draft");
+
+          setFormData(data.formData || {});
+          setRoofSections(data.roofSections || []);
+          setSpreadsheetUrl(data.spreadsheetUrl || null);
+          setFinalEstimate(data.finalEstimate || null);
+        } else {
+          console.log("ℹ️ No live draft found");
+        }
+      } catch (error) {
+        console.error("❌ Error loading live draft:", error);
+      }
+    }
+  };
+
+  loadSavedData();
+}, [user, location.state]);
+
+
+
+
+
+
+
+useEffect(() => {
+  const loadSavedDraft = async () => {
+    if (!user) return;
+
+    try {
+      const docRef = doc(db, "inspections", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+
+        setFormData(data.formData || {});
+        setRoofSections(data.roofSections || []);
+        setSpreadsheetUrl(data.spreadsheetUrl || null);
+        setFinalEstimate(data.finalEstimate || null);
+
+        console.log("✅ Loaded saved draft");
+      } else {
+        console.log("ℹ️ No saved draft found");
+      }
+    } catch (error) {
+      console.error("❌ Failed to load saved draft:", error);
+    } finally {
+      setInitialLoadComplete(true); // ✅ signal we're ready
+    }
+  };
+
+  loadSavedDraft();
+}, [user]);
+
+
+useEffect(() => {
+  if (!initialLoadComplete) return;
+
+  const timer = setTimeout(async () => {
+    if (!user) return;
+
+    try {
+      const inspection = { formData, roofSections, spreadsheetUrl, finalEstimate };
+      await saveInspectionDraftToFirestore(inspection);
+      console.log("✅ Auto-saved draft");
+    } catch (error) {
+      console.error("❌ Auto-save failed:", error);
+    }
+  }, 1000);
+
+  return () => clearTimeout(timer);
+}, [formData, roofSections, spreadsheetUrl, finalEstimate, initialLoadComplete]);
 
 
 
@@ -447,7 +600,16 @@ const emptyRoofSection = {
           droneImages = [],
           spreadsheetUrl: savedSpreadsheetUrl, // ✅ Add this line
         } = location.state.data;
+
+
+
+
+        
       
+
+
+
+       
     
         const convert = async (images) =>
           await Promise.all(
@@ -766,6 +928,7 @@ const emptyRoofSection = {
         const blob = await fetch(updatedBase64).then((res) => res.blob());
         const filename = `${Date.now()}-annotated.jpg`;
         const storageRef = ref(storage, `annotated/${filename}`);
+        
         await uploadBytes(storageRef, blob);
         const uploadedUrl = await getDownloadURL(storageRef);
         newUrl = uploadedUrl; // ✅ Works because let newUrl was declared above
@@ -820,6 +983,14 @@ setEditorType(null);
             <h2 className="text-2xl font-bold mb-4">Commercial Roof Inspection</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
 
+
+            <button
+  type="button"  // ← this prevents form submission!
+  onClick={handleClearInspection}
+  className="bg-red-500 text-white px-4 py-2 rounded"
+>
+  Clear Inspection
+</button>
 
 
 
@@ -954,7 +1125,7 @@ setEditorType(null);
         <div key={index} className="relative bg-gray-50 p-3 border rounded">
           <img
             src={image.url}
-            alt={`Overview ${index + 1}`}
+            alt={`Upload ${index + 1}`}
             className="w-full h-48 object-cover rounded"
           />
 
@@ -1055,7 +1226,7 @@ setEditorType(null);
         <div key={index} className="relative bg-gray-50 p-3 border rounded">
           <img
             src={image.url}
-            alt={`Drone ${index + 1}`}
+            alt={`Upload ${index + 1}`}
             className="w-full h-48 object-cover rounded"
           />
 
@@ -1446,60 +1617,54 @@ setEditorType(null);
   </button>
 
   <button
-    type="button"
-    onClick={async () => {
-      const user = auth.currentUser;
-      if (!user) return alert("Must be logged in to save drafts.");
+  type="button"
+  onClick={async () => {
+    const user = auth.currentUser;
+    if (!user) return alert("Must be logged in to save draft.");
 
-      try {
-        const [defectUrls, overviewUrls, droneUrls] = await Promise.all([
-          uploadImagesAndGetDownloadUrls(formData.images || [], "defect"),
-          uploadImagesAndGetDownloadUrls(formData.overviewImages || [], "overview"),
-          uploadImagesAndGetDownloadUrls(formData.droneImages || [], "drone"),
-        ]);
+    try {
+      const [defectUrls, overviewUrls, droneUrls] = await Promise.all([
+        uploadImagesAndGetDownloadUrls(formData.images || [], "defect"),
+        uploadImagesAndGetDownloadUrls(formData.overviewImages || [], "overview"),
+        uploadImagesAndGetDownloadUrls(formData.droneImages || [], "drone"),
+      ]);
 
-        // Remove base64 + url from each image object before saving
-        const clean = (images) =>
-          images.map(({ base64, ...rest }) => rest); // KEEP url!
-        
+      const clean = (images) =>
+        images.map(({ base64, ...rest }) => ({ ...rest }));
 
-        // Clean formData by omitting undefined fields (Firestore-safe)
-        const {
-          images: _images,
-          overviewImages: _overviewImages,
-          droneImages: _droneImages,
-          ...cleanFormData
-        } = formData;
+      const {
+        images: _images,
+        overviewImages: _overviewImages,
+        droneImages: _droneImages,
+        ...cleanFormData
+      } = formData;
 
-        const inspection = {
-          formData: cleanFormData,
-          roofSections,
-          images: clean(defectUrls),
-          overviewImages: clean(overviewUrls),
-          droneImages: clean(droneUrls),
-          spreadsheetUrl,
-          finalEstimate, // ✅ Add this
-        };
+      const inspection = {
+        formData: cleanFormData,
+        roofSections,
+        images: clean(defectUrls),
+        overviewImages: clean(overviewUrls),
+        droneImages: clean(droneUrls),
+        spreadsheetUrl,
+        finalEstimate,
+      };
 
-        const cleanedInspection = deepClean({
-          ...inspection,
-          propertyName: formData.propertyName, // ← already here
-        });
-        
-        
-        
-        await saveInspectionDraftToFirestore(cleanedInspection);
+      const cleanedInspection = deepClean(inspection);
 
-        alert("✅ Inspection draft saved to your account!");
-      } catch (error) {
-        console.error("❌ Failed to save draft:", error);
-        alert("Error saving draft. See console for details.");
-      }
-    }}
-    className="bg-black text-white p-2 rounded w-[48%]"
-  >
-    Save Draft
-  </button>
+      // 🚀 SAVE TO ARCHIVE
+      await saveInspectionToArchive(cleanedInspection);
+
+      alert("✅ Inspection snapshot saved! You can revisit it anytime.");
+    } catch (error) {
+      console.error("❌ Failed to save snapshot:", error);
+      alert("Error saving snapshot. See console for details.");
+    }
+  }}
+  className="bg-purple-600 text-white p-2 rounded w-[48%]"
+>
+  Save Snapshot (Revisit)
+</button>
+
 </div>
 
 

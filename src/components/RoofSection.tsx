@@ -898,86 +898,84 @@ const RoofSection = ({ section, index, onChange }) => {
 />
 
 
-
-
 {/* Additional Roof Elements Section */}
 <h3 className="text-lg font-bold">Additional Roof Elements</h3>
 
 {/* Wall Flashing Section */}
 <label className="block">Wall Flashing - Length x Height</label>
-<input type="text" name="wallFlashingEast" placeholder="East Wall (Length x Height)" onChange={handleChange} className="w-full border p-2 rounded" />
-<input type="text" name="wallFlashingWest" placeholder="West Wall (Length x Height)" onChange={handleChange} className="w-full border p-2 rounded" />
-<input type="text" name="wallFlashingNorth" placeholder="North Wall (Length x Height)" onChange={handleChange} className="w-full border p-2 rounded" />
-<input type="text" name="wallFlashingSouth" placeholder="South Wall (Length x Height)" onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="text" name="wallFlashingEast" placeholder="East Wall (Length x Height)" value={section.wallFlashingEast || ""} onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="text" name="wallFlashingWest" placeholder="West Wall (Length x Height)" value={section.wallFlashingWest || ""} onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="text" name="wallFlashingNorth" placeholder="North Wall (Length x Height)" value={section.wallFlashingNorth || ""} onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="text" name="wallFlashingSouth" placeholder="South Wall (Length x Height)" value={section.wallFlashingSouth || ""} onChange={handleChange} className="w-full border p-2 rounded" />
 
 {/* Curbs Section */}
 <label className="block mt-4">Curbs - Enter Details</label>
-<input type="text" name="curbSize" placeholder="Curb Size (e.g., 5’ x 3’)" onChange={handleChange} className="w-full border p-2 rounded" />
-<input type="number" name="curbCount" placeholder="Curb Count" onChange={handleChange} className="w-full border p-2 rounded" />
-<input type="text" name="curbLinearFeet" placeholder="Linear Feet of Curb" onChange={handleChange} className="w-full border p-2 rounded" />
-<input type="text" name="curbHeight" placeholder="Curb Height" onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="text" name="curbSize" placeholder="Curb Size (e.g., 5’ x 3’)" value={section.curbSize || ""} onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="number" name="curbCount" placeholder="Curb Count" value={section.curbCount || ""} onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="text" name="curbLinearFeet" placeholder="Linear Feet of Curb" value={section.curbLinearFeet || ""} onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="text" name="curbHeight" placeholder="Curb Height" value={section.curbHeight || ""} onChange={handleChange} className="w-full border p-2 rounded" />
 
 {/* Curb Rails */}
 <label className="block mt-4">Curb Rails</label>
-<input type="text" name="curbRailSize" placeholder="Curb Rail Size (e.g., 4” x 5’)" onChange={handleChange} className="w-full border p-2 rounded" />
-<input type="number" name="curbRailCount" placeholder="Curb Rail Count" onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="text" name="curbRailSize" placeholder="Curb Rail Size (e.g., 4” x 5’)" value={section.curbRailSize || ""} onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="number" name="curbRailCount" placeholder="Curb Rail Count" value={section.curbRailCount || ""} onChange={handleChange} className="w-full border p-2 rounded" />
 
 {/* Hot Stacks */}
 <label className="block mt-4">Hot Stacks</label>
-<input type="text" name="hotStackDiameter" placeholder="Hot Stack Diameter (e.g., 4”)" onChange={handleChange} className="w-full border p-2 rounded" />
-<input type="number" name="hotStackCount" placeholder="Hot Stack Count" onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="text" name="hotStackDiameter" placeholder="Hot Stack Diameter (e.g., 4”)" value={section.hotStackDiameter || ""} onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="number" name="hotStackCount" placeholder="Hot Stack Count" value={section.hotStackCount || ""} onChange={handleChange} className="w-full border p-2 rounded" />
 
 {/* Drains Section */}
 <label className="block mt-4">Drains</label>
-<input type="number" name="drainCount" placeholder="Drain Count" onChange={handleChange} className="w-full border p-2 rounded" />
-<input type="text" name="drainSize" placeholder="Drain Size" onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="number" name="drainCount" placeholder="Drain Count" value={section.drainCount || ""} onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="text" name="drainSize" placeholder="Drain Size" value={section.drainSize || ""} onChange={handleChange} className="w-full border p-2 rounded" />
 
 {/* Wood Nailer Section */}
 <label className="block mt-4">Wood Nailers</label>
-<input type="text" name="woodNailerSize" placeholder="Wood Nailer Size (e.g., 2x4, 2x6)" onChange={handleChange} className="w-full border p-2 rounded" />
-<input type="number" name="woodNailerCount" placeholder="Wood Nailer Count" onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="text" name="woodNailerSize" placeholder="Wood Nailer Size (e.g., 2x4, 2x6)" value={section.woodNailerSize || ""} onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="number" name="woodNailerCount" placeholder="Wood Nailer Count" value={section.woodNailerCount || ""} onChange={handleChange} className="w-full border p-2 rounded" />
 
 {/* Roof Hatch Section */}
 <label className="block mt-4">Roof Hatch</label>
-<input type="text" name="roofHatchSize" placeholder="Roof Hatch Size" onChange={handleChange} className="w-full border p-2 rounded" />
-<input type="number" name="roofHatchCount" placeholder="Roof Hatch Count" onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="text" name="roofHatchSize" placeholder="Roof Hatch Size" value={section.roofHatchSize || ""} onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="number" name="roofHatchCount" placeholder="Roof Hatch Count" value={section.roofHatchCount || ""} onChange={handleChange} className="w-full border p-2 rounded" />
 
 {/* Slip Flashing Section */}
 <label className="block mt-4">Slip Flashing</label>
-<input type="number" name="slipFlashingCount" placeholder="Slip Flashing Count" onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="number" name="slipFlashingCount" placeholder="Slip Flashing Count" value={section.slipFlashingCount || ""} onChange={handleChange} className="w-full border p-2 rounded" />
 
 {/* Coping Metal Section */}
 <label className="block mt-4">Coping Metal</label>
-<input type="text" name="copingMetalMeasurements" placeholder="Coping Metal Measurements" onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="text" name="copingMetalMeasurements" placeholder="Coping Metal Measurements" value={section.copingMetalMeasurements || ""} onChange={handleChange} className="w-full border p-2 rounded" />
 
 {/* Hold Down Cleat Section */}
 <label className="block mt-4">Hold Down Cleat</label>
-<input type="number" name="holdDownCleatCount" placeholder="Hold Down Cleat Count" onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="number" name="holdDownCleatCount" placeholder="Hold Down Cleat Count" value={section.holdDownCleatCount || ""} onChange={handleChange} className="w-full border p-2 rounded" />
 
 {/* Drip Edge/Gravel Stop Section */}
 <label className="block mt-4">Drip Edge/Gravel Stop</label>
-<input type="number" name="dripEdgeCount" placeholder="Drip Edge Count" onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="number" name="dripEdgeCount" placeholder="Drip Edge Count" value={section.dripEdgeCount || ""} onChange={handleChange} className="w-full border p-2 rounded" />
 
 {/* Pipe Boots Section */}
 <label className="block mt-4">Pipe Boots</label>
-<input type="number" name="pipeBootsCount" placeholder="Pipe Boots Count" onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="number" name="pipeBootsCount" placeholder="Pipe Boots Count" value={section.pipeBootsCount || ""} onChange={handleChange} className="w-full border p-2 rounded" />
 
 {/* Pitch Pans (Portals) Section */}
 <label className="block mt-4">Pitch Pans (Portals)</label>
-<input type="number" name="pitchPansCount" placeholder="Pitch Pans Count" onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="number" name="pitchPansCount" placeholder="Pitch Pans Count" value={section.pitchPansCount || ""} onChange={handleChange} className="w-full border p-2 rounded" />
 
 {/* Gutter Section */}
 <label className="block mt-4">Gutters</label>
-<input type="text" name="gutterSize" placeholder="Gutter Size (e.g., 6” or 7”)" onChange={handleChange} className="w-full border p-2 rounded" />
-<input type="text" name="gutterLength" placeholder="Gutter Length" onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="text" name="gutterSize" placeholder="Gutter Size (e.g., 6” or 7”)" value={section.gutterSize || ""} onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="text" name="gutterLength" placeholder="Gutter Length" value={section.gutterLength || ""} onChange={handleChange} className="w-full border p-2 rounded" />
 
 {/* Core Sample Description */}
 <h4 className="text-md font-semibold mt-4">Core Sample Description</h4>
-<input type="text" name="coreSampleRoofCover" placeholder="Roof Cover" onChange={handleChange} className="w-full border p-2 rounded" />
-<input type="text" name="coreSampleCoverBoard" placeholder="Cover Board" onChange={handleChange} className="w-full border p-2 rounded" />
-<input type="text" name="coreSampleTopInsulation" placeholder="Insulation (top)" onChange={handleChange} className="w-full border p-2 rounded" />
-<input type="text" name="coreSampleBottomInsulation" placeholder="Insulation (bottom)" onChange={handleChange} className="w-full border p-2 rounded" />
-<input type="text" name="coreSampleDeckType" placeholder="Deck Type" onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="text" name="coreSampleRoofCover" placeholder="Roof Cover" value={section.coreSampleRoofCover || ""} onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="text" name="coreSampleCoverBoard" placeholder="Cover Board" value={section.coreSampleCoverBoard || ""} onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="text" name="coreSampleTopInsulation" placeholder="Insulation (top)" value={section.coreSampleTopInsulation || ""} onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="text" name="coreSampleBottomInsulation" placeholder="Insulation (bottom)" value={section.coreSampleBottomInsulation || ""} onChange={handleChange} className="w-full border p-2 rounded" />
+<input type="text" name="coreSampleDeckType" placeholder="Deck Type" value={section.coreSampleDeckType || ""} onChange={handleChange} className="w-full border p-2 rounded" />
 
 
 

@@ -26,10 +26,11 @@ const SavedInspectionPage = () => {
       if (!user) return alert("You must be logged in to see saved inspections.");
 
       const q = query(
-        collection(db, "inspections"),
+        collection(db, "inspectionsArchive"),
         where("userId", "==", user.uid),
-        orderBy("timestamp", "desc")
-      );
+        orderBy("savedAt", "desc")
+    );
+    
       const snapshot = await getDocs(q);
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as InspectionData[];
       setInspections(data);
