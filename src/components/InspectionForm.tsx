@@ -376,25 +376,59 @@ const [initialLoadComplete, setInitialLoadComplete] = useState(false);
 useEffect(() => {
   const loadSavedData = async () => {
     if (location.state?.data) {
-      // 🎯 Priority 1: load passed-in snapshot (from Revisit page)
       console.log("✅ Loaded inspection from Revisit snapshot");
-
+  
       const data = location.state.data;
-      setFormData(data.formData || {});
+  
+      const convertUrlsToBase64 = async (images) =>
+        await Promise.all(
+          (images || []).map(async (img) => ({
+            ...img,
+            base64: img.base64 || await fetchImageAsBase64(img.url), // re-add base64 if missing
+          }))
+        );
+  
+      const defectImages = await convertUrlsToBase64(data.formData?.images);
+      const overviewImages = await convertUrlsToBase64(data.formData?.overviewImages);
+      const droneImages = await convertUrlsToBase64(data.formData?.droneImages);
+  
+      setFormData({
+        ...data.formData,
+        images: defectImages,
+        overviewImages: overviewImages,
+        droneImages: droneImages,
+      });
       setRoofSections(data.roofSections || []);
       setSpreadsheetUrl(data.spreadsheetUrl || null);
       setFinalEstimate(data.finalEstimate || null);
+  
     } else if (user) {
-      // 🎯 Priority 2: fallback to live auto-save draft
       try {
         const docRef = doc(db, "inspections", user.uid);
         const docSnap = await getDoc(docRef);
-
+  
         if (docSnap.exists()) {
           const data = docSnap.data();
           console.log("✅ Loaded live auto-save draft");
-
-          setFormData(data.formData || {});
+  
+          const convertUrlsToBase64 = async (images) =>
+            await Promise.all(
+              (images || []).map(async (img) => ({
+                ...img,
+                base64: img.base64 || await fetchImageAsBase64(img.url),
+              }))
+            );
+  
+          const defectImages = await convertUrlsToBase64(data.formData?.images);
+          const overviewImages = await convertUrlsToBase64(data.formData?.overviewImages);
+          const droneImages = await convertUrlsToBase64(data.formData?.droneImages);
+  
+          setFormData({
+            ...data.formData,
+            images: defectImages,
+            overviewImages: overviewImages,
+            droneImages: droneImages,
+          });
           setRoofSections(data.roofSections || []);
           setSpreadsheetUrl(data.spreadsheetUrl || null);
           setFinalEstimate(data.finalEstimate || null);
@@ -406,6 +440,7 @@ useEffect(() => {
       }
     }
   };
+  
 
   loadSavedData();
 }, [user, location.state]);
