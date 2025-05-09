@@ -25,6 +25,8 @@ import MobileHeader from "./components/MobileHeader";
 import LandingPageTVTracker from "./components/LandingPageTVTracker";
 import { AuthProvider } from "../contexts/AuthContext";
 import TVDashboardPage from "./components/TVDashboard";
+import GetStartedPage from "./components/GetStartedPage";
+
 
 
 
@@ -80,6 +82,14 @@ function App() {
         >
           TV Tracker
         </Link>
+
+        <Link
+  to="/get-started"
+  className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition"
+>
+  Get Started
+</Link>
+
       </div>
 
       <div className="flex space-x-2 items-center">
@@ -130,6 +140,8 @@ function App() {
   <Route path="/estimator" element={<EstimatorPage />} />
 
   <Route path="/projects/:id/report" element={<ProjectReportPage />} />
+  <Route path="/get-started" element={<GetStartedPage />} />
+
   <Route path="/survey-proposal" element={<SurveyProposalPage />} />
   <Route path="/landingpagetvtracker" element={<LandingPageTVTracker />} />
   <Route path="/tv-dashboard" element={<TVDashboardPage />} />
