@@ -499,7 +499,8 @@ useEffect(() => {
 
     try {
       const inspection = { formData, roofSections, spreadsheetUrl, finalEstimate };
-      await saveInspectionDraftToFirestore(inspection);
+      await saveInspectionToArchive(inspection);
+
       console.log("✅ Auto-saved draft");
     } catch (error) {
       console.error("❌ Auto-save failed:", error);
@@ -964,52 +965,69 @@ const emptyRoofSection = {
 
     const handleAnnotationSave = async (newAnnotations: any[], updatedBase64?: string) => {
       if (editorIndex === null || !editorType) return;
-    
-      // Step 1: Create new URL from updated base64
-      let newUrl = updatedBase64 ? await base64ToObjectUrl(updatedBase64) : formData[editorType][editorIndex].url;
 
+      if (!formData[editorType] || !formData[editorType][editorIndex]) {
+        console.error("❌ Invalid editorType or editorIndex in handleAnnotationSave");
+        return;
+      }
+      
+    
+      let newUrl = formData[editorType][editorIndex].url;
+    
       if (updatedBase64) {
         const blob = await fetch(updatedBase64).then((res) => res.blob());
         const filename = `${Date.now()}-annotated.jpg`;
         const storageRef = ref(storage, `annotated/${filename}`);
-        
+    
         await uploadBytes(storageRef, blob);
         const uploadedUrl = await getDownloadURL(storageRef);
-        newUrl = uploadedUrl; // ✅ Works because let newUrl was declared above
+        newUrl = uploadedUrl; // ✅ this becomes the new cloud-based URL
       }
-      
-
-      
-
-      
     
-      // Step 2: Replace the image at [type][index]
       const updatedImages = [...formData[editorType]];
       updatedImages[editorIndex] = {
         ...updatedImages[editorIndex],
         base64: updatedBase64 || updatedImages[editorIndex].base64,
-        url: newUrl,
+        url: newUrl, // ✅ ensure we store the permanent URL, not blob
         annotations: newAnnotations,
       };
     
-      // Optional cleanup: revoke old object URL
+      // Optional cleanup: revoke old blob URL
       if (formData[editorType][editorIndex]?.url?.startsWith("blob:")) {
         URL.revokeObjectURL(formData[editorType][editorIndex].url);
       }
     
-      // Step 3: Save the updated list back to formData
       setFormData((prev) => ({
         ...prev,
         [editorType]: updatedImages,
       }));
-      setEditorImage(updatedImages[editorIndex]); // ✅ Fix preview staleness
 
+
+      // Immediately save updated draft to Firestore
+try {
+  const inspection = {
+    formData: {
+      ...formData,
+      [editorType]: updatedImages,
+    },
+    roofSections,
+    spreadsheetUrl,
+    finalEstimate,
+  };
+  await saveInspectionDraftToFirestore(inspection);
+  console.log("✅ Draft updated immediately after annotation save");
+} catch (error) {
+  console.error("❌ Failed to update draft after annotation save:", error);
+}
+
+
+      setEditorImage(updatedImages[editorIndex]);
     
       setEditorOpen(false);
       setEditorIndex(null);
-setEditorType(null);
-
+      setEditorType(null);
     };
+    
     
     
     
@@ -1704,10 +1722,9 @@ setEditorType(null);
         finalEstimate,
       };
 
-      const cleanedInspection = deepClean(inspection);
 
       // 🚀 SAVE TO ARCHIVE
-      await saveInspectionToArchive(cleanedInspection);
+      await saveInspectionToArchive(inspection);
 
       alert("✅ Inspection snapshot saved! You can revisit it anytime.");
     } catch (error) {
