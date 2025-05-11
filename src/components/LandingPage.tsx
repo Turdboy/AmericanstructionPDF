@@ -18,23 +18,27 @@ const LandingPage = () => {
                 className="max-w-[250px] h-auto mb-4"
               />
 
-              <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-3">
-                <span className="block">AI-Generated Competitive Bids</span>
-                <span className="block">& High-Quality, Winning Proposals</span>
-                <span className="block text-purple-400 mt-2">
-                  with <span className="text-white">Vysix</span>
-                </span>
-              </h1>
+          <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-3">
+  <span className="block"></span>
+  <span className="block">AI Generated Bids</span>
+  <span className="block">
+    Win jobs & <span className="text-purple-400">work for yourself </span>
+
+
+  </span>
+  <span className="text-white"> with Vysix</span>
+</h1>
+
 
               <p className="text-lg text-gray-400 max-w-md mb-8">
-                Streamline estimating and turn insights into impactful deliverables.
+                AI Generated Bids designed for people to win service jobs against larger corporations and work for themselves.
               </p>
 
               <button
-                onClick={() => navigate("/landingpagetvtracker")}
+                onClick={() => navigate("/get-started")}
                 className="bg-purple-600 hover:bg-purple-700 transition text-white text-lg font-semibold py-3 px-6 rounded-lg shadow-md"
               >
-                Demo our Technology
+                Get Started
               </button>
             </div>
 
@@ -84,10 +88,10 @@ const LandingPage = () => {
 
         <div className="flex flex-col space-y-3 w-full max-w-xs">
           <button
-            onClick={() => navigate("/landingpagetvtracker")}
+            onClick={() => navigate("/get-started")}
             className="bg-purple-600 hover:bg-purple-700 transition text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md"
           >
-            Demo our Tech
+            Get Started
           </button>
 
           <button

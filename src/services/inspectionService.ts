@@ -29,6 +29,7 @@ export const saveInspectionDraftToFirestore = async (inspection) => {
     ...inspection,
     userId: user.uid,
     savedAt: serverTimestamp(),
+    saveType: "auto", // ✅ added saveType flag
   });
 
   await setDoc(docRef, cleanedInspection, { merge: true });
@@ -37,8 +38,8 @@ export const saveInspectionDraftToFirestore = async (inspection) => {
   const updatedSnap = await getDoc(docRef);
   const updatedData = updatedSnap.data();
 
-  console.log("✅ Draft saved and confirmed with server timestamp:", updatedData.savedAt);
-  return updatedData;
+  console.log("✅ Draft saved and confirmed with server timestamp:", updatedData ? updatedData.savedAt : "unknown");
+
 };
 
 // 🧹 Clear saved draft
@@ -59,6 +60,7 @@ export const saveInspectionToArchive = async (inspection) => {
     ...inspection,
     userId: user.uid,
     savedAt: serverTimestamp(),
+    saveType: "manual", // ✅ added saveType flag
   });
 
   const addedDocRef = await addDoc(archiveRef, cleanedInspection);

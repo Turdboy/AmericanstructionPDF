@@ -26,6 +26,9 @@ import LandingPageTVTracker from "./components/LandingPageTVTracker";
 import { AuthProvider } from "../contexts/AuthContext";
 import TVDashboardPage from "./components/TVDashboard";
 import GetStartedPage from "./components/GetStartedPage";
+import ChooseHustlePage from "./components/chooseHustlePage";
+import DesignPage from "./components/DesignPage";
+
 
 
 
@@ -76,12 +79,7 @@ function App() {
         >
           Start Inspection
         </Link>
-        <Link
-          to="/landingpagetvtracker"
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
-        >
-          TV Tracker
-        </Link>
+
 
         <Link
   to="/get-started"
@@ -144,7 +142,10 @@ function App() {
 
   <Route path="/survey-proposal" element={<SurveyProposalPage />} />
   <Route path="/landingpagetvtracker" element={<LandingPageTVTracker />} />
+  <Route path="/design" element={<DesignPage />} />
   <Route path="/tv-dashboard" element={<TVDashboardPage />} />
+  <Route path="/choose-hustle" element={<ChooseHustlePage />} />
+
 
 
   <Route path="/inspection" element={<InspectionTypePage />} />
