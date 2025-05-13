@@ -33,10 +33,11 @@ const DesignPage = () => {
 
   const field = location.state?.field;
 
-  const [coverDesign, setCoverDesign] = useState({
-    primaryColor: "#ffffff",
-    secondaryColor: "#ffffff",
-  });
+const [coverDesign, setCoverDesign] = useState({
+  primaryColor: "",
+  secondaryColor: "",
+});
+
 
 const [showShapeOptions, setShowShapeOptions] = useState(false);
 const [showTextOptions, setShowTextOptions] = useState(false);
@@ -70,7 +71,7 @@ const createNewShape = () => ({
 
 const createNewText = () => ({
   id: Date.now(),
-  text: "Sample Text",
+  text: "",
   color: "#000000",
   rotation: 0,
   fontSize: 16,
@@ -83,7 +84,7 @@ const createNewText = () => ({
 
 const createNewDesign = () => ({
   id: Date.now(),
-  type: "header",
+  type: "footer",
   primaryColor: "#2e3192",
   accentColor: "#d50000",
   rotation: 0,
@@ -337,7 +338,7 @@ onClick={() => setShowDesignOptions(prev => !prev)}
   onChange={(e) => updateDesign(design.id, "type", e.target.value)}
   className="w-full px-2 py-1 bg-gray-900 text-white rounded border border-gray-600"
 >
-  <option value="header">Gradient Decor</option>
+  
   <option value="ascented">Ascented Decor</option>
   <option value="footer">Footer Bar</option>
 </select>
@@ -497,40 +498,38 @@ onClick={() => setShowDesignOptions(prev => !prev)}
 
 <button
 onClick={async () => {
-  if (!title.trim()) {
-    const entered = prompt("Please enter a title for this inspection:");
-    if (!entered) return alert("⚠️ Title is required to save your bid.");
-    setTitle(entered);
-    return; // wait until they click again after input
+  let finalTitle = title;
+  if (!finalTitle.trim()) {
+    finalTitle = prompt("Please enter a title for this inspection:") || "";
+    if (!finalTitle.trim()) return alert("⚠️ Title is required.");
+    setTitle(finalTitle); // for internal state
   }
 
   try {
     await saveFormAndBid({
       field,
-      coverDesign: { ...coverDesign, title },
+      coverDesign: { ...coverDesign, title: finalTitle },
       shapes,
       texts,
       designs,
       images,
     });
-    navigate("/inspection/custom", {
-  state: {
-    form: {
-      field,
-      formData: {}, // you can initialize this or leave blank
-    },
-    coverDesign,
-    texts,
-    shapes,
-    designs,
-    images,
-  },
-});
 
+    navigate("/inspection", {
+      state: {
+        form: { field, formData: {} },
+        coverDesign: { ...coverDesign, title: finalTitle },
+        texts,
+        shapes,
+        designs,
+        images,
+      },
+    });
   } catch (error) {
     alert("❌ Error saving bid: " + error.message);
   }
 }}
+
   className="ml-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow"
 >
   Generate My Bid
