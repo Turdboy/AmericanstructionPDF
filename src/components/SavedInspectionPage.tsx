@@ -19,38 +19,53 @@ interface InspectionData {
 const SavedInspectionPage = () => {
   const [inspections, setInspections] = useState<InspectionData[]>([]);
   const [searchTerm, setSearchTerm] = useState(""); // ✅ added search state
+  const [draftInspection, setDraftInspection] = useState<InspectionData | null>(null);
+
   const navigate = useNavigate();
+useEffect(() => {
+  const fetchUserInspections = async () => {
+    const user = auth.currentUser;
+    if (!user) return alert("You must be logged in to see saved inspections.");
 
-  useEffect(() => {
-    const fetchUserInspections = async () => {
-      const user = auth.currentUser;
-      if (!user) return alert("You must be logged in to see saved inspections.");
+    try {
+      // Fetch archive
+      const archiveQ = query(
+        collection(db, "inspectionsArchive"),
+        where("userId", "==", user.uid),
+        orderBy("savedAt", "desc")
+      );
+      const archiveSnap = await getDocs(archiveQ);
+      const archiveData = archiveSnap.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as InspectionData[];
 
-      try {
-        const q = query(
-          collection(db, "inspectionsArchive"), // or inspectionsDrafts if you switched
-          where("userId", "==", user.uid),
-          orderBy("savedAt", "desc")
-        );
+      setInspections(archiveData);
 
-        const snapshot = await getDocs(q);
-        const data = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as InspectionData[];
+      // Fetch draft
+      const draftSnap = await getDocs(
+        query(
+          collection(db, "inspectionsDrafts"),
+          where("userId", "==", user.uid) // if saved by UID as doc ID, fetch by ID instead
+        )
+      );
 
-        setInspections(data);
-      } catch (error) {
-        console.error("❌ Error fetching inspections:", error);
+      if (!draftSnap.empty) {
+        const draftDoc = draftSnap.docs[0];
+        setDraftInspection({
+          id: draftDoc.id,
+          ...draftDoc.data(),
+        } as InspectionData);
       }
-    };
 
-    fetchUserInspections();
-  }, []);
-
-  const handleResume = (inspection: InspectionData) => {
-    navigate("/inspection/commercial", { state: { data: inspection } });
+    } catch (error) {
+      console.error("❌ Error fetching inspections:", error);
+    }
   };
+
+  fetchUserInspections();
+}, []);
+
 
   const formatTimestamp = (savedAt: any) => {
     if (savedAt?.seconds) {

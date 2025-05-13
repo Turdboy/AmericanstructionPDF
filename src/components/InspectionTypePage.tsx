@@ -1,23 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../firebase";
+import { db, auth } from "../firebase";
+import { collection, getDocs, query, where, orderBy } from "firebase/firestore";
 
 const InspectionTypePage = () => {
   const navigate = useNavigate();
+  const [myForms, setMyForms] = useState([]);
 
-  const handleSelect = (type: string) => {
-    // If commercial is selected, check login
-    if (type === "commercial") {
+  useEffect(() => {
+    const fetchUserForms = async () => {
       const user = auth.currentUser;
+      if (!user) return;
+
+      const q = query(
+        collection(db, "inspectionformsandbids"),
+        where("userId", "==", user.uid),
+        orderBy("createdAt", "desc")
+      );
+      const snapshot = await getDocs(q);
+      const forms = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setMyForms(forms);
+    };
+
+    fetchUserForms();
+  }, []);
+
+  const handleSelect = (type) => {
+    const user = auth.currentUser;
+    if (type === "commercial") {
       if (!user) {
         alert("You must be logged in to start a Commercial Roofing inspection.");
         return navigate("/login");
       }
-      return navigate("/inspection/commercial"); // ✅ updated path
+      return navigate("/inspection/commercial");
     }
-    
 
-    // Add logic for other types here later
     if (type === "residential") {
       return alert("Residential form coming soon!");
     }
@@ -41,6 +58,21 @@ const InspectionTypePage = () => {
         >
           🏠 Residential Inspection (Coming Soon)
         </button>
+      </div>
+
+      <div className="mt-8">
+        <h2 className="text-lg font-semibold mb-2">📁 My Saved Inspections</h2>
+        <div className="space-y-2">
+          {myForms.map((form) => (
+            <div
+              key={form.id}
+onClick={() => navigate("/inspection/custom", { state: { form } })}
+              className="bg-gray-100 hover:bg-gray-200 transition cursor-pointer rounded px-4 py-2"
+            >
+{form.coverDesign?.title || form.title || "Untitled Inspection"}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

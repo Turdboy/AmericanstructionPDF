@@ -20,7 +20,7 @@ const LandingPage = () => {
 
           <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-3">
   <span className="block"></span>
-  <span className="block">AI Generated Bids</span>
+  <span className="block">AI Generated Bids.</span>
   <span className="block">
     Win jobs & <span className="text-purple-400">work for yourself </span>
 

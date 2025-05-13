@@ -28,6 +28,7 @@ import TVDashboardPage from "./components/TVDashboard";
 import GetStartedPage from "./components/GetStartedPage";
 import ChooseHustlePage from "./components/chooseHustlePage";
 import DesignPage from "./components/DesignPage";
+import CustomInspectionPage from "./components/CustomInspectionPage"
 
 
 
@@ -145,6 +146,8 @@ function App() {
   <Route path="/design" element={<DesignPage />} />
   <Route path="/tv-dashboard" element={<TVDashboardPage />} />
   <Route path="/choose-hustle" element={<ChooseHustlePage />} />
+  <Route path="/inspection/custom" element={<CustomInspectionPage />} />
+
 
 
 
