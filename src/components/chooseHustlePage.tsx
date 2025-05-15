@@ -6,9 +6,7 @@ const hustles = [
   { name: "Lawncare", icon: "🌱" },
   { name: "Painting", icon: "🎨" },
   { name: "Gutter Cleaning", icon: "🧹" },
-  { name: "Commercial Roofing", icon: "🏢" },
-  { name: "Residential Roofing", icon: "🏠" },
-  { name: "Custom Hustle", icon: "🛠️" },
+
 ];
 
 const ChooseHustlePage = () => {

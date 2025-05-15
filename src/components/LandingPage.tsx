@@ -22,7 +22,7 @@ const LandingPage = () => {
   <span className="block"></span>
   <span className="block">AI Generated Bids.</span>
   <span className="block">
-    Win jobs & <span className="text-purple-400">work for yourself </span>
+    Win jobs & <span className="text-purple-400">Look Professional </span>
 
 
   </span>
@@ -31,7 +31,7 @@ const LandingPage = () => {
 
 
               <p className="text-lg text-gray-400 max-w-md mb-8">
-                AI Generated Bids designed for people to win service jobs against larger corporations and work for themselves.
+                AI Generated Bids designed for people to win service jobs against larger corporations.
               </p>
 
               <button
