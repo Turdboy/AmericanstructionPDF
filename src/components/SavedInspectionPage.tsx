@@ -41,6 +41,8 @@ useEffect(() => {
       })) as InspectionData[];
 
       setInspections(archiveData);
+      console.log("🕒 Saved timestamps:", archiveData.map(d => d.savedAt));
+
 
       // Fetch draft
       const draftSnap = await getDocs(
@@ -71,7 +73,7 @@ useEffect(() => {
     if (savedAt?.seconds) {
       return new Date(savedAt.seconds * 1000).toLocaleString();
     }
-    return "Unknown time";
+    return "";
   };
 
   // ✅ Filter inspections by search term
@@ -93,35 +95,53 @@ useEffect(() => {
         className="mb-4 p-2 w-full border rounded"
       />
 
-      {filteredInspections.length === 0 ? (
-        <p>No saved inspections found.</p>
-      ) : (
-        <ul className="space-y-4">
-          {filteredInspections.map((insp) => (
-            <li
-              key={insp.id}
-              className="p-4 border rounded shadow flex justify-between items-center"
-            >
-              <div>
-                <p className="font-bold">
-                  {insp.propertyName ||
-                   insp.formData?.propertyName ||
-                   "Unnamed Property"}
-                </p>
-                <p className="text-gray-500 text-sm">
-                  {formatTimestamp(insp.savedAt)}
-                </p>
-              </div>
-              <button
-                onClick={() => handleResume(insp)}
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-              >
-                Resume
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
+      {/* 🔵 Resume Draft Section */}
+{draftInspection && (
+  <div className="mb-6 p-4 border rounded shadow bg-blue-50">
+    <h2 className="text-lg font-bold mb-1">Resume In-Progress Draft</h2>
+    <p className="text-gray-700 mb-2">
+      {draftInspection.propertyName || draftInspection.formData?.propertyName || "Unnamed Property"}
+    </p>
+    <button
+      onClick={() => navigate("/inspection/commercial", { state: { data: draftInspection } })}
+      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+    >
+      Resume Draft
+    </button>
+  </div>
+)}
+{/* 🔻 Snapshot Archive Section */}
+<h2 className="text-lg font-bold mt-6 mb-2">Saved Snapshots</h2>
+
+{filteredInspections.length === 0 ? (
+  <p className="text-gray-500">No saved snapshots found.</p>
+) : (
+  <ul className="space-y-4">
+    {filteredInspections.map((insp) => (
+      <li
+        key={insp.id}
+        className="p-4 border rounded shadow flex justify-between items-center"
+      >
+        <div>
+          <p className="font-bold">
+            {insp.propertyName || insp.formData?.propertyName || "Unnamed Property"}
+          </p>
+          <p className="text-gray-500 text-sm">
+            {formatTimestamp(insp.savedAt)}
+          </p>
+        </div>
+        <button
+          onClick={() => navigate("/inspection/commercial", { state: { data: insp } })}
+          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+        >
+          Open Snapshot
+        </button>
+      </li>
+    ))}
+  </ul>
+)}
+
+
     </div>
   );
 };

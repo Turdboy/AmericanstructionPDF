@@ -499,7 +499,7 @@ useEffect(() => {
 
     try {
       const inspection = { formData, roofSections, spreadsheetUrl, finalEstimate };
-      await saveInspectionToArchive(inspection);
+await saveInspectionDraftToFirestore(inspection);
 
       console.log("✅ Auto-saved draft");
     } catch (error) {
@@ -1712,15 +1712,18 @@ try {
         ...cleanFormData
       } = formData;
 
-      const inspection = {
-        formData: cleanFormData,
-        roofSections,
-        images: clean(defectUrls),
-        overviewImages: clean(overviewUrls),
-        droneImages: clean(droneUrls),
-        spreadsheetUrl,
-        finalEstimate,
-      };
+const inspection = {
+  userId: user.uid,              // ✅ Add this so it’s queryable
+  savedAt: serverTimestamp(),    // ✅ So you can orderBy it and show date
+  formData: cleanFormData,
+  roofSections,
+  images: clean(defectUrls),
+  overviewImages: clean(overviewUrls),
+  droneImages: clean(droneUrls),
+  spreadsheetUrl,
+  finalEstimate,
+};
+
 
 
       // 🚀 SAVE TO ARCHIVE
