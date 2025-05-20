@@ -19,19 +19,19 @@ const LandingPage = () => {
               />
 
           <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-3">
-  <span className="block"></span>
+  <span className="block">Americanstruction VPAI</span>
 
   <span className="block">
-    Virtual Proposals <span className="text-purple-400">Made By AI </span>
+    Virtual Proposals... <span className="text-purple-400">Made By AI </span>
 
 
   </span>
-  <span className="text-white"> in seconds</span>
+
 </h1>
 
 
               <p className="text-lg text-gray-400 max-w-md mb-8">
-                AI Generated Bids designed for people to win service jobs against larger corporations.
+                AI Generated Bids designed to win service jobs against larger corporations.
               </p>
 
               <button
@@ -79,11 +79,12 @@ const LandingPage = () => {
         <img src={VpaiLogo} alt="VPAI Logo" className="w-32 h-32 mb-6" />
 
         <h1 className="text-2xl font-bold mb-4">
-          Win More Contracts <br /> with <span className="text-purple-400">Vpai</span>
+          Americanstruction VPAI <br /> Virtual Proposals... <span className="text-purple-400">Made By AI</span>
         </h1>
 
         <p className="text-gray-400 text-sm max-w-xs mb-6">
-          AI-crafted, competitive bids designed to outshine competitors and win you more contracts.
+                AI Generated Bids designed to win service jobs against larger corporations.
+
         </p>
 
         <div className="flex flex-col space-y-3 w-full max-w-xs">
