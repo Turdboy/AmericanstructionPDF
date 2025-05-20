@@ -20,13 +20,13 @@ const LandingPage = () => {
 
           <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-3">
   <span className="block"></span>
-  <span className="block">AI Generated Bids.</span>
+
   <span className="block">
-    Win jobs & <span className="text-purple-400">Look Professional </span>
+    Virtual Proposals <span className="text-purple-400">Made By AI </span>
 
 
   </span>
-  <span className="text-white"> with Vysix</span>
+  <span className="text-white"> in seconds</span>
 </h1>
 
 
@@ -44,7 +44,7 @@ const LandingPage = () => {
 
             <div className="w-1/2 flex flex-col justify-center items-center text-center px-8">
               <p className="text-gray-300 text-lg max-w-md leading-tight mb-4">
-                Vysix turns your data into beautiful, branded proposals — ready to share with clients in seconds.
+                Vpai turns your data into beautiful, branded proposals — ready to share with clients in seconds.
               </p>
 
               <img
@@ -62,7 +62,7 @@ const LandingPage = () => {
               Win More Contracts with AI-Generated Competitive Bids
             </h2>
             <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-8">
-              Vysix doesn’t just generate proposals — it crafts <span className="text-purple-400 font-semibold">winning bids</span> designed to outshine competitors, backed by smart pricing, client insights, and razor-sharp positioning.
+              Vpai doesn’t just generate proposals — it crafts <span className="text-purple-400 font-semibold">winning bids</span> designed to outshine competitors, backed by smart pricing, client insights, and razor-sharp positioning.
             </p>
             <button
               onClick={() => navigate("/landingpagetvtracker")}
@@ -79,7 +79,7 @@ const LandingPage = () => {
         <img src={VpaiLogo} alt="VPAI Logo" className="w-32 h-32 mb-6" />
 
         <h1 className="text-2xl font-bold mb-4">
-          Win More Contracts <br /> with <span className="text-purple-400">Vysix</span>
+          Win More Contracts <br /> with <span className="text-purple-400">Vpai</span>
         </h1>
 
         <p className="text-gray-400 text-sm max-w-xs mb-6">
