@@ -75,7 +75,7 @@ const LandingPage = () => {
       </div>
 
       {/* Mobile-only view */}
-      <div className="sm:hidden bg-black text-white flex flex-col items-center text-center px-6 py-8 min-h-screen">
+<div className="sm:hidden bg-black text-white flex flex-col items-center text-center px-6 py-8 min-h-screen pt-16">
         <img src={VpaiLogo} alt="VPAI Logo" className="w-32 h-32 mb-6" />
 
         <h1 className="text-2xl font-bold mb-4">
