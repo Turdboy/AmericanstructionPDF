@@ -42,7 +42,7 @@ const InspectionTypePage = () => {
 
   return (
     <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded shadow">
-      <h1 className="text-2xl font-bold mb-6 text-center">Enterprise Inspection Types:</h1>
+      <h1 className="text-2xl font-bold mb-6 text-center">Americanstruction Inspection Forms:</h1>
 
       <div className="space-y-4">
         <button
@@ -61,7 +61,7 @@ const InspectionTypePage = () => {
       </div>
 
       <div className="mt-8">
-        <h2 className="text-lg font-semibold mb-2">📁 My Saved Inspections</h2>
+        <h2 className="text-lg font-semibold mb-2">📁 My Inspection Forms</h2>
         <div className="space-y-2">
           {myForms.map((form) => (
             <div

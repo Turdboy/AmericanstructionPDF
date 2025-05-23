@@ -8,6 +8,8 @@ import { BlockPicker } from "react-color";
 
 
 
+
+
 const saveFormAndBid = async (data) => {
   const user = auth.currentUser;
   if (!user) throw new Error("User not logged in");
@@ -36,11 +38,15 @@ const DesignPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const field = location.state?.field;
 
+  const [pageCount, setPageCount] = useState(2); // starts with 2 pages (cover + 1)
+  const [pagesExpanded, setPagesExpanded] = useState(false);
+
+
+const defaultColor = "#4444ff"; // or any hex you like
 const [coverDesign, setCoverDesign] = useState({
-  primaryColor: "",
-  secondaryColor: "",
+  primaryColor: "#001f3f",  // 🌑 Navy / Dark Blue
+  accentColor: "#8B0000",   // 🟥 Dark Red
 });
 
 
@@ -65,12 +71,11 @@ const [footerStyle, setFooterStyle] = useState("");
 
 const [showHeaderFooterTextOptions, setShowHeaderFooterTextOptions] = useState(false);
 const [showHeaderFooterImageOptions, setShowHeaderFooterImageOptions] = useState(false);
-
-
-
-
-// Add this state up top
 const [showThemeColors, setShowThemeColors] = useState(false);
+
+
+
+
 
 useEffect(() => {
   setDesigns((prevDesigns) =>
@@ -78,14 +83,15 @@ useEffect(() => {
       if (design.type === "footer" || design.type === "ascented") {
         return {
           ...design,
-          primaryColor: coverDesign.primaryColor || "",
-          accentColor: coverDesign.accentColor || "",
+          primaryColor: coverDesign.primaryColor || "#000000",
+          accentColor: coverDesign.accentColor || "#ff0000",
         };
       }
       return design;
     })
   );
 }, [coverDesign.primaryColor, coverDesign.accentColor]);
+
 
 
 
@@ -104,31 +110,34 @@ const createNewShape = () => ({
   zIndex: Date.now(), // 🧠 unique layer order
 });
 
-const createNewText = () => ({
+const createNewText = (page = 1) => ({
   id: Date.now(),
-  text: "",
-  color: "#000000",
+  text: "",          // ✅ Default text
+  color: "#ffffff",             // ✅ Light color to show on dark backgrounds
   rotation: 0,
   fontSize: 16,
   width: 150,
   height: 30,
   x: 50,
   y: 50,
-  zIndex: Date.now(), // 🧠
+  zIndex: Date.now(),
+  page,
 });
+
 
 const createNewDesign = () => ({
   id: Date.now(),
   type: "footer",
-  primaryColor: "",
-  accentColor: "",
+  primaryColor: coverDesign.primaryColor || "#000000",
+  accentColor: coverDesign.accentColor || "#ff0000",
   rotation: 0,
   width: 300,
   height: 40,
   x: 50,
   y: 50,
-  zIndex: Date.now(), // 🧠
+  zIndex: Date.now(),
 });
+
 
 const createNewHeaderFooterText = () => ({
   id: Date.now(),
@@ -207,30 +216,10 @@ const getHighestZIndex = () => {
 
 
 
-  const handleContinue = () => {
-    navigate("/form-builder", {
-      state: { field, coverDesign },
-    });
-  };
-
-
   
 
 
 
-
-
-
-
-  
-
-  if (!field) {
-    return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <p className="text-red-500">No field selected. Please go back and choose a field.</p>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col sm:flex-row px-6 py-12">
@@ -279,7 +268,6 @@ const getHighestZIndex = () => {
   )}
 </div>
 
-        <p className="text-gray-400">You selected: <span className="text-purple-400 font-semibold">{field}</span></p>
 
         <div className="mb-6">
 
@@ -295,7 +283,7 @@ const getHighestZIndex = () => {
                 className="bg-gray-800 hover:bg-purple-600 text-white font-medium py-2 px-4 rounded shadow transition w-full text-left"
 onClick={() => setShowShapeOptions(prev => !prev)}
               >
-             Add Shapes
+              Shapes Menu
               </button>
 {showShapeOptions && (
                 <div className="bg-gray-700 p-4 mt-2 rounded shadow-inner space-y-6">
@@ -367,7 +355,7 @@ onClick={() => setShowShapeOptions(prev => !prev)}
                 className="bg-gray-800 hover:bg-purple-600 text-white font-medium py-2 px-4 rounded shadow transition w-full text-left"
 onClick={() => setShowTextOptions(prev => !prev)}
               >
-                Add Text
+                Text Menu
               </button>
 {showTextOptions && (
                 <div className="bg-gray-700 p-4 mt-2 rounded shadow-inner space-y-6">
@@ -437,7 +425,7 @@ onClick={() => setShowTextOptions(prev => !prev)}
     className="bg-gray-800 hover:bg-purple-600 text-white font-medium py-2 px-4 rounded shadow transition w-full text-left"
 onClick={() => setShowDesignOptions(prev => !prev)}
   >
-    Add Designs
+   Design Menu
   </button>
 {showDesignOptions && (
     <div className="bg-gray-700 p-4 mt-2 rounded shadow-inner space-y-6">
@@ -509,7 +497,7 @@ onClick={() => setShowDesignOptions(prev => !prev)}
     className="bg-gray-800 hover:bg-purple-600 text-white font-medium py-2 px-4 rounded shadow transition w-full text-left"
     onClick={() => setShowImageOptions(prev => !prev)}
   >
-    Add Image
+    Image Menu
   </button>
   {showImageOptions && (
     <div className="bg-gray-700 p-4 mt-2 rounded shadow-inner space-y-4">
@@ -584,179 +572,15 @@ onClick={() => setShowDesignOptions(prev => !prev)}
 
 
 
-  <h2 className="text-2xl font-bold mt-10 mb-2">Customize Your Header and Footer</h2>
-
-
-  {/* TEXT DROPDOWN */}
-<div className="mb-6">
-  <button
-    className="bg-gray-800 hover:bg-purple-600 text-white font-medium py-2 px-4 rounded shadow transition w-full text-left"
-    onClick={() => setShowHeaderFooterTextOptions(prev => !prev)}
-  >
-    Add Text to Header/Footer Page
-  </button>
-
-  {showHeaderFooterTextOptions && (
-    <div className="bg-gray-700 p-4 mt-2 rounded shadow-inner space-y-6">
-      {texts.filter(t => t.isHeaderFooter).map((text, idx) => (
-        <div
-          key={text.id}
-          className={`bg-gray-800 p-3 rounded space-y-2 border ${
-            selectedTextId === text.id ? "border-2 border-blue-400 shadow-md" : "border-gray-600"
-          }`}
-          onClick={() => setSelectedTextId(text.id)}
-        >
-          <label className="text-white text-sm font-semibold block">Text {idx + 1}</label>
-          <input
-            type="text"
-            value={text.text}
-            onChange={(e) => updateText(text.id, "text", e.target.value)}
-            className="w-full px-2 py-1 bg-gray-900 text-white rounded border border-gray-600"
-          />
-          <label className="text-white text-xs block mt-2">Color</label>
-          <SketchPicker
-            color={text.color}
-            onChangeComplete={(color) => updateText(text.id, "color", color.hex)}
-          />
-          <label className="text-white text-xs block mt-2">Rotate</label>
-          <input
-            type="range"
-            min={-180}
-            max={180}
-            value={text.rotation}
-            onChange={(e) => updateText(text.id, "rotation", Number(e.target.value))}
-            className="w-full"
-          />
-          <p className="text-gray-400 text-xs">{text.rotation}°</p>
-
-          <button
-            onClick={() => updateText(text.id, "zIndex", getHighestZIndex() + 1)}
-            className="text-green-400 text-xs underline"
-          >
-            Bring to Front
-          </button>
-          <button
-            onClick={() => setTexts(texts.filter(t => t.id !== text.id))}
-            className="text-red-400 text-xs underline mt-1"
-          >
-            Delete
-          </button>
-        </div>
-      ))}
-
-      <button
-        onClick={() => {
-          const newText = {
-            ...createNewText(),
-            isHeaderFooter: true,
-          };
-          setTexts((prev) => [...prev, newText]);
-          setSelectedTextId(newText.id);
-        }}
-        className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-1 px-2 rounded"
-      >
-        + Add Text
-      </button>
-    </div>
-  )}
-</div>
-
-<div className="mb-6">
-  <button
-    className="bg-gray-800 hover:bg-purple-600 text-white font-medium py-2 px-4 rounded shadow transition w-full text-left"
-    onClick={() => setShowHeaderFooterImageOptions(prev => !prev)}
-  >
-    Add Image to Header/Footer Page
-  </button>
-
-  {showHeaderFooterImageOptions && (
-    <div className="bg-gray-700 p-4 mt-2 rounded shadow-inner space-y-6">
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => {
-          const file = e.target.files[0];
-          if (!file) return;
-
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            const newImage = createNewHeaderFooterImage(reader.result);
-            setImages((prev) => [...prev, newImage]);
-            setSelectedImageId(newImage.id);
-          };
-          reader.readAsDataURL(file);
-        }}
-        className="text-white"
-      />
-
-      {images.filter(i => i.isHeaderFooter).map((img, idx) => (
-        <div
-          key={img.id}
-          className={`bg-gray-800 p-3 rounded space-y-2 border ${
-            selectedImageId === img.id ? "border-2 border-blue-400 shadow-md" : "border-gray-600"
-          }`}
-          onClick={() => setSelectedImageId(img.id)}
-        >
-          <label className="text-white text-sm font-semibold block">Image {idx + 1}</label>
-
-          <button
-            onClick={() => updateImage(img.id, "zIndex", getHighestZIndex() + 1)}
-            className="text-green-400 text-xs underline"
-          >
-            Bring to Front
-          </button>
-          <button
-            onClick={() => setImages(images.filter((i) => i.id !== img.id))}
-            className="text-red-400 text-xs underline mt-1"
-          >
-            Delete
-          </button>
-        </div>
-      ))}
-    </div>
-  )}
-</div>
 
 
 
 
-<div className="space-y-4">
-  <div>
-    <label className="block text-sm font-semibold mb-1">Header Style</label>
-    <select
-  value={headerStyle}
-  onChange={(e) => setHeaderStyle(e.target.value)}
-  className="w-full bg-gray-800 text-white px-3 py-2 rounded border border-gray-600"
->
-  <option value="">None</option>
-  <option value="ascented">Ascented Header</option>
-</select>
 
-  </div>
-<div>
-  <label className="block text-sm font-semibold mb-1">Footer Style</label>
-  <select
-    value={footerStyle}
-    onChange={(e) => setFooterStyle(e.target.value)}
-    className="w-full bg-gray-800 text-white px-3 py-2 rounded border border-gray-600"
-  >
-    <option value="">None</option>
-    <option value="accentedLine">Accented Line Footer</option>
-  </select>
-</div>
-
-</div>
 
 </div>
 
 
-
-        <button
-          onClick={handleContinue}
-          className="bg-purple-600 hover:bg-purple-700 transition text-white font-semibold py-2 px-6 rounded-lg shadow"
-        >
-          Continue
-        </button>
 
 
 
@@ -791,7 +615,7 @@ onClick={async () => {
 
   try {
 await saveFormAndBid({
-  field,
+
   coverDesign: { ...coverDesign, title: finalTitle },
   shapes,
   texts,
@@ -804,7 +628,7 @@ await saveFormAndBid({
 
 navigate("/inspection", {
   state: {
-    form: { field, formData: {} },
+    form: { formData: {} },
     coverDesign: { ...coverDesign, title: finalTitle },
     texts,
     shapes,
@@ -964,91 +788,6 @@ navigate("/inspection", {
           </Rnd>
         ))}
     </div>
-{/* Page 2: Only render dropdown-based header/footer */}
-<div className="bg-white w-[428px] h-[554px] p-4 rounded shadow-lg border border-gray-300 relative">
-  {[...texts, ...images]
-  .filter((item) => item.isHeaderFooter)
-  .sort((a, b) => a.zIndex - b.zIndex)
-  .map((item) => (
-    <Rnd
-      key={item.id}
-      size={{ width: item.width, height: item.height }}
-      position={{ x: item.x, y: item.y }}
-      onDragStop={(e, d) => {
-        const updater = item.text ? updateText : updateImage;
-        updater(item.id, "x", d.x);
-        updater(item.id, "y", d.y);
-      }}
-      onResizeStop={(e, dir, ref, delta, position) => {
-        const updater = item.text ? updateText : updateImage;
-        updater(item.id, "width", parseInt(ref.style.width));
-        updater(item.id, "height", parseInt(ref.style.height));
-        updater(item.id, "x", position.x);
-        updater(item.id, "y", position.y);
-      }}
-      bounds="parent"
-      enableResizing
-      style={{ zIndex: item.zIndex }}
-    >
-      {item.text ? (
-        <div
-          style={{
-            width: "100%",
-            height: "100%",
-            color: item.color,
-            fontSize: item.fontSize,
-            transform: `rotate(${item.rotation}deg)`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            border: selectedTextId === item.id ? "2px dashed #00f" : "none",
-            cursor: "move",
-          }}
-        >
-          {item.text}
-        </div>
-      ) : (
-        <img
-          src={item.src}
-          alt="Uploaded"
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "contain",
-            transform: `rotate(${item.rotation}deg)`,
-            border: selectedImageId === item.id ? "2px dashed #00f" : "none",
-            cursor: "move",
-          }}
-        />
-      )}
-    </Rnd>
-  ))}
-
-  {/* Header Style from dropdown */}
-  {headerStyle === "ascented" && (
-    <div className="absolute top-[10px] left-0 w-full h-[60px] flex flex-col z-0">
-      <div style={{ height: "4px", backgroundColor: coverDesign.accentColor, width: "100%" }} />
-      <div style={{ flexGrow: 1, backgroundColor: coverDesign.primaryColor }} />
-      <div style={{ height: "4px", backgroundColor: coverDesign.accentColor, width: "100%" }} />
-    </div>
-  )}
-
-{footerStyle === "accentedLine" && (
-  <div
-    style={{
-      position: "absolute",
-      bottom: "0px", // stick to page bottom
-      left: 0,
-      width: "100%",
-      height: "4px",
-      backgroundColor: coverDesign.accentColor,
-      zIndex: 0,
-    }}
-  />
-)}
-
-
-</div>
 
 
 
