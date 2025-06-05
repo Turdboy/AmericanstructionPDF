@@ -36,58 +36,50 @@ const TVDashboardPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black text-white p-8">
-      <h1 className="text-3xl font-bold mb-6 text-center">TV Tracker Dashboard</h1>
+      {/* Hero Banner */}
+      <div className="relative w-full h-64 bg-gradient-to-r from-purple-800 via-black to-black flex items-center justify-center mb-12">
+        <h1 className="text-4xl font-extrabold text-white drop-shadow-lg">
+          Welcome back, {user?.email?.split('@')[0]}.
+        </h1>
+      </div>
 
-      {user && (
-        <div className="mb-8 text-center">
-          <p className="text-lg">
-            Logged in as: <span className="font-semibold">{user.email}</span>
-          </p>
-          <button
-            onClick={() => navigate("/survey-proposal")}
-            className="mt-4 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded transition"
-          >
-            Write a New Review
-          </button>
+      {/* Section Title */}
+      <h2 className="text-2xl font-bold mb-6 text-left">New from the Community</h2>
+
+      {/* Review Feed - Horizontal Scroll */}
+      {latestReviews.length > 0 ? (
+        <div className="overflow-x-auto whitespace-nowrap pb-6">
+          {latestReviews.map((review) => (
+            <div
+              key={review.id}
+              className="inline-block bg-gray-900 rounded-lg shadow-md mr-4 p-4 w-64 align-top"
+            >
+              <img
+                src={review.imageUrl || "https://via.placeholder.com/150x220?text=No+Image"}
+                alt={review.showName}
+                className="w-full h-40 object-cover rounded mb-2"
+              />
+              <h3 className="text-xl font-semibold mb-1">{review.showName}</h3>
+              <p className="text-sm mb-1">
+                Season {review.seasonNumber}, Episode {review.episodeNumber}
+              </p>
+              <p className="text-sm text-purple-400 mb-1">Rating: {review.rating}/10</p>
+              <p className="text-sm italic text-gray-300">{review.review}</p>
+            </div>
+          ))}
         </div>
+      ) : (
+        <p className="text-center text-gray-400">No recent reviews found.</p>
       )}
 
-      <div>
-        <h2 className="text-2xl font-bold mb-4">Recent Activity</h2>
-
-        {latestReviews.length > 0 ? (
-          <div className="grid gap-6 max-w-4xl mx-auto">
-            {latestReviews.map((review) => (
-              <div
-                key={review.id}
-                className="bg-gray-800 rounded-lg shadow-lg flex items-center space-x-6 p-6"
-              >
-                <img
-                  src={review.imageUrl || "https://via.placeholder.com/150x220?text=No+Image"}
-                  alt={review.showName}
-                  className="w-32 h-48 object-cover rounded"
-                />
-                <div>
-                  <h3 className="text-2xl font-bold mb-2">{review.showName}</h3>
-                  <p className="text-sm mb-1">
-                    Season: <span className="font-medium">{review.seasonNumber}</span>
-                  </p>
-                  <p className="text-sm mb-1">
-                    Episode: <span className="font-medium">{review.episodeNumber}</span>
-                  </p>
-                  <p className="text-sm mb-1">
-                    Rating: <span className="font-medium">{review.rating}/10</span>
-                  </p>
-                  <p className="text-sm">
-                    Review: <span className="italic">{review.review}</span>
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-center text-gray-400">No recent reviews found.</p>
-        )}
+      {/* Floating Log Button */}
+      <div className="fixed top-6 right-6">
+        <button
+          onClick={() => navigate("/survey-proposal")}
+          className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-full shadow-lg"
+        >
+          + Log TV
+        </button>
       </div>
     </div>
   );

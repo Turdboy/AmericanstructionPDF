@@ -1983,14 +1983,16 @@ overviewPages.forEach((pair, index) => {
                     stack: [
                       {
                         ul: [
-                          image1.section && { text: truncateText("Section: " + image1.section) },
-                          image1.area && { text: truncateText("Area: " + image1.area) },
-                          image1.caption && { text: truncateText("Caption: " + image1.caption) },
-                          image1.description && { text: truncateText("Description: " + image1.description) },
-                          image1.cause && { text: truncateText("Cause: " + image1.cause) },
-                          image1.impact && { text: truncateText("Impact: " + image1.impact) },
-                          image1.solution && { text: truncateText("Solution: " + image1.solution) }
-                        ].filter(Boolean),
+  image1.note && { text: truncateText("Note: " + image1.note) },
+  image1.section && { text: truncateText("Section: " + image1.section) },
+  image1.area && { text: truncateText("Area: " + image1.area) },
+  image1.caption && { text: truncateText("Caption: " + image1.caption) },
+  image1.description && { text: truncateText("Description: " + image1.description) },
+  image1.cause && { text: truncateText("Cause: " + image1.cause) },
+  image1.impact && { text: truncateText("Impact: " + image1.impact) },
+  image1.solution && { text: truncateText("Solution: " + image1.solution) }
+].filter(Boolean)
+,
                         fontSize: 9
                       }
                     ],
@@ -2137,14 +2139,16 @@ droneImages.forEach((pair, index) => {
                       stack: [
                         {
                           ul: [
-                            image1.section && { text: truncateText("Section: " + image1.section) },
-                            image1.area && { text: truncateText("Area: " + image1.area) },
-                            image1.caption && { text: truncateText("Caption: " + image1.caption) },
-                            image1.description && { text: truncateText("Description: " + image1.description) },
-                            image1.cause && { text: truncateText("Cause: " + image1.cause) },
-                            image1.impact && { text: truncateText("Impact: " + image1.impact) },
-                            image1.solution && { text: truncateText("Solution: " + image1.solution) }
-                          ].filter(Boolean),
+  image1.note && { text: truncateText("Note: " + image1.note) },
+  image1.section && { text: truncateText("Section: " + image1.section) },
+  image1.area && { text: truncateText("Area: " + image1.area) },
+  image1.caption && { text: truncateText("Caption: " + image1.caption) },
+  image1.description && { text: truncateText("Description: " + image1.description) },
+  image1.cause && { text: truncateText("Cause: " + image1.cause) },
+  image1.impact && { text: truncateText("Impact: " + image1.impact) },
+  image1.solution && { text: truncateText("Solution: " + image1.solution) }
+].filter(Boolean)
+,
                           fontSize: 9
                         }
                       ],
@@ -2304,13 +2308,14 @@ margin: [0, 0, 0, 8]
                     stack: [
                       {
                         ul: [
-                          image1.section && { text: truncateText("Section: " + image1.section) },
-                          image1.area && { text: truncateText("Area: " + image1.area) },
-                          image1.caption && { text: truncateText("Caption: " + image1.caption) },
-                          image1.description && { text: truncateText("Description: " + image1.description) },
-                          image1.cause && { text: truncateText("Cause: " + image1.cause) },
-                          image1.impact && { text: truncateText("Impact: " + image1.impact) },
-                          image1.solution && { text: truncateText("Solution: " + image1.solution) }
+  image1.note && { text: truncateText("Note: " + image1.note) }, // 👈 or image1.caption if that's what you're using
+  image1.section && { text: "Section: " + image1.section },
+  image1.area && { text: "Area: " + image1.area },
+  image1.caption && { text: "Caption: " + image1.caption },
+  image1.description && { text: "Description: " + image1.description },
+  image1.cause && { text: "Cause: " + image1.cause },
+  image1.impact && { text: "Impact: " + image1.impact },
+  image1.solution && { text: "Solution: " + image1.solution }
                         ].filter(Boolean),
                         fontSize: 9,
                       }

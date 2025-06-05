@@ -871,13 +871,8 @@ const emptyRoofSection = {
         Array.from(files).map(async (file) => ({
           url: URL.createObjectURL(file),
           base64: await readFileAsBase64(file),
-          section: "",
-          area: "",
-          caption: "",
-          description: "",
-          cause: "",
-          impact: "",
-          solution: "",
+          notes: "", // 🆕 one field for all text
+
           annotations: [], // ← ✅ Add annotation field
         }))
       );
@@ -905,13 +900,8 @@ const emptyRoofSection = {
         Array.from(files).map(async (file) => ({
           url: URL.createObjectURL(file),
           base64: await readFileAsBase64(file),
-          section: "",
-          area: "",
-          caption: "",
-          description: "",
-          cause: "",
-          impact: "",
-          solution: "",
+         note: "", // 🆕 one field for all text
+
           annotations: [], // ← ✅ Add annotation field
         }))
       );
@@ -939,13 +929,8 @@ const emptyRoofSection = {
         Array.from(files).map(async (file) => ({
           url: URL.createObjectURL(file),
           base64: await readFileAsBase64(file),
-          section: "",
-          area: "",
-          caption: "",
-          description: "",
-          cause: "",
-          impact: "",
-          solution: "",
+note: "", // 🆕 one field for all text
+
           annotations: [], // ← ✅ Add annotation field
         }))
       );
@@ -1093,56 +1078,27 @@ try {
           />
 
           <div className="mt-2 space-y-1">
-            {DEFECT_IMAGE_FIELDS.map((field) => (
-              <div key={field} className="mb-2">
-                {field === "caption" ? (
-                  <input
-                    type="text"
-                    placeholder="Caption"
-                    value={image[field] || ""}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      const limit = wordLimits[field];
-                      if (limit && getWordCount(value) > limit) return;
-
-                      const imgs = [...formData.images];
-                      imgs[index][field] = value;
-                      setFormData({ ...formData, images: imgs });
-                    }}
-                    className="w-full border p-1 rounded"
-                  />
-                ) : (
-                  <textarea
-                    placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-                    value={image[field] || ""}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      const limit = wordLimits[field];
-                      if (limit && getWordCount(value) > limit) return;
-
-                      const imgs = [...formData.images];
-                      imgs[index][field] = value;
-                      setFormData({ ...formData, images: imgs });
-                    }}
-                    className="w-full border p-1 rounded"
-                  />
-                )}
-                <p className="text-xs text-gray-500 mt-1">
-                  {getWordCount(image[field] || "")} / {wordLimits[field]} words
-                </p>
-                {field === "solution" && (
-                  <button
-  type="button"  // ← ✅ ADD THIS LINE
+            <textarea
+  placeholder="Describe this image..."
+  value={image.note || ""}
+  onChange={(e) => {
+    const imgs = [...formData.images];
+    imgs[index].note = e.target.value;
+    setFormData({ ...formData, images: imgs });
+  }}
+  className="w-full border p-2 rounded"
+/>
+<p className="text-xs text-gray-500 mt-1">
+  {getWordCount(image.note || "")} / 100 words
+</p>
+<button
+  type="button"
   onClick={() => openImageEditor(index, "images")}
   className="mt-2 text-blue-600 underline"
 >
   Annotate
 </button>
 
-)}
-
-              </div>
-            ))}
           </div>
 
           <button
@@ -1187,59 +1143,31 @@ try {
         <div key={index} className="relative bg-gray-50 p-3 border rounded">
           <img
             src={image.url}
-            alt={`Upload ${index + 1}`}
+            alt={`Overview ${index + 1}`}
             className="w-full h-48 object-cover rounded"
           />
 
           <div className="mt-2 space-y-1">
-            {["section", "area", "caption"].map((field) => (
-              <div key={field} className="mb-2">
-                {field === "caption" ? (
-                  <input
-                    type="text"
-                    placeholder="Caption"
-                    value={image[field] || ""}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      // 30‑word guard
-                      if (getWordCount(value) > 30) return;
-
-                      const imgs = [...formData.overviewImages];
-                      imgs[index][field] = value;
-                      setFormData({ ...formData, overviewImages: imgs });
-                    }}
-                    className="w-full border p-1 rounded"
-                  />
-                ) : (
-                  <textarea
-                    placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-                    value={image[field] || ""}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      if (getWordCount(value) > 30) return;
-
-                      const imgs = [...formData.overviewImages];
-                      imgs[index][field] = value;
-                      setFormData({ ...formData, overviewImages: imgs });
-                    }}
-                    className="w-full border p-1 rounded"
-                  />
-                )}
-                <p className="text-xs text-gray-500 mt-1">
-                  {getWordCount(image[field] || "")} / 30 words
-                </p>
-                {field === "caption" && (
-  <button
-  type="button"  // ← ✅ ADD THIS LINE
-  onClick={() => openImageEditor(index, "overviewImages")}
-  className="mt-2 text-blue-600 underline"
->
-  Annotate
-</button>
-)}
-
-              </div>
-            ))}
+            <textarea
+              placeholder="Describe this image..."
+              value={image.note || ""}
+              onChange={(e) => {
+                const imgs = [...formData.overviewImages];
+                imgs[index].note = e.target.value;
+                setFormData({ ...formData, overviewImages: imgs });
+              }}
+              className="w-full border p-2 rounded"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              {getWordCount(image.note || "")} / 100 words
+            </p>
+            <button
+              type="button"
+              onClick={() => openImageEditor(index, "overviewImages")}
+              className="mt-2 text-blue-600 underline"
+            >
+              Annotate
+            </button>
           </div>
 
           <button
@@ -1256,6 +1184,9 @@ try {
     </div>
   </div>
 )}
+
+
+
 
 
 
@@ -1288,58 +1219,31 @@ try {
         <div key={index} className="relative bg-gray-50 p-3 border rounded">
           <img
             src={image.url}
-            alt={`Upload ${index + 1}`}
+            alt={`Drone ${index + 1}`}
             className="w-full h-48 object-cover rounded"
           />
 
           <div className="mt-2 space-y-1">
-            {["section", "area", "caption", "description"].map((field) => (
-              <div key={field} className="mb-2">
-                {field === "caption" ? (
-                  <input
-                    type="text"
-                    placeholder="Caption"
-                    value={image[field] || ""}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      if (getWordCount(value) > 30) return;
-
-                      const imgs = [...formData.droneImages];
-                      imgs[index][field] = value;
-                      setFormData({ ...formData, droneImages: imgs });
-                    }}
-                    className="w-full border p-1 rounded"
-                  />
-                ) : (
-                  <textarea
-                    placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-                    value={image[field] || ""}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      if (getWordCount(value) > 30) return;
-
-                      const imgs = [...formData.droneImages];
-                      imgs[index][field] = value;
-                      setFormData({ ...formData, droneImages: imgs });
-                    }}
-                    className="w-full border p-1 rounded"
-                  />
-                )}
-                <p className="text-xs text-gray-500 mt-1">
-                  {getWordCount(image[field] || "")} / 30 words
-                </p>
-                {field === "description" && (
-  <button
-  type="button"  // ← ✅ ADD THIS LINE
-  onClick={() => openImageEditor(index, "droneImages")}
-  className="mt-2 text-blue-600 underline"
->
-  Annotate
-</button>
-)}
-
-              </div>
-            ))}
+            <textarea
+              placeholder="Describe this image..."
+              value={image.note || ""}
+              onChange={(e) => {
+                const imgs = [...formData.droneImages];
+                imgs[index].note = e.target.value;
+                setFormData({ ...formData, droneImages: imgs });
+              }}
+              className="w-full border p-2 rounded"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              {getWordCount(image.note || "")} / 100 words
+            </p>
+            <button
+              type="button"
+              onClick={() => openImageEditor(index, "droneImages")}
+              className="mt-2 text-blue-600 underline"
+            >
+              Annotate
+            </button>
           </div>
 
           <button
@@ -1356,6 +1260,7 @@ try {
     </div>
   </div>
 )}
+
 
 
 

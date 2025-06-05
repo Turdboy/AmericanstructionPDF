@@ -29,17 +29,74 @@ import GetStartedPage from "./components/GetStartedPage";
 import ChooseHustlePage from "./components/chooseHustlePage";
 import DesignPage from "./components/DesignPage";
 import CustomInspectionPage from "./components/CustomInspectionPage"
+import VysixLandingPage from "./components/VysixLandingPage";
+import VysixProfilePage from "./components/VysixProfilePage";
+import VysixEditProfilePage from "./components/VysixEditProfilePage";
+import AboutMeJamesTyler from "./components/AboutMeJamesTyler"; 
+
+import { useAuth } from "../hooks/useAuth"; // ✅ adjust path if needed
 
 
 
 
+function VysixDropdown({ dropdownOpen, setDropdownOpen }) {
+  const { user } = useAuth(); // ✅ NOW it's safe to use here
+  const navigate = useNavigate();
 
 
+  return (
+    <div className="relative inline-block text-left">
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          setDropdownOpen((prev) => !prev);
+        }}
+        className="bg-black hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded transition"
+      >
+        James Tyler
+      </button>
 
+      {dropdownOpen && (
+        <div
+          className="absolute left-0 mt-2 w-48 bg-gray-900 border border-gray-700 rounded shadow-lg z-50"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {[
+            { label: "Home", path: "/vysix/dashboard" },
+            { label: "Profile", path: "/vysix/profile" },
+            { label: "about me", path: "/vysix/shows" }
+          ].map((item) => (
+            <div
+              key={item.label}
+              onClick={() => {
+                setDropdownOpen(false);
+                if (!user) {
+                  navigate("/login", { state: { from: item.path } });
+                } else {
+                  navigate(item.path);
+                }
+              }}
+              className="px-4 py-2 text-sm hover:bg-gray-800 cursor-pointer"
+            >
+              {item.label}
+            </div>
+          ))}
 
-
-
-
+          <div
+            onClick={() => {
+              auth.signOut();
+              setDropdownOpen(false);
+              navigate("/");
+            }}
+            className="px-4 py-2 text-sm text-red-400 hover:bg-gray-800 cursor-pointer"
+          >
+            Sign Out
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 
 
@@ -52,6 +109,21 @@ function MainPage() {
 }
 
 function App() {
+
+
+
+const [dropdownOpen, setDropdownOpen] = useState(false);
+
+useEffect(() => {
+  const close = () => setDropdownOpen(false);
+  window.addEventListener("click", close);
+  return () => window.removeEventListener("click", close);
+}, []);
+
+
+
+
+
   return (
     <AuthProvider>
     <Router>
@@ -82,12 +154,10 @@ function App() {
         </Link>
 
 
-        <Link
-  to="/design"
-  className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition"
->
-  Get Started
-</Link>
+<VysixDropdown dropdownOpen={dropdownOpen} setDropdownOpen={setDropdownOpen} />
+
+
+
 
       </div>
 
@@ -128,6 +198,10 @@ function App() {
   {/* 🌟 Landing/Home */}
   <Route path="/" element={<LandingPage />} />
 
+
+  <Route path="/vysix/profile/edit" element={<VysixEditProfilePage />} />
+
+
   {/* 🔐 Authentication */}
   <Route path="/account" element={<AuthGatewayPage />} />
   <Route path="/login" element={<LoginPage />} />
@@ -135,16 +209,24 @@ function App() {
 
   {/* ✅ Protected (after login) */}
   <Route path="/projects" element={<ProjectsPage />} />
+  <Route path="/vysix" element={<VysixLandingPage />} />
+  <Route path="/vysix/dashboard" element={<TVDashboardPage />} />
+
+
   <Route path="/projects/:id" element={<ProjectAnalysisPage />} />
   <Route path="/estimator" element={<EstimatorPage />} />
 
   <Route path="/projects/:id/report" element={<ProjectReportPage />} />
   <Route path="/get-started" element={<GetStartedPage />} />
+  <Route path="/vysix/profile" element={<VysixProfilePage />} />
+    <Route path="/vysix/shows" element={<AboutMeJamesTyler />} />
+
 
   <Route path="/survey-proposal" element={<SurveyProposalPage />} />
   <Route path="/landingpagetvtracker" element={<LandingPageTVTracker />} />
   <Route path="/design" element={<DesignPage />} />
-  <Route path="/tv-dashboard" element={<TVDashboardPage />} />
+<Route path="/vysix/dashboard" element={<TVDashboardPage />} />
+
   <Route path="/choose-hustle" element={<ChooseHustlePage />} />
   <Route path="/inspection/custom" element={<CustomInspectionPage />} />
 
