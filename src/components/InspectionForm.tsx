@@ -1572,7 +1572,7 @@ try {
 />
 
 
-<h3 className="text-lg font-bold mt-6">Overall Condition Summary</h3>
+<h3 className="text-lg font-bold mt-6">Scope of Work</h3>
 
 <label className="block mt-2">Summary of the overall condition across all roof sections</label>
 <textarea

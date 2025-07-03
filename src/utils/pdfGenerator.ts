@@ -1798,10 +1798,11 @@ const roofSections = Array.isArray(formData.roofSections) ? formData.roofSection
           [
             {
               text: "Dear " + (formData.clientname || "Client") + ",\n\n" +
-  "Americanstruction is a proudly female-led business founded and operated by Pamela Degregorio. With decades of experience, our company has become a trusted name in the Chicagoland area by delivering top-tier roofing services with integrity, precision, and care. From small repairs to full-scale commercial projects, we bring a commitment to excellence that puts our clients first every step of the way.\n\n" +
-  "Our Head of Commercial Development, Nick Degregorio, sought out developer James Tyler to conceive a practical AI tool that could transform manual operational processes into automated, streamlined workflows. Together, they developed Vysix — a platform that empowers businesses to generate precise, professional proposals and reports in a fraction of the time, delivering innovation and efficiency to industries long overdue for digital transformation. \n\n" +
-  "Our broader mission with Vysix is to help Americanstruction scale its operations and serve more clients without increasing crew size, unlocking new growth by maximizing efficiency and output through technology.\n\n" +
-  "Warm regards,\n\nPamela Degregorio\nCEO, Americanstruction",
+"Americanstruction is a family-owned business committed to delivering reliable, high-quality roofing services across the Chicagoland area. With decades of experience, our team has built a reputation rooted in honesty, precision, and professionalism. From responsive service calls to large-scale commercial projects, we are proud to serve our community with integrity and expertise.\n\n" +
+    "Recognizing the need for innovation in how we generate and deliver proposals, our Head of Commercial Development, Nick Degregorio, partnered with developer James Tyler to create a smarter solution. What began as a basic automation tool has evolved into VPAI — a powerful platform that enables roofers and contractors to generate professional proposals and reports in minutes, not hours.\n\n" +
+    "With VPAI, we’re able to streamline every step of the inspection and proposal process — from field documentation to client-ready PDFs — helping Americanstruction grow without adding more crew, and empowering others in the industry to do the same.\n\n" +
+    "Warm regards,\n\nPamela Degregorio\nChief Executive Officer\nAmericanstruction\nwww.americanstruction.com",
+
 fontSize: 10,
 lineHeight: 1.5,
 margin: [0, 0, 0, 10]
@@ -2444,26 +2445,22 @@ docDefinition.content.push({
       margin: [0, 30, 0, 30]
     },
 
-    // === Weather Info Section ===
-    {
-      text: "Weather Information",
-      fontSize: 12,
-      bold: true,
-      margin: [0, 16, 0, 6]
-    },
-    {
-      columns: [
-        ...[
-          ["Weather Condition", "weatherCondition"],
-          ["Temperature (°F)", "temperature"]
-        ].map(([label, key]) => ({
-          stack: [
-            { text: label + ":", bold: true, fontSize: 9, margin: [0, 3, 0, 0] },
-            { text: formData?.[key] || "N/A", fontSize: 8, margin: [0, 0, 0, 6] }
-          ]
-        }))
-      ]
-    },
+// === Proposal Preface Section ===
+
+{
+  text: [
+    "Thank you for the opportunity to quote on the repairs to your facility. Please find your estimate below.\n\n",
+
+    "This quote including price will have a start date of TBD, project duration of 6–8 weeks (full roof), weather depending. Note: the materials must be ordered 4 weeks in advance of our start date.\n\n",
+
+    "Pre-construction meetings required to go over site plan, job site set-up, notification to tenants and job site safety.\n\n",
+
+  ],
+  fontSize: 9,
+  lineHeight: 1.4,
+  margin: [0, 0, 0, 10]
+},
+
 
  // === Recommendations ===
 {
@@ -2482,37 +2479,11 @@ docDefinition.content.push({
     },
     { text: formData.recommendationDetails || "N/A", fontSize: 9, margin: [0, 0, 0, 6] },
 
-    {
-      text: "Prioritization of Repairs:",
-      bold: true,
-      fontSize: 10,
-      margin: [0, 2, 0, 0]
-    },
-    { text: formData.recommendationPrioritization || "N/A", fontSize: 9, margin: [0, 0, 0, 6] },
 
-    {
-      text: "Estimated Cost of Repairs ($):",
-      bold: true,
-      fontSize: 10,
-      margin: [0, 2, 0, 0]
-    },
-    { text: formData.recommendationCost ? `$${formData.recommendationCost}` : "N/A", fontSize: 9, margin: [0, 0, 0, 12] }
   ]
 },
 
-// === Summary ===
-{
-  text: "Overall Roof Summary",
-  fontSize: 12,
-  bold: true,
-  margin: [0, 20, 0, 6]
-},
-{
-  stack: [
-    
-    { text: formData.overallConditionSummary || "N/A", fontSize: 9, margin: [0, 0, 0, 0] }
-  ]
-},
+
 
 
     // === Footer ===
@@ -2572,6 +2543,43 @@ docDefinition.content.push({
       ]
     })),
 
+
+
+    
+    {
+      text: "\nPrice Summary",
+      fontSize: 14,
+      bold: true,
+      margin: [0, 20, 0, 10]
+    },
+{
+  text: [
+    "The agreed upon price is ",
+    {
+      text: formData.finalEstimate
+        ? `$${Number(formData.finalEstimate).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+        : "To Be Determined",
+      bold: true
+    },
+    " (not including options, upgrades, change orders, or Allowance) to be paid as follows:"
+  ],
+  fontSize: 10,
+  lineHeight: 1.3,
+  margin: [0, 0, 0, 10]
+},
+
+
+    {
+      text:
+        "1) 1/3 down (due upon signed agreement)\n" +
+        "2) 1/3 upon material drop\n" +
+        "3) 1/3 upon substantial completion\n\n" +
+        "Includes labor, material, taxes, and disposal. Estimates valid for 20 days. A 33% deposit is required before any material is ordered.\n\n" +
+        "A docusign version including details of this proposal will be sent for signature if this proposal is found to be acceptable.",
+      fontSize: 10,
+      lineHeight: 1.3
+    },
+
     {
       canvas: [
         { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
@@ -2603,94 +2611,25 @@ docDefinition.content.push({
 
 
 
-
-
-
-//============= Loop for roof sections !!!!!!
-
-
-
-
-
-
-roofSections.forEach((section, index) => {
-  try {
-    if (!section) throw new Error("Missing section");
-
-    const pageStart = basePageOffset + index * 6;
-    const pages = [
-      createSummaryPage(index + 1, section, pageStart + 0),
-      createMembranePage(index + 1, section, pageStart + 1),
-      createFlashingAndDrainagePage(index + 1, section, pageStart + 2), // ✅ this line!
-      createInsulationAndDeckPage(index + 1, section, pageStart + 3),
-      createPenetrationsAndParapetPage(index + 1, section, pageStart + 4),
-      createAdditionalElementsPage(index + 1, section, pageStart + 5)
-    ];
-    
-
-    docDefinition.content.push(...pages);
-  } catch (err) {
-    console.error(`Error creating roof section ${index + 1}:`, err);
-  }
-});
-
-
-const finalPageNumber =
-  6 + // first 6 pages before images
-  imagePages.length +
-  overviewPages.length +
-  droneImages.length +
-  1 + // roof condition summary overview
-  roofSections.length * 6 +
-  1; // final pricing page itself
-
-
-
-
-// ================= FINAL PRICING SUMMARY PAGE =================
 docDefinition.content.push({
   pageBreak: "before",
   stack: [
-    ...createStandardHeader("Final Pricing Summary"),
-
+    ...createStandardHeader("Change Order Items"),
     {
-      text: "Executive Pricing Summary",
-      fontSize: 18,
-      bold: true,
-      margin: [0, 40, 0, 20]
-    },
-
-    {
-      table: {
-        widths: ["60%", "*"],
-        body: [
-          [
-            { text: "Total Estimate for Scope of Work", bold: true, fontSize: 14 },
-            {
-              text:
-  formData.finalEstimate !== null && formData.finalEstimate !== undefined
-    ? `$${Number(formData.finalEstimate).toLocaleString()}`
-    : "N/A",
-
-              fontSize: 14,
-              bold: true,
-              color: "#2e3192"
-            }
-          ]
-        ]
-      },
-      layout: "lightHorizontalLines",
-      margin: [0, 0, 0, 50]
-    },
-
-    {
-      text: "* This pricing is based on information available at the time of inspection. Any unforeseen conditions may result in pricing adjustments.",
-      italics: true,
+      text: formData.changeOrderNotes || 
+      `Interior Protection Draping  ...............  $1.50 per sq ft
+Fall Suspension Protection  .............  $3.50 per sq ft
+Drain (Retrofit) Replacement ............  $775.00
+Drain Bowl Replacement ....................  $850.00 ea
+Metal Decking Replacement ...............  $16.50 per sq ft
+Wood Decking Replacement ................  $7.00 per sq ft
+Walkway Protection Roll ......................  $28.00 per linear ft
+New Bilco Hatch (30x36) .....................  $1,850.00
+Hatch Safety Rail .................................  $950.00`,
       fontSize: 10,
-      margin: [0, 0, 0, 30]
+      margin: [0, 40, 0, 10],
+      lineHeight: 1.3
     },
-
-    // Footer
     {
       canvas: [
         { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
@@ -2702,8 +2641,8 @@ docDefinition.content.push({
       columns: [
         { text: "", width: "*" },
         {
-          text: "Page " + finalPageNumber,
-
+          text: "Page " +
+            (6 + imagePages.length + overviewPages.length + droneImages.length + 2),
           fontSize: 10,
           alignment: "right",
           margin: [0, 10, 40, 0],
@@ -2714,6 +2653,127 @@ docDefinition.content.push({
     }
   ]
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+docDefinition.content.push({
+  pageBreak: "before",
+  stack: [
+    ...createStandardHeader("Full Disclaimer"),
+
+    {
+      text:
+        "We will include complete photo reports daily to track job progress, a site supervisor to manage site.\n" +
+        "Crews are OSHA certified and a foreman's book kept on-site that includes:\n" +
+        "1) Scope of Work/ Contract with Building Owner or GC Contract w/Price Deleted\n" +
+        "2) Material List\n" +
+        "3) Roof Plan - Drawing or Google Earth Image\n" +
+        "4) Staging Plan - Where do you load Material From, Employee Parking, Dumpster Location. and Key Contacts. All Company Employees involved with Job and Titles, Foreman on Site. All Building Key Contacts for Access, Questions.\n" +
+        "5) Manufacturer Details - Walls, base tie ins, Insulation Attachment, Gutter Detail. Product Data Sheets\n" +
+        "6) Project Specific Details\n" +
+        "7) Shop Drawings If needed For GC or Specialty Details\n" +
+        "8) SDS Sheets/Emergency Plan (Hospital) or Urgent Care locations near Job Flag Locations, Skylight Safety.\n" +
+        "9) Tool Box Talks /NRCA /Should do these weekly while on Job\n" +
+        "10) Equipment List\n" +
+        "11) Pictures\n" +
+        "12) Change Order Forms - A document the Foreman has on site for Unforeseen Items",
+      fontSize: 10,
+      margin: [0, 20, 0, 30],
+      lineHeight: 1.35
+    },
+
+    {
+      text:
+        "The construction industry is currently experiencing substantial volatility in material pricing and availability. Prices may increase, and delivery timelines may shift unexpectedly.\n\n" +
+        "If a specified product is unavailable or delayed, Contractor shall provide written notice to the Owner and offer substitutions as needed. If material prices increase before installation, the total contract amount may be adjusted with documentation provided.",
+      fontSize: 10,
+      margin: [0, 0, 0, 30],
+      lineHeight: 1.4
+    },
+
+    {
+      text:
+        "Respectfully,\n\nMichael J. DeGregorio\nVice President / Co-Founder\nAmericanstruction\nwww.americanstruction.com",
+      fontSize: 10
+    },
+
+    {
+      canvas: [
+        { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
+        { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
+      ],
+      absolutePosition: { x: 0, y: 755 }
+    },
+    {
+      columns: [
+        { text: "", width: "*" },
+        {
+          text: "Page " +
+            (6 + imagePages.length + overviewPages.length + droneImages.length + 3),
+          fontSize: 10,
+          alignment: "right",
+          margin: [0, 10, 40, 0],
+          color: "white"
+        }
+      ],
+      absolutePosition: { x: 0, y: 760 }
+    }
+  ]
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+const finalPageNumber =
+  6 + // first 6 pages before images
+  imagePages.length +
+  overviewPages.length +
+  droneImages.length +
+  1 + // roof condition summary overview
+  roofSections.length * 3 + // ✅ Only 3 pages per section now
+  1; // final pricing page
+
+
+
+
 
 
 
