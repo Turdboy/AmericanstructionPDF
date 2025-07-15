@@ -3575,6 +3575,53 @@ docDefinition.content.push({
 });
 
 
+// ================= ANNUAL INSPECTION PAGE =================
+docDefinition.content.push({
+  pageBreak: "before",
+  stack: [
+    ...createStandardHeader("Annual Inspection"),
+
+
+    {
+      text:
+        "All Low Slope Roofing Systems are susceptible to severe weathering, expansion, contraction, and even abuse. " +
+        "It is not uncommon for some leakage to develop at any time after the original roof application as a result of these causes. " +
+        "In addition, roofs frequently don’t last their design life, but with proactive inspections and scheduled maintenance, " +
+        "Americanstruction can ensure that you’ll beat the odds with a roofing system that lasts beyond its normal life cycle.\n\n" +
+        "Even though a manufacturer’s warranty may have been purchased with your new roof, most roofing materials manufacturers " +
+        "require regular maintenance to keep roof warranties valid. This means the building owner continues to be responsible for " +
+        "the proper roof care and maintenance to insure its top performance.\n\n" +
+        "Americanstruction’s goal is to ensure performance of your existing roof system by offering a maintenance program, which " +
+        "ultimately reduces the costs incurred for roof repairs and/or replacement.",
+      fontSize: 8,
+      margin: [0, 0, 0, 15]
+    },
+
+    {
+      text: "SERVICES",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 0, 0, 5]
+    },
+    {
+      ol: [
+        "Inspect the entire roof area for damage that may have resulted from foreign objects or from human activity i.e.: HVAC unit maintenance.",
+        "Remove all debris that may have accumulated on the roof surface to ensure it does not restrict drainage or cause roof membrane damage.",
+        "Inspect and clean all roof drains, overflow drains, gates, and scupper drains to ensure a free flow of rain water and snow melt.",
+        "Inspect all welds at membrane field seams, roof curbs, and roof penetrations. Verify no voids have developed at weld points.",
+        "Inspect all sheet metal flashings and counter flashings at copings, gutters, collector boxes, and downspouts to verify they are firmly attached and sealed.",
+        "Inspect and verify roof access scuttle, ladder, and locking mechanism are operational and all flashings are in place and secure.",
+        "Verify all HVAC unit access doors and covers are installed and secured.",
+        "Submit a written report including photos to the building owner detailing the current roof condition, evidence of any roof abuse, and any problems that could potentially lead to future roof problems. Michael DeGregorio is a thermographer capable of conducting thermal scans that can determine the possibility of moisture levels within the roofing system. Price of thermal inspection and report upon request.",
+        "Any deficiencies (ie. repairs) will be dealt with on a fixed cost or time and material basis. Contractor will provide the owner or owner’s representative an estimate of the repairs needed. Work will commence upon written approval by the owner or owner’s representative."
+      ],
+      fontSize: 8,
+      margin: [0, 0, 0, 20]
+    },
+
+    createFooter(finalPageNumber + 1)
+  ]
+});
 
 
 
