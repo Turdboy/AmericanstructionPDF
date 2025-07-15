@@ -205,7 +205,7 @@ recommendationPrioritization: '',
 recommendationCost: '',
 overallConditionSummary: '',
 
-
+additionalPDFs: [],
         
     });
 
@@ -1582,6 +1582,47 @@ try {
   className="w-full border p-2 rounded"
 />
 
+
+
+<hr className="my-6" />
+<h3 className="text-lg font-bold">Additional PDF Attachments</h3>
+
+<input
+  type="file"
+  accept="application/pdf"
+  multiple
+  onChange={async (e) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+
+    const uploaded = await Promise.all(
+      files.map(async (file) => {
+        const blob = file;
+        const filename = `${Date.now()}-${file.name}`;
+        const storageRef = ref(storage, `additional_pdfs/${filename}`);
+        await uploadBytes(storageRef, blob);
+        const url = await getDownloadURL(storageRef);
+        return { name: file.name, url };
+      })
+    );
+
+    setFormData((prev) => ({
+      ...prev,
+      additionalPDFs: [...(prev.additionalPDFs || []), ...uploaded],
+    }));
+  }}
+  className="mb-4 block"
+/>
+
+<ul className="list-disc pl-5 text-sm text-gray-700">
+  {(formData.additionalPDFs || []).map((pdf, index) => (
+    <li key={index}>
+      <a href={pdf.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+        {pdf.name}
+      </a>
+    </li>
+  ))}
+</ul>
 
 
                 

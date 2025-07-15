@@ -9,6 +9,7 @@ const coverPlaceholderImage = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAA
 const americanstructionheader = "data:image/png;base64,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";
 
 
+
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 pdfMake.vfs = pdfFonts.vfs;
@@ -177,6 +178,31 @@ const createStandardHeader = (titleText = "") => ([
 ]);
 
 
+const createFooter = (pageNumber) => [
+  {
+    canvas: [
+      { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
+      { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
+    ],
+    absolutePosition: { x: 0, y: 755 }
+  },
+  {
+    columns: [
+      { text: "", width: "*" },
+      {
+        text: "Page " + pageNumber,
+        fontSize: 10,
+        alignment: "right",
+        margin: [0, 10, 40, 0],
+        color: "white"
+      }
+    ],
+    absolutePosition: { x: 0, y: 760 }
+  }
+];
+
+
+
 export const prepareImages = async (images: any[]) => {
   return await Promise.all(
     images.map(async (img) => {
@@ -199,6 +225,27 @@ export const prepareImages = async (images: any[]) => {
     })
   );
 };
+
+
+
+async function appendAdditionalPDFs(mainPdfBytes: Uint8Array, urls: string[]): Promise<Uint8Array> {
+  const mergedPdf = await PDFDocument.load(mainPdfBytes);
+
+  for (const url of urls) {
+    try {
+      const response = await fetch(url);
+      const data = await response.arrayBuffer();
+      const newPdf = await PDFDocument.load(data);
+      const copiedPages = await mergedPdf.copyPages(newPdf, newPdf.getPageIndices());
+      copiedPages.forEach((page) => mergedPdf.addPage(page));
+    } catch (error) {
+      console.error(`❌ Failed to append PDF from ${url}:`, error);
+    }
+  }
+
+  return await mergedPdf.save();
+}
+
 
 
 
@@ -252,7 +299,7 @@ const createAdditionalElementsPage = (sectionNumber, sectionData = {}, pageNumbe
   pageBreak: "before",
   stack: [
     // Header
-    ...createStandardHeader(`Section ${sectionNumber} Roof Condition Summary`),
+    ...createStandardHeader(`Section ${sectionNumber}  Summary`),
 
     // === Additional Roof Elements Table ===
     {
@@ -355,7 +402,7 @@ const createPenetrationsAndParapetPage = (sectionNumber, sectionData = {}, pageN
   pageBreak: "before",
   stack: [
     // Header
-    ...createStandardHeader(`Section ${sectionNumber} Roof Condition Summary`),
+    ...createStandardHeader(`Section ${sectionNumber} Summary`),
 
     // === Wall and Curb Square Footage (MOVED TO TOP) ===
     {
@@ -484,7 +531,7 @@ const createPenetrationsAndParapetPage = (sectionNumber, sectionData = {}, pageN
 const createInsulationAndDeckPage = (sectionNumber, sectionData = {}, pageNumber) => ({
   pageBreak: "before",
   stack: [
-    ...createStandardHeader(`Section ${sectionNumber} Roof Condition Summary`),
+    ...createStandardHeader(`Section ${sectionNumber} Summary`),
 
     // === Insulation Section
     {
@@ -601,7 +648,7 @@ const createInsulationAndDeckPage = (sectionNumber, sectionData = {}, pageNumber
 const createFlashingAndDrainagePage = (sectionNumber, sectionData = {}, pageNumber) => ({
   pageBreak: "before",
   stack: [
-    ...createStandardHeader(`Section ${sectionNumber} Roof Condition Summary`),
+    ...createStandardHeader(`Section ${sectionNumber} Summary`),
 
     // === Flashing & Sealants Header ===
     {
@@ -713,7 +760,7 @@ const createMembranePage = (sectionNumber, sectionData = {}, pageNumber) => ({
   pageBreak: "before",
   stack: [
     // Header
-    ...createStandardHeader(`Section ${sectionNumber} Roof Condition Summary`),
+    ...createStandardHeader(`Section ${sectionNumber} Summary`),
 
     // === General Observations Section Header ===
     {
@@ -843,7 +890,7 @@ const createSummaryPage = (sectionNumber, sectionData, pageNumber) => ({
   pageBreak: "before",
   stack: [
     // Header
-    ...createStandardHeader(`Section ${sectionNumber} Roof Condition Summary`),
+    ...createStandardHeader(`Section ${sectionNumber} Summary`),
 
 
     
@@ -1797,13 +1844,19 @@ const roofSections = Array.isArray(formData.roofSections) ? formData.roofSection
           ],
           [
             {
-              text: "Dear " + (formData.clientname || "Client") + ",\n\n" +
-"Americanstruction is a family-owned business committed to delivering reliable, high-quality roofing services across the Chicagoland area. With decades of experience, our team has built a reputation rooted in honesty, precision, and professionalism. From responsive service calls to large-scale commercial projects, we are proud to serve our community with integrity and expertise.\n\n" +
-    "Recognizing the need for innovation in how we generate and deliver proposals, our Head of Commercial Development, Nick Degregorio, partnered with developer James Tyler to create a smarter solution. What began as a basic automation tool has evolved into VPAI — a powerful platform that enables roofers and contractors to generate professional proposals and reports in minutes, not hours.\n\n" +
-    "With VPAI, we’re able to streamline every step of the inspection and proposal process — from field documentation to client-ready PDFs — helping Americanstruction grow without adding more crew, and empowering others in the industry to do the same.\n\n" +
-    "Warm regards,\n\nPamela Degregorio\nChief Executive Officer\nAmericanstruction\nwww.americanstruction.com",
-
-fontSize: 10,
+               text:
+            "Dear Home Enthusiast,\n\n" +
+            "At Americanstruction, our core values—Resilience, Integrity, Solidarity, and Excellence (R.I.S.E.)—guide every shingle we lay and every customer we serve. As a proud woman-owned company, we champion empowerment and extend that spirit of confidence to homeowners, helping you make informed, confident decisions for your home and family.\n\n" +
+            "Choosing a new roof is a big decision. From cost to durability and curb appeal, we understand your concerns. Our journey from a small provider to Chicagoland’s trusted name in residential roofing speaks to our deep-rooted values. We’re here to educate and guide you through the process—from material selection to final installation—so you always know what’s happening without stepping foot on your roof.\n\n" +
+            "We use cutting-edge tools to manage your project with precision. Each photo is organized and geo-tagged for clarity. With HOVER, we create accurate 3D models of your home, and EagleView aerial imagery enhances our measurement precision. These technologies save time and increase accuracy so we can focus more on your needs.\n\n" +
+            "As certified GAF and Owens Corning installers, we meet rigorous standards of workmanship and satisfaction. Our preferred contractor status holds us accountable to the highest standards and ensures you receive modern, reliable roofing solutions.\n\n" +
+            "Empowerment is our foundation. Just as we champion women in leadership, we empower you with information and options. We combine traditional values with modern tools to help you protect and enhance your home.\n\n" +
+            "Choose a contractor rooted in the community, committed to environmental care, and dedicated to building roofs that are as strong as they are beautiful. Whether you're interested in shingles, metal roofing, or just need an honest inspection—Americanstruction is here.\n\n" +
+            "Contact us today for a free estimate and inspection.\n\n" +
+            "We look forward to helping with your roofing needs,\n\n" +
+            "Pamela DeGregorio\nFounder, Americanstruction\n\n" +
+            "Michael DeGregorio\nCo-Founder, Americanstruction",
+fontSize: 8,
 lineHeight: 1.5,
 margin: [0, 0, 0, 10]
 
@@ -1859,7 +1912,7 @@ margin: [0, 0, 0, 10]
   image: americanstructionheader,
   width: 150,
   alignment: "right",
-  margin: [50, -515, 0, 0]
+  margin: [50, -600, 0, 0]
 },
 
             
@@ -2412,354 +2465,41 @@ margin: [0, 0, 0, 8]
 
 
 
-// Roof Summary Overview 
-docDefinition.content.push({
-  pageBreak: "before",
-  stack: [
-    // Header
-    ...createStandardHeader("Roof Summary Overview"),
-
-    // === Section List Table ===
-    {
-      table: {
-        widths: ["20%", "30%", "25%", "25%"],
-        body: [
-          [
-            { text: "Section", bold: true },
-            { text: "Material", bold: true },
-            { text: "Condition", bold: true },
-            { text: "Square Footage", bold: true }
-          ],
-          ...roofSections.map((section, i) => [
-            section.sectionName || `Section ${i + 1}`,
-
-            section.membraneMaterial || "N/A",
-            section.overallCondition || "N/A",
-            section.roofSquareFootage ||
-              ((section.roofLength || 0) * (section.roofWidth || 0)) ||
-              "N/A"
-          ])
-        ]
-      },
-      layout: "lightHorizontalLines",
-      margin: [0, 30, 0, 30]
-    },
-
-// === Proposal Preface Section ===
-
-{
-  text: [
-    "Thank you for the opportunity to quote on the repairs to your facility. Please find your estimate below.\n\n",
-
-    "This quote including price will have a start date of TBD, project duration of 6–8 weeks (full roof), weather depending. Note: the materials must be ordered 4 weeks in advance of our start date.\n\n",
-
-    "Pre-construction meetings required to go over site plan, job site set-up, notification to tenants and job site safety.\n\n",
-
-  ],
-  fontSize: 9,
-  lineHeight: 1.4,
-  margin: [0, 0, 0, 10]
-},
-
-
- // === Recommendations ===
-{
-  text: "Recommendations",
-  fontSize: 12,
-  bold: true,
-  margin: [0, 25, 0, 6]
-},
-{
-  stack: [
-    {
-      text: "Detailed Description of Recommended Repairs or Maintenance:",
-      bold: true,
-      fontSize: 10,
-      margin: [0, 2, 0, 0]
-    },
-    { text: formData.recommendationDetails || "N/A", fontSize: 9, margin: [0, 0, 0, 6] },
-
-
-  ]
-},
 
 
 
 
-    // === Footer ===
-    {
-      canvas: [
-        { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
-        { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
-      ],
-      absolutePosition: { x: 0, y: 755 }
-    },
-    {
-      columns: [
-        { text: "", width: "*" },
-        {
-          text:
-            "Page " +
-            (6 + imagePages.length + overviewPages.length + droneImages.length),
-          fontSize: 10,
-          alignment: "right",
-          margin: [0, 10, 40, 0],
-          color: "white"
-        }
-      ],
-      absolutePosition: { x: 0, y: 760 }
-    }
-  ]
+
+
+
+//============= Loop for roof sections !!!!!!
+
+
+
+
+
+
+roofSections.forEach((section, index) => {
+  try {
+    if (!section) throw new Error("Missing section");
+
+const pageStart = basePageOffset + index * 4;
+
+    const pages = [
+
+      createMembranePage(index + 1, section, pageStart + 1),
+      createFlashingAndDrainagePage(index + 1, section, pageStart + 2), // ✅ this line!
+      createInsulationAndDeckPage(index + 1, section, pageStart + 3),
+      createPenetrationsAndParapetPage(index + 1, section, pageStart + 4),
+
+    ];
+    
+
+    docDefinition.content.push(...pages);
+  } catch (err) {
+    console.error(`Error creating roof section ${index + 1}:`, err);
+  }
 });
-
-
-
-// === Roof Summary Overview - Page 2: Warranty Only ===
-docDefinition.content.push({
-  pageBreak: "before",
-  stack: [
-    ...createStandardHeader("Roof Summary Overview"),
-
-    {
-      text: "Warranty Information",
-      fontSize: 12,
-      bold: true,
-      margin: [0, 30, 0, 6]
-    },
-    ...[
-      ["Is the current roof still under warranty?", "warrantyCoverage"],
-      ["Warranty Term (Years)", "warrantyTerm"],
-      ["Warranty Type", "warrantyType"],
-      ["Is the Building FM Insured?", "fmInsured"]
-    ]
-    
-    
-    
-    
-    .map(([label, key]) => ({
-      stack: [
-        { text: label + ":", bold: true, fontSize: 9, margin: [0, 3, 0, 0] },
-        { text: formData?.[key] || "N/A", fontSize: 8, margin: [0, 0, 0, 6] }
-      ]
-    })),
-
-
-
-    
-    {
-      text: "\nPrice Summary",
-      fontSize: 14,
-      bold: true,
-      margin: [0, 20, 0, 10]
-    },
-{
-  text: [
-    "The agreed upon price is ",
-    {
-      text: formData.finalEstimate
-        ? `$${Number(formData.finalEstimate).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-        : "To Be Determined",
-      bold: true
-    },
-    " (not including options, upgrades, change orders, or Allowance) to be paid as follows:"
-  ],
-  fontSize: 10,
-  lineHeight: 1.3,
-  margin: [0, 0, 0, 10]
-},
-
-
-    {
-      text:
-        "1) 1/3 down (due upon signed agreement)\n" +
-        "2) 1/3 upon material drop\n" +
-        "3) 1/3 upon substantial completion\n\n" +
-        "Includes labor, material, taxes, and disposal. Estimates valid for 20 days. A 33% deposit is required before any material is ordered.\n\n" +
-        "A docusign version including details of this proposal will be sent for signature if this proposal is found to be acceptable.",
-      fontSize: 10,
-      lineHeight: 1.3
-    },
-
-    {
-      canvas: [
-        { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
-        { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
-      ],
-      absolutePosition: { x: 0, y: 755 }
-    },
-    {
-      columns: [
-        { text: "", width: "*" },
-        {
-          text:
-            "Page " +
-            (6 + imagePages.length + overviewPages.length + droneImages.length + 1),
-          fontSize: 10,
-          alignment: "right",
-          margin: [0, 10, 40, 0],
-          color: "white"
-        }
-      ],
-      absolutePosition: { x: 0, y: 760 }
-    }
-  ]
-});
-
-
-
-
-
-
-
-docDefinition.content.push({
-  pageBreak: "before",
-  stack: [
-    ...createStandardHeader("Change Order Items"),
-    {
-      text: formData.changeOrderNotes || 
-      `Interior Protection Draping  ...............  $1.50 per sq ft
-Fall Suspension Protection  .............  $3.50 per sq ft
-Drain (Retrofit) Replacement ............  $775.00
-Drain Bowl Replacement ....................  $850.00 ea
-Metal Decking Replacement ...............  $16.50 per sq ft
-Wood Decking Replacement ................  $7.00 per sq ft
-Walkway Protection Roll ......................  $28.00 per linear ft
-New Bilco Hatch (30x36) .....................  $1,850.00
-Hatch Safety Rail .................................  $950.00`,
-      fontSize: 10,
-      margin: [0, 40, 0, 10],
-      lineHeight: 1.3
-    },
-    {
-      canvas: [
-        { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
-        { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
-      ],
-      absolutePosition: { x: 0, y: 755 }
-    },
-    {
-      columns: [
-        { text: "", width: "*" },
-        {
-          text: "Page " +
-            (6 + imagePages.length + overviewPages.length + droneImages.length + 2),
-          fontSize: 10,
-          alignment: "right",
-          margin: [0, 10, 40, 0],
-          color: "white"
-        }
-      ],
-      absolutePosition: { x: 0, y: 760 }
-    }
-  ]
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-docDefinition.content.push({
-  pageBreak: "before",
-  stack: [
-    ...createStandardHeader("Full Disclaimer"),
-
-    {
-      text:
-        "We will include complete photo reports daily to track job progress, a site supervisor to manage site.\n" +
-        "Crews are OSHA certified and a foreman's book kept on-site that includes:\n" +
-        "1) Scope of Work/ Contract with Building Owner or GC Contract w/Price Deleted\n" +
-        "2) Material List\n" +
-        "3) Roof Plan - Drawing or Google Earth Image\n" +
-        "4) Staging Plan - Where do you load Material From, Employee Parking, Dumpster Location. and Key Contacts. All Company Employees involved with Job and Titles, Foreman on Site. All Building Key Contacts for Access, Questions.\n" +
-        "5) Manufacturer Details - Walls, base tie ins, Insulation Attachment, Gutter Detail. Product Data Sheets\n" +
-        "6) Project Specific Details\n" +
-        "7) Shop Drawings If needed For GC or Specialty Details\n" +
-        "8) SDS Sheets/Emergency Plan (Hospital) or Urgent Care locations near Job Flag Locations, Skylight Safety.\n" +
-        "9) Tool Box Talks /NRCA /Should do these weekly while on Job\n" +
-        "10) Equipment List\n" +
-        "11) Pictures\n" +
-        "12) Change Order Forms - A document the Foreman has on site for Unforeseen Items",
-      fontSize: 10,
-      margin: [0, 20, 0, 30],
-      lineHeight: 1.35
-    },
-
-    {
-      text:
-        "The construction industry is currently experiencing substantial volatility in material pricing and availability. Prices may increase, and delivery timelines may shift unexpectedly.\n\n" +
-        "If a specified product is unavailable or delayed, Contractor shall provide written notice to the Owner and offer substitutions as needed. If material prices increase before installation, the total contract amount may be adjusted with documentation provided.",
-      fontSize: 10,
-      margin: [0, 0, 0, 30],
-      lineHeight: 1.4
-    },
-
-    {
-      text:
-        "Respectfully,\n\nMichael J. DeGregorio\nVice President / Co-Founder\nAmericanstruction\nwww.americanstruction.com",
-      fontSize: 10
-    },
-
-    {
-      canvas: [
-        { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
-        { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
-      ],
-      absolutePosition: { x: 0, y: 755 }
-    },
-    {
-      columns: [
-        { text: "", width: "*" },
-        {
-          text: "Page " +
-            (6 + imagePages.length + overviewPages.length + droneImages.length + 3),
-          fontSize: 10,
-          alignment: "right",
-          margin: [0, 10, 40, 0],
-          color: "white"
-        }
-      ],
-      absolutePosition: { x: 0, y: 760 }
-    }
-  ]
-});
-
-
-
-
-
-
-
-
-
-
-
 
 
 const finalPageNumber =
@@ -2768,8 +2508,1072 @@ const finalPageNumber =
   overviewPages.length +
   droneImages.length +
   1 + // roof condition summary overview
-  roofSections.length * 3 + // ✅ Only 3 pages per section now
-  1; // final pricing page
+  roofSections.length * 6 +
+  1; // final pricing page itself
+
+
+
+
+
+
+  // ================= SCOPE OF WORK PAGE =================
+docDefinition.content.push({
+  pageBreak: "before",
+  stack: [
+    ...createStandardHeader("Scope of Work"),
+
+    {
+      text: "Scope of Work Summary",
+      fontSize: 18,
+      bold: true,
+      margin: [0, 40, 0, 20]
+    },
+    {
+      text:
+        formData.overallConditionSummary?.trim() || "No scope of work was provided in the digital inspection form.",
+      fontSize: 12,
+      margin: [0, 0, 0, 30]
+    },
+
+    {
+      text: "* This summary was written by the inspector based on observations and recommendations made during the inspection.",
+      italics: true,
+      fontSize: 10,
+      margin: [0, 0, 0, 30]
+    },
+
+    // 🟥⬛ Matching Americanstruction Footer (like Final Pricing Page)
+    {
+      canvas: [
+        { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
+        { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
+      ],
+      absolutePosition: { x: 0, y: 755 }
+    },
+    {
+      columns: [
+        { text: "", width: "*" },
+        {
+          text: "Page " + (finalPageNumber + 1), // ✅ carry from previous page count
+          fontSize: 10,
+          alignment: "right",
+          margin: [0, 10, 40, 0],
+          color: "white"
+        }
+      ],
+      absolutePosition: { x: 0, y: 760 }
+    }
+  ]
+});
+
+
+
+
+
+// ================= FINAL PRICING SUMMARY PAGE =================
+docDefinition.content.push({
+  pageBreak: "before",
+  stack: [
+    ...createStandardHeader("Final Pricing Summary"),
+
+    {
+      text: "Executive Pricing Summary",
+      fontSize: 18,
+      bold: true,
+      margin: [0, 40, 0, 20]
+    },
+
+    {
+      table: {
+        widths: ["60%", "*"],
+        body: [
+          [
+            { text: "Total Estimate for Scope of Work", bold: true, fontSize: 14 },
+            {
+              text:
+  formData.finalEstimate !== null && formData.finalEstimate !== undefined
+    ? `$${Number(formData.finalEstimate).toLocaleString()}`
+    : "N/A",
+
+              fontSize: 14,
+              bold: true,
+              color: "#2e3192"
+            }
+          ]
+        ]
+      },
+      layout: "lightHorizontalLines",
+      margin: [0, 0, 0, 50]
+    },
+
+    {
+      text: "* This pricing is based on information available at the time of inspection. Any unforeseen conditions may result in pricing adjustments.",
+      italics: true,
+      fontSize: 10,
+      margin: [0, 0, 0, 30]
+    },
+
+    // Footer
+    {
+      canvas: [
+        { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
+        { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
+      ],
+      absolutePosition: { x: 0, y: 755 }
+    },
+    {
+      columns: [
+        { text: "", width: "*" },
+        {
+          text: "Page " + finalPageNumber,
+
+          fontSize: 10,
+          alignment: "right",
+          margin: [0, 10, 40, 0],
+          color: "white"
+        }
+      ],
+      absolutePosition: { x: 0, y: 760 }
+    }
+  ]
+});
+
+
+
+
+
+
+
+
+
+//////CONTRACT page 1
+
+
+
+docDefinition.content.push({
+  pageBreak: "before",
+  stack: [
+    ...createStandardHeader("Contract"),
+
+    {
+      text: "CONSTRUCTION, ROOF REPLACEMENT, OR REPAIR",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 40, 0, 5]
+    },
+    {
+      text:
+        "This Contract is made on 7/10/2024\nBETWEEN the contractor : Americanstruction Inc\nwhose address is: 11751 Wind Dance Ct. Mokena, Illinois 60448\nreferred to as the “Contractor,”\nAND the Property Owner(s) : Matt Moeller\nwhose address is : 1610 Main Street Crete, IL 60417\nreferred to as the “Owner.”\nIf there is more than one Property Owner, the word “Owner” shall mean each Property Owner named above.",
+      fontSize: 8,
+      margin: [0, 0, 0, 10]
+    },
+
+    {
+      text: "1. Agreement.",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 8, 0, 3]
+    },
+    {
+      text:
+        "The contractor agrees to perform certain construction, alteration or repair work (referred to as the “Work”) in accordance with this Contract. All work will be done in a good, sound and workmanlike manner. The Contractor will begin the work no later than (see Schedule A).",
+      fontSize: 8
+    },
+
+    {
+      text: "2. Work.",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 8, 0, 3]
+    },
+    {
+      text:
+        "The Work is described as follows: A detailed Description of the Work is attached and incorporated hereto as Schedule A.",
+      fontSize: 8
+    },
+
+    {
+      text: "3. Location.",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 8, 0, 3]
+    },
+    {
+      text:
+        "All work will be completed on the property (called the “Property”) known as:\n1610 Main Street Crete, IL 60417",
+      fontSize: 8
+    },
+
+    {
+      text: "4. Price.",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 8, 0, 3]
+    },
+    {
+      text:
+        "The agreed upon price is TBD based on option chosen, upgrades, and change orders, to be paid as follows:\nSchedule of Payments:\nFinal price includes labor, material, taxes, and disposal.\n1) Payment includes 1/3 down (due upon signed agreement), 1/3 upon material drop, 1/3 upon substantial completion.",
+      fontSize: 8
+    },
+
+    {
+      text: "5. Materials.",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 8, 0, 3]
+    },
+    {
+      text:
+        "The Contractor will provide the materials, supplies, equipment, services and labor necessary for the complete performance of this Contract. Unless otherwise agreed, all materials will be new and of good quality.",
+      fontSize: 8
+    },
+
+    {
+      text: "6. Compliance with Laws.",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 8, 0, 3]
+    },
+    {
+      text:
+        "The Contractor will comply with all applicable Federal, State and local laws regarding work, materials and the safety of persons or property. The Owner will not be responsible for any loss or damage to the work or any property of the Contractor.",
+      fontSize: 8
+    },
+
+    {
+      text: "7. No Oral Changes.",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 8, 0, 3]
+    },
+    {
+      text:
+        "This Contract can only be changed by an agreement in writing signed by both the Owner and the Contractor (Change Order). No variations, alterations, deviations, deletions or extra work can be made unless both the Owner and the Contractor specifically agree in writing.",
+      fontSize: 8,
+      margin: [0, 0, 0, 30]
+    },
+
+    createFooter(finalPageNumber + 7)
+  ]
+});
+
+
+
+
+////// CONTRACT PAGE 2
+
+
+docDefinition.content.push({
+  pageBreak: "before",
+  stack: [
+    ...createStandardHeader("Contract"),
+
+    {
+      text: "8. Failure to Complete Work.",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 40, 0, 3]
+    },
+    {
+      text:
+        "The Contractor must properly and diligently complete the work provided for in this Contract. Otherwise, the Owner may notify the Contractor in writing that he must begin work within three days or the Owner will complete the work by other means. Any additional cost to complete this work will be charged to the Contractor.",
+      fontSize: 8
+    },
+
+    {
+      text: "9. Failure to Pay Contractor.",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "The Contractor may stop work and terminate this Contract if the Owner fails to pay the Contractor any sum within 5 (“five”) days after the date fixed for payment. The Owner must then pay for all work which has been completed, together with the Contractor’s reasonable profits and damages.",
+      fontSize: 8
+    },
+
+    {
+      text: "10. Fire Insurance.",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "The Owner will adequately insure all buildings as well as any work and materials used in the buildings against fire. The policy will provide for extended coverage in the names of both the Owner and the Contractor.",
+      fontSize: 8
+    },
+
+    {
+      text: "11. Ownership of Materials.",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "The Contractor will continue to own all materials delivered and work performed until paid for by the Owner. The Contractor will have access to these materials and work at all reasonable times.",
+      fontSize: 8
+    },
+
+    {
+      text: "12. Care of Property.",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "The Contractor will protect the work, materials, property and adjacent property from damage or loss. The Contractor will also take proper precautions for the safety of the public. The Property will be kept free of waste, rubbish and surplus materials. The Contractor will leave the Property “broom clean” before being entitled to the final payment under this Contract.",
+      fontSize: 8
+    },
+
+    {
+      text: "13. Permits.",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "The Contractor will obtain all building permits or approvals as required by law. The Owner will pay for these permits or approvals and cooperate in obtaining them.",
+      fontSize: 8
+    },
+
+    {
+      text: "14. Notices.",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "All notices under this Contract must be in writing. The notices must be delivered personally or via electronic mail, to the other party at the address(es) provided in this Contract or to that party’s attorney.",
+      fontSize: 8
+    },
+
+    {
+      text: "15. Parties.",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "Both the Owner and the Contractor are bound by this Contract. All parties who lawfully succeed to their rights and responsibilities are also bound.",
+      fontSize: 8
+    },
+
+    {
+      text: "16. Retainage.",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "A maximum allowable retainage of 5% of original contract price shall be held for any punch-out items. Customer agrees to pay in full at completion of each trade.",
+      fontSize: 8
+    },
+
+    {
+      text: "17. NOTICE TO OWNER.",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "a. Do not sign this contract if blank.\nb. You are entitled to a copy of the contract at the time you sign.\nc. Keep it to protect your legal rights.\n\nDo not sign any completion certificate or agreement stating that you are satisfied with the entire project before this project is complete.",
+      fontSize: 8
+    },
+
+    {
+      text: "18. Signatures.",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "Both parties sign and agree to this Contract by electronic signature. The respective signatures will be recorded on the Authorization Page of this contract. THE OWNER ACKNOWLEDGES RECEIPT OF A COMPLETELY EXECUTED COPY WITHOUT CHARGE.",
+      fontSize: 8,
+      margin: [0, 0, 0, 30]
+    },
+
+    createFooter(finalPageNumber + 8)
+  ]
+});
+
+
+// ================= CONTRACT - SIGNATURES + OPTIONS PAGE =================
+docDefinition.content.push({
+  pageBreak: "before",
+  stack: [
+    ...createStandardHeader("Contract"),
+
+    // Pricing Summary
+    {
+      columns: [
+        {
+          width: "50%",
+          stack: [
+            {
+              text: "☑ Silicone Coating",
+              fontSize: 9,
+              margin: [0, 10, 0, 2]
+            },
+            {
+              text: "$85,446.00",
+              fontSize: 9
+            },
+            {
+              text: "☑ Roof Overlay & TPO System",
+              fontSize: 9,
+              margin: [0, 10, 0, 2]
+            },
+            {
+              text: "$164,002.23",
+              fontSize: 9
+            }
+          ]
+        },
+        {
+          width: "50%",
+          stack: [
+            {
+              text: "Project: 3272541976",
+              fontSize: 9,
+              alignment: "right"
+            },
+            {
+              text: "Name: Matt Moeller",
+              fontSize: 9,
+              alignment: "right"
+            },
+            {
+              text: "Address: 1610 Main Street, Crete, IL",
+              fontSize: 9,
+              alignment: "right"
+            }
+          ]
+        }
+      ]
+    },
+
+    // Disclaimer
+    {
+      text: "Estimates valid for 20 days from date of estimate / A 33% deposit is required before any material is ordered",
+      fontSize: 8,
+      bold: true,
+      margin: [0, 10, 0, 10]
+    },
+
+       // Optional Upgrades
+    {
+      text: "Optional Upgrades",
+      bold: true,
+      fontSize: 12,
+      margin: [0, 10, 0, 5]
+    },
+    {
+      table: {
+        headerRows: 1,
+        widths: ["*", "auto", "auto", "auto"],
+        body: [
+          [
+            { text: "Description", bold: true, fontSize: 9 },
+            { text: "Qty", bold: true, fontSize: 9 },
+            { text: "Unit price", bold: true, fontSize: 9 },
+            { text: "Line total", bold: true, fontSize: 9 }
+          ],
+          [
+            {
+              stack: [
+                { text: "☐ Once a year annual Inspection (beginning Spring 2026)", margin: [2, 0, 0, 0] }
+              ]
+            },
+            { text: "10", alignment: "center" },
+            "",
+            ""
+          ],
+          [
+            {
+              stack: [
+                { text: "☐ $10,000.00 discount to the school for the “Silicone” project which has already been applied.", margin: [2, 0, 0, 0] }
+              ]
+            },
+            "",
+            "",
+            ""
+          ],
+          [
+            {
+              stack: [
+                { text: "☐ Fix the area above gymnasium sign:", margin: [2, 0, 0, 0] },
+                { text: "prep the damaged area and we will silicone coat the panels (per the scope) in white", fontSize: 8, margin: [12, 2, 0, 0] }
+              ]
+            },
+            "1",
+            "",
+            ""
+          ]
+        ]
+      },
+      fontSize: 8,
+      layout: "lightHorizontalLines",
+      margin: [0, 0, 0, 10]
+    },
+
+
+    // Customer Comments and Product Selections
+    {
+      columns: [
+        {
+          width: "60%",
+          stack: [
+            { text: "Customer Comments / Notes", bold: true, fontSize: 9, margin: [0, 5, 0, 3] },
+            {
+              canvas: [{ type: 'rect', x: 0, y: 0, w: 350, h: 70, r: 0, lineColor: '#999' }]
+            }
+          ]
+        }
+      ],
+      columnGap: 20,
+      margin: [0, 10, 0, 15]
+    },
+
+    // Signature lines
+    {
+      columns: [
+        {
+          width: "50%",
+          stack: [
+            { text: "Matt Moeller:", margin: [0, 10, 0, 5] },
+            { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 200, y2: 0, lineWidth: 1 }] },
+            { text: "Date:", margin: [0, 10, 0, 5] },
+            { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 200, y2: 0, lineWidth: 1 }] }
+          ]
+        },
+        {
+          width: "50%",
+          stack: [
+            { text: "Michael DeGregorio:", margin: [0, 10, 0, 5] },
+            { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 200, y2: 0, lineWidth: 1 }] },
+            { text: "Date:", margin: [0, 10, 0, 5] },
+            { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 200, y2: 0, lineWidth: 1 }] }
+          ]
+        }
+      ]
+    },
+
+    // Footer text
+    {
+      text:
+        "By signing this form I agree to and confirm the following: I certify that I am the registered owner of the above project property, or have the legal permission to authorize the work as stated. I agree to pay the total project price and understand that this work will be completed in accordance with industry best practices.",
+      fontSize: 7,
+      margin: [0, 20, 0, 25]
+    },
+
+    createFooter(finalPageNumber + 1)
+  ]
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ================= LABOR WARRANTY - PAGE 1 =================
+docDefinition.content.push({
+  pageBreak: "before",
+  stack: [
+    ...createStandardHeader("Labor Warranty"),
+
+
+
+    {
+      text: "Warranty",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 0, 0, 3]
+    },
+    {
+      text:
+        "Upon payment in full for our work, we warrant that we applied the roofing materials in accordance with (a) the written specifications of the Roofing Materials Manufacturer and (b) good and workmanlike manner according to standard construction practices in effect on the date the roof covering was installed, subject to the terms, conditions and limitations stated in this Warranty. During the term of this Warranty, upon receipt of written notice, we will, at our expense, repair any leaks in the new roof covering which are the result of defects in our workmanship for a period of 2 (Two) years. Once this Warranty expires, any obligation to make repairs at our expense under any provision of this Warranty shall cease to exist.",
+      fontSize: 8,
+      margin: [0, 0, 0, 10]
+    },
+
+    {
+      text: "Terms, Conditions and Limitations",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 0, 0, 3]
+    },
+    {
+      text:
+        "This Warranty excludes any leaks caused by fire, lightning, peak gust wind speeds exceeding 50 mph measured at eave level, hailstorm, flood, earthquake, or other extraordinary weather phenomena; structural settlement; failure, movement, cracking or excess deflection of the roof deck or exterior walls; defects or failure the pre-existing substrate over which the roofing system is applied; any faulty condition causing movement of parapet walls, copings, chimneys, skylights, ventilation supports or other parts of the building; vapor condensation beneath the roof covering; penetration of pitch boxes; erosion, cracking and porosity of mortar and brick; dry rot; penetrations of the roof from underneath by pre-existing rising fasteners of any type; insufficient drainage, clogging of roof drains and/or gutters, inadequate pitch or other conditions beyond our control which cause ponding or standing water; damage by termites or other insects, rodents or other animals; harmful chemicals, oils, acids and the like that come in contact with the roofing system and cause a leak or otherwise damage said system, any acts or omissions that compromise the watertight condition of the roof system. If the roof fails to maintain a watertight condition because of damage due to any of the foregoing, this Warranty shall immediately become null and void unless we are hired, at a reasonable expense, to repair said damage. This Warranty shall be null and void if you fail to comply with the conditions outlined in this Warranty, or if any work is done on the roof by you or others, including work in connection with any roof penetrations, vents, flues, drains, gutters, sign braces, railings, platforms or other equipment fastened to or set on the roof, or if repairs or alterations are made to the roof without first notifying us in writing and giving us a reasonable opportunity to make the necessary repairs. We shall be reasonably compensated for the time and materials expended in making recommendations or repairs occasioned by the work of others on the subject roof.",
+      fontSize: 8,
+      margin: [0, 0, 0, 10]
+    },
+
+    {
+      text: "Notification",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 0, 0, 3]
+    },
+    {
+      text:
+        "During the term of this warranty we must be promptly notified in writing of any roof leak within 72 hours after it was or should have been detected the leak and provide us a reasonable opportunity to inspect and repair the roof, and all action reasonably necessary to prevent any further damage to the property must be taken. Multiple inspections may be necessary to determine the cause and origin of the roof leak. You agree to cooperate with us by providing us reasonably necessary access, at reasonable times, to the exterior and interior of the property to investigate the leak.",
+      fontSize: 8,
+      margin: [0, 0, 0, 10]
+    },
+
+    {
+      text: "Transferability",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 0, 0, 3]
+    },
+    {
+      text:
+        "In the event ownership of this property changes, this warranty will be transferable one (1) time only. However, any transferred Warranty will remain in effect for, and is limited to three (3) years from the completion date set forth below, and applies to leaks only.",
+      fontSize: 8,
+      margin: [0, 0, 0, 10]
+    },
+
+    {
+      text: "Exclusivity",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 0, 0, 3]
+    },
+    {
+      text:
+        "This Warranty is separate from any warranty that may be issued to you by the Roofing Material Manufacturer. WE SPECIFICALLY DISCLAIM ANY LIABILITY FOR CLAIMS ATTRIBUTABLE TO DEFECTS IN THE ROOFING MATERIALS OR THE ROOFING MATERIALS MANUFACTURER’S WARRANTY. THE REPAIR OF THE SUBJECT ROOF IS THE EXCLUSIVE AND SOLE REMEDY UNDER THIS WARRANTY AND EXPRESSLY EXCLUDES ANY REPAIRS OR REIMBURSEMENT FOR WATER DAMAGE TO INTERIOR. THE WARRANTY SPECIFICALLY EXCLUDES ALL ENVIRONMENTAL CONDITIONS, INCLUDING, THE PRESENCE OF MOLD, FUNGUS, MYCOTOXINS, SPORES, OR OTHER INFESTATIONS OR CONTAMINATES CLAIMED TO BE CAUSED BY MOISTURE, LEAKS, OTHER WATER INTRUSION OR ANY CONTAMINATION, EVEN IF SUCH CONDITIONS ARE CLAIMED TO BE CAUSED BY OUR NEGLIGENCE. ALL OTHER EXPRESS OR IMPLIED WARRANTIES, INCLUDING THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE EXPRESSLY EXCLUDED AND DISCLAIMED.",
+      fontSize: 8,
+      margin: [0, 0, 0, 25]
+    },
+
+    createFooter(finalPageNumber + 2)
+  ]
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ================= LABOR WARRANTY - PAGE 2 =================
+docDefinition.content.push({
+  pageBreak: "before",
+  stack: [
+    ...createStandardHeader("Labor Warranty"),
+
+
+
+    {
+      text: "INCIDENTAL OR CONSEQUENTIAL DAMAGES",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 0, 0, 3]
+    },
+    {
+      text:
+        "UNDER NO CIRCUMSTANCES SHALL WE BE LIABLE FOR ANY INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR OTHER DAMAGES INCLUDING LOSS OF PROFITS OR DAMAGE TO THE BUILDING OR ITS CONTENTS, WHETHER ARISING OUT OF BREACH OF WARRANTY, BREACH OF CONTRACT OR UNDER ANY OTHER THEORY OF LAW.",
+      fontSize: 8,
+      margin: [0, 0, 0, 10]
+    },
+
+    {
+      text: "Facer Delamination",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "In the event the scope of work requires direct adhesion of a single-ply system without the use of a cover board, Contractor disclaims liability for any damage that may occur as a result including, without limitation, facer delamination.",
+      fontSize: 8,
+      margin: [0, 0, 0, 10]
+    },
+
+    {
+      text: "Acceptance of Deck",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "Contractor’s commencement of roof installation indicates only that Contractor has visually inspected the surface of the roof deck for visible defects. Roofing Contractor’s prosecution of the roof work indicates only that the surface of the deck appears satisfactory to the Roofing Contractor to attach roofing materials. Roofing Contractor is not responsible for the construction, slope, moisture content, undulations, or structural sufficiency of the roof deck or other trades’ work or design and their effect on the roof and roofing materials. Roofing Contractor is not responsible for condensation, moisture migration from the building interior or other building components, location or size of roof drains, adequacy of drainage, ponding on the roof, structural conditions, or the properties of the roof deck or substrate on which Roofing Contractors roofing work is installed.",
+      fontSize: 8,
+      margin: [0, 0, 0, 10]
+    },
+
+    {
+      text: "Roof to Wall Connection Provision",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "Contractor disclaims liability for damages caused by water, air, or vapor intrusion at roof to wall connections resulting from structural movement, improper wall anchorage, improper installation of work not performed by contractor, or other events outside contractor's reasonable control. Subcontractor shall not be responsible for damage caused by circumstances beyond the control of Subcontractor. Contractor shall coordinate the Project so that the Project proceeds in an orderly and customary manner and so as to avoid newly installed roofing being damaged by or used as a surface for ongoing construction work. If the Subcontractor’s Work is damaged by other trades, Contractor agrees to backcharge the trades causing the damage. Contractor will purchase or arrange with Owner to maintain Builder’s Risk and property insurance.",
+      fontSize: 8,
+      margin: [0, 0, 0, 10]
+    },
+
+    {
+      text: "Utilities Under Deck",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "Unforeseen Decking Lines: Installation of a new roof to the deck area of the building requires nails and/or screws to be inserted into the deck area. By code, electrical, telephone, security wiring, HVAC wiring and lines should not be installed directly beneath the roof deck. If you are aware of these or any other such lines please notify us immediately as the Contractor will not be responsible for the puncture of improperly installed lines or lines within three inches of the roof deck. Customer assumes and accepts full responsibility for any repair or replacement that may be necessary.",
+      fontSize: 8,
+      margin: [0, 0, 0, 30]
+    },
+
+    createFooter(finalPageNumber + 2)
+  ]
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ================= ADDITIONAL TERMS & CONDITIONS - PAGE 1 =================
+docDefinition.content.push({
+  pageBreak: "before",
+  stack: [
+    ...createStandardHeader("Additional Terms and Conditions"),
+
+    {
+      text: "A. FINAL SCOPE OF WORK AND AGREEMENT PRICE",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 30, 0, 3]
+    },
+    {
+      text:
+        "We will perform the Final Scope of Work (the Work) for the Agreement Price. The Agreement Price does not include any builder’s risk insurance coverage, which may be provided for an additional fee upon request. We reserve the right to perform any changed/additional work with your verbal instruction, but shall not be required to perform such work without a signed Change Order.",
+      fontSize: 8,
+      margin: [0, 0, 0, 8]
+    },
+
+    {
+      text: "B. TERMS OF PAYMENT",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "Payment per Trade Policy: We reserve the right to invoice you once any particular trade is fully completed and to collect said payment in full before beginning any succeeding trade. Any balance remaining shall be due upon substantial completion of the Work. You acknowledge that payment in full for the Work is a precondition to our obligation to honor our Labor Warranty or to provide the Material Warranty. Acceptance of late or partial payments (regardless of any purported limitations such as ‘Paid in Full’, ‘Accord and Satisfaction’, or similar), will not waive, limit, or prejudice our right to collect any amounts due. You agree that if any amounts due for completed work are not paid when due, you shall be liable to pay all costs of collection, including reasonable attorney’s fees and collection costs which, together with all sums due hereunder, shall bear interest at the maximum rate allowable by law until paid in full. You further agree that we shall be entitled to an enforceable contractual lien against the property and any insurance proceeds as security to ensure payment for our Work.",
+      fontSize: 8,
+      margin: [0, 0, 0, 8]
+    },
+
+    {
+      text: "C. OUR RESPONSIBILITY",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "We agree to perform our Work in a professional, efficient, good and workmanlike manner, according to standard construction practices and all applicable building codes. We will supervise and direct all work using our best skill and attention and be solely responsible for all construction means, methods, techniques, sequences and procedures, and for contracting and performing all portions of the Work under this Agreement. You agree that we are not responsible for the safety and health of any persons present at the job site who are not our employees, subcontractors or agents or for the failure of any materials or equipment not within our direct control. All material we provide is guaranteed to be as specified. In the event that material has to be restocked or reordered because of a cancellation or interference by you or at your direction, in addition to any other fees or costs associated therewith, there will be a materials restocking fee equal to 15% of the value of the applicable materials. Acceptance of this Agreement by you shall constitute acceptance of the terms, conditions and limitations of said warranty. You agree that our maximum liability, in the event of any default by us, shall not exceed the total sum paid to us for our Work, except in cases of incidents that arise due to Negligence. Where colors are to be matched, Contractor shall make reasonable efforts using standard colors and materials but does not guarantee a perfect match. All materials and work shall be furnished in accordance with normal industry tolerances for color, variation, thickness, size, weight, amount, finish, texture and performance standards.",
+      fontSize: 8,
+      margin: [0, 0, 0, 8]
+    },
+
+    {
+      text: "D. YOUR RESPONSIBILITY",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "You certify that your property insurance policy is and will remain valid and in force until completion of the Work. Certificates of such insurance shall be provided to us if requested. You authorize us access to enter your property, furnish materials, and supply all equipment and labor necessary to perform all work identified in the Final Scope of Work. Should you become aware of any damage to your property you believe was caused by us, our subcontractors, agents or employees during the course of the Work, you must notify us of said damage prior to the time of final payment for the work in question. If you fail to notify us, you waive all rights against us concerning said damage. You acknowledge that we are not responsible for damage to...",
+      fontSize: 8,
+      margin: [0, 0, 0, 8]
+    },
+
+    createFooter(finalPageNumber + 4)
+  ]
+});
+
+
+
+
+
+
+
+//Additional page 2
+docDefinition.content.push({
+  pageBreak: "before",
+  stack: [
+    ...createStandardHeader("Additional Terms and Conditions"),
+
+ {
+  text:
+    "Landscaping, driveway or sidewalks as a result of normal construction activities. You further acknowledge that re-roofing an existing building may cause dust or debris to fall into the interior, and may cause objects to fall from the interior ceilings and walls. You therefore agree to remove or protect interior and exterior property directly below the roof in order to minimize potential property damage, and that you are solely responsible for any disturbance, damage, clean-up, or loss to property resulting from your failure to do so prior to commencement of construction. You acknowledge that any loss of productivity experienced by us due to interference by you or at your direction may result in an additional charge. You understand that by code, nails must penetrate the roof deck at least 1⁄4” and warrant that all electrical wiring, HVAC, plumbing and/or gas lines have been installed according to all applicable building codes and agree that we are not liable for any punctures through lines closer than 3” from the underside of your roof deck. Contractor shall not be liable for the structural sufficiency, quality of construction, undulations, or moisture content of the roof deck. Furthermore, you understand that nail pops on textured ceilings cannot reasonably be avoided during the installation of a roof and agree not to hold us liable for any nail pops or drywall cracking or movement incidental to the construction process. It is your responsibility to address any concern about ponding areas on the roof before work commences, and agree that any repairs necessary to correct ponding not the result of our work will be charged to you as an extra. You agree that your property insurance shall be liable for any interior damage that occurs as a result of our work provided we have taken reasonable care to protect the roof and interior during our Work.",
+  fontSize: 8,
+  margin: [0, 0, 0, 8]
+},
+
+    {
+      text: "E. WORK SCHEDULE",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "You authorize us to perform the Final Scope of Work and to commence construction AS SOON AS FEASIBLE after the execution of this Construction Agreement. We agree to diligently pursue completion of the Work, however, we are not responsible for delays beyond our control such as floods, tornadoes, earthquakes, lightning, natural disasters or any other inclement or unfavorable weather; national emergencies, strikes, lockouts, fires, freight embargoes or labor disputes; inability to obtain labor, services or any materials subject to supply shortages; acts or failures to act by you, your agents or tenants which delays the Work; changes in the plans or specifications; acts of war, riots, civil commotion; fires; epidemics, quarantine restrictions; delays caused by any state, government, public authority or public enemy, or any other delays beyond our control. We routinely order more materials than necessary; therefore, all leftover building materials remain our property.",
+      fontSize: 8,
+      margin: [0, 0, 0, 8]
+    },
+
+    {
+      text: "F. DELAYS AND/OR CANCELLATION",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "This agreement cannot be canceled except by mutual written agreement of all parties. In the event that you elect to delay scheduling the Work or cancel this Agreement, whether or not work has commenced, you expressly acknowledge and agree that we will suffer serious financial harm which cannot be ascertained at this time. As such, you agree that 15% of the Agreement Price, plus the reasonable value of any consultant services of fees expended on your behalf in identifying damage to the Property, would be reasonable compensation as liquidated damages, but not as a penalty, for termination of this Agreement, all of which shall be credited toward the Agreement Price in the event you elect to have us perform the Final Scope of Work.",
+      fontSize: 8,
+      margin: [0, 0, 0, 8]
+    },
+
+    {
+      text: "G. DISPUTE RESOLUTION",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "You agree that any claim or controversy, arising out of or relating to this Agreement or any alleged breach thereof, shall be determined by binding arbitration in the County in which the property is located under the rules of the Federal Arbitration Act. Absent other agreements by the parties, the arbitration shall be administered by the American Arbitration Association. Any award of the Arbitrator is final and binding and may be entered as a final judgment in any court having jurisdiction thereof. You expressly waive the right to consequential or exemplary damages, to participate in any class actions, and to a trial by jury of any claims arising from this Agreement. In the event it is necessary for us to initiate any collection or legal proceedings to enforce our rights under this Agreement, you agree to pay all legal fees and costs of any nature whatsoever associated therewith incurred by us.",
+      fontSize: 8,
+      margin: [0, 0, 0, 8]
+    },
+
+    {
+      text: "H. ASBESTOS AND HAZARDOUS MATERIALS",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "You agree that we are not responsible for expenses, claims, or damages arising out of the presence, disturbance, or removal of mold-containing, asbestos-containing, or any other hazardous materials. If such materials are encountered, we reserve the right to suspend work while you engage a firm specializing in the removal and disposal of such hazardous materials, at your sole expense, or to submit a change order and perform the necessary work for additional compensation. We will be entitled to compensation for any additional expenses incurred as a result of encountering mold-containing...",
+      fontSize: 8,
+      margin: [0, 0, 0, 30]
+    },
+
+    createFooter(finalPageNumber + 5)
+  ]
+});
+
+
+
+// ================= ADDITIONAL TERMS & CONDITIONS - PAGE 3 =================
+docDefinition.content.push({
+  pageBreak: "before",
+  stack: [
+    ...createStandardHeader("Additional Terms and Conditions"),
+
+    {
+      text:
+        "Asbestos-containing, or any other hazardous materials. You acknowledge that mold is a latent but foreseeable condition when specified maintenance procedures to prevent moisture intrusion are not followed. YOU AGREE TO INDEMNIFY, HOLD HARMLESS, AND DEFEND US FROM AND AGAINST ANY AND ALL LIABILITY, DAMAGES, LOSSES, CLAIMS, DEMANDS, FINES, FEES, PENALTIES OR CITATIONS OF ANY KIND, INCLUDING BODILY INJURY OR PROPERTY DAMAGE, NOW OR IN THE FUTURE, INCLUDING, BUT NOT LIMITED TO, THE PRESENCE OF MOLD, ASBESTOS, OR ANY OTHER HAZARDOUS MATERIALS, NOW OR IN THE FUTURE. YOU WILL HOLD HARMLESS AND INDEMNIFY US FROM CLAIMS DUE TO POOR INDOOR AIR QUALITY WHETHER OR NOT RESULTING FROM A FAILURE BY YOU TO MAINTAIN THE INTERIOR OR EXTERIOR OF THE BUILDING IN A MANNER TO AVOID GROWTH OF MOLD OR THE LIKE. We disclaim any and all responsibility for damage to persons or property arising from or relating to the presence of mold in the building and are NOT responsible for any electric, piping, HVAC, ductwork, carpentry, or tuck-pointing. Customer will be required to correct any abnormalities existing such as wiring, conduit, HVAC, electrical, etc.",
+      fontSize: 8,
+      margin: [0, 30, 0, 10]
+    },
+
+    {
+      text: "I. SKYLIGHT NOTICE",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "Americanstruction strongly suggests that you replace all of your skylights during the re-roof process. Americanstruction is not responsible for any problems or issues as a result of leaving existing skylights in place.",
+      fontSize: 8,
+      margin: [0, 0, 0, 10]
+    },
+
+    {
+      text: "J. MISCELLANEOUS",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "We shall not be obligated to continue work hereunder in the event you breach any term or condition of this Agreement. This Agreement and all applicable warranties cannot be assigned except with our written permission. In case any one or more of the provisions in this Agreement are determined to be invalid, illegal, or unenforceable in any respect, such provision shall be modified to the minimum extent necessary to make it a valid and enforceable provision. To the extent it cannot be so modified, the Agreement shall be construed as if such provision(s) had never been contained herein. Our failure to enforce any right under any Agreement with you shall not be construed as a waiver of any other right to enforce the same or any other right, term or condition. This Agreement supersedes all previous agreements, arrangements, and understandings, whether verbal or written, between us. There are no representations, oral or written, other than those set forth herein. This Agreement may not be amended, modified, or otherwise changed except as mutually agreed in writing, executed by the parties and shall be binding on and inure to the benefit of the parties and their respective heirs, executors, administrators, legal representatives, successors, and assigns. The headings and captions contained in this Agreement are for convenience of reference only and are not determinative or to be considered in the construction or interpretation of any of the terms, items, conditions or provisions hereof.",
+      fontSize: 8,
+      margin: [0, 0, 0, 10]
+    },
+
+    {
+      text: "K. BACKCHARGES",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "No back charge or claim against us shall be valid except by written agreement. If you believe we have failed to properly perform our work, you shall notify us of such alleged default in a detailed writing and allow us a reasonable time of at least five full working days to commence appropriate corrective measures (or demonstrate the absence of default) before incurring any cost chargeable to us.",
+      fontSize: 8,
+      margin: [0, 0, 0, 10]
+    },
+
+   {
+  text: "L. WARRANTIES",
+  bold: true,
+  fontSize: 10,
+  margin: [0, 10, 0, 3]
+},
+{
+  text:
+    "Should leaks occur after completion of our work, inspections, or repairs performed by us shall be treated as warranty matters, and shall not be grounds for withholding payment of the Agreement Price; provided, however, if our work is installed over an existing system, we shall have no responsibility for water penetration or mold growth that occurs as a result of moisture contained in the old, or former, roofing system. THE WARRANTIES EXPRESSLY STATED OR REFERRED TO HEREIN ARE EXCLUSIVE AND IN LIEU OF ALL OTHER WARRANTIES, EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, AND ALL OTHER WARRANTIES ARE HEREBY DISCLAIMED AND EXCLUDED. We make no warranty respecting “Wind Uplift Resistance” of the installed roof system. Our Labor Warranty does not cover damage by lightning, winds over 65 mph, hurricanes, tornadoes, hail storms, impact of foreign objects, damage due to settlement of foundation, or your failure to properly maintain the property. Said Warranty cannot be assigned, is not transferable, and is void if any other contractor alters our Work. Any labor warranty will be revoked if not paid in full. Roofing Contractor is not responsible for damages or leaks due to existing conditions or existing sources of leakage simply because the Roofing Contractor started work on a building or performed repair work. Unless otherwise provided: All warranties/guarantees provided by Contractor, if any, shall be deemed null and void if Customer fails to strictly adhere to the payment terms contained in the Agreement. All warranties and guarantees, if any, provided under the Agreement are solely for the original Customer and are non-transferable, unless otherwise agreed to by Customer and Contractor in writing. Any express warranty provided, if any, by Contractor is the sole and exclusive remedy for alleged construction defects, in lieu of all other remedies, implied or statutory.",
+  fontSize: 8,
+  margin: [0, 0, 0, 20]
+},
+
+    createFooter(finalPageNumber + 6)
+  ]
+});
+
+
+/// additional terms and conditions page 4
+
+
+docDefinition.content.push({
+  pageBreak: "before",
+  stack: [
+    ...createStandardHeader("Additional Terms and Conditions"),
+
+    {
+      text: "M. GOVERNING LAW",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 30, 0, 3]
+    },
+    {
+      text:
+        "This Agreement shall be governed by and construed in accordance with the laws of the State of Illinois. The prevailing party shall be entitled to recover all costs and expenses arising before, during, or after mediation, arbitration, trial, or any other method of dispute resolution including but not limited to mediation, arbitration or court costs, attorney's fees, and expert witness fees and any such further costs or expenses as may be incurred in any appeal therefrom. The prevailing party shall be defined as the party that is either awarded an amount equal to or greater than 75% of its claim or the party that is only required to pay damages totaling less than 25% of the claim asserted by the other party.",
+      fontSize: 8,
+      margin: [0, 0, 0, 10]
+    },
+
+    {
+      text: "N. ENTIRE AGREEMENT",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "This Agreement contains the entire and only agreement between the Parties respecting the subject matter hereof and supersedes all prior agreements and understandings between them as to the subject matter hereof; and no modification shall be binding upon Contractor unless made in writing signed by an authorized officer of Contractor. It is further agreed that Schedule A and any documents contained in Schedule A are incorporated into this Agreement by reference, with the same force and effect as if the same were set forth at length therein and the Owner will be and is bound by any and all of said documents contained in Schedule A insofar as they relate in any way to the work covered by this Agreement.",
+      fontSize: 8,
+      margin: [0, 0, 0, 10]
+    },
+
+    {
+      text: "O. UNRELATED ITEMS THAT EXIST ON THE ROOF OR IN AND AROUND THE PROPERTY",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "We are NOT responsible for any electrical, piping, HVAC, ductwork, carpentry, plumbing, or tuck-pointing on the Roof or in and around the Property. Owner will be required to correct any abnormalities, including, but not limited to wiring, conduit, HVAC, electrical, plumbing, etc. on the roof and in and around the Property. Customer acknowledges that the price of the work to be performed anticipates the use of heavy equipment and or trucks to roof-top materials. It is possible that the driveway, curbs, or walkways may be cracked or damaged because of the weight of the equipment or trucks. Accordingly, the contractor disclaims liability for any cracks or damages caused to the driveway, curbs or walkways. If customer would prefer the contractor to hand lift the materials, the contract price will need to be increased to reflect the additional labor cost.",
+      fontSize: 8,
+      margin: [0, 0, 0, 10]
+    },
+
+    {
+      text: "P. SAFETY RESPONSIBILITY OF SUBCONTRACTORS",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "Subcontractor understands and acknowledges that Subcontractor shall control and implement all required safety procedures, and that Contractor shall only perform occasional inspections to determine conformance with the plans and specifications for the project. As a result, Contractor shall not be able to ensure Subcontractor (while working for Contractor) adherence to safety standards and the OSH Act or applicable state health and safety plans because Contractor cannot reasonably be expected to prevent, detect or abate violative conditions by reason of its limited role on the project. Therefore, the Subcontractor shall be solely responsible for controlling safety on the jobsite as it relates to the Subcontractor.",
+      fontSize: 8,
+      margin: [0, 0, 0, 20]
+    },
+
+    createFooter(finalPageNumber + 7)
+  ]
+});
+
 
 
 
@@ -2785,9 +3589,14 @@ const finalPageNumber =
   // Debug + Create PDF
   console.log("Generated docDefinition:", docDefinition);
   pdfMake.createPdf(docDefinition).download("Roof_Inspection_Report.pdf");
+
+
+  
 };
 
 export default generatePDF;
+
+
 
 
 
