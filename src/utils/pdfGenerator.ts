@@ -279,751 +279,221 @@ const safeText = (val) => ({ text: val !== undefined && val !== null ? String(va
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// =================== PAGE 6: ADDITIONAL ROOF ELEMENTS ===================
-
-const createAdditionalElementsPage = (sectionNumber, sectionData = {}, pageNumber) => ({
-  pageBreak: "before",
-  stack: [
-    // Header
-    ...createStandardHeader(`Section ${sectionNumber}  Summary`),
-
-    // === Additional Roof Elements Table ===
-    {
-      text: "Additional Roof Elements",
-      fontSize: 16,
-      bold: true,
-      margin: [0, 30, 0, 10]
-    },
-    {
-      table: {
-        widths: ["60%", "*"],
-        body: [
-
-          ["East Wall (L x H)", sectionData.wallFlashingEast || "N/A"],
-["West Wall (L x H)", sectionData.wallFlashingWest || "N/A"],
-["North Wall (L x H)", sectionData.wallFlashingNorth || "N/A"],
-["South Wall (L x H)", sectionData.wallFlashingSouth || "N/A"],
-
-          ["Curb Size", String(sectionData.curbSize ?? "N/A")],
-          ["Curb Count", String(sectionData.curbCount ?? "N/A")],
-          ["Linear Feet of Curb", String(sectionData.curbLinearFeet ?? "N/A")],
-          ["Curb Height", String(sectionData.curbHeight ?? "N/A")],
-          ["Curb Rail Size", String(sectionData.curbRailSize ?? "N/A")],
-          ["Curb Rail Count", String(sectionData.curbRailCount ?? "N/A")],
-          ["Hot Stack Diameter", String(sectionData.hotStackDiameter ?? "N/A")],
-          ["Hot Stack Count", String(sectionData.hotStackCount ?? "N/A")],
-          ["Drain Count", String(sectionData.drainCount ?? "N/A")],
-          ["Drain Size", String(sectionData.drainSize ?? "N/A")],
-          ["Wood Nailer Size", String(sectionData.woodNailerSize ?? "N/A")],
-          ["Wood Nailer Count", String(sectionData.woodNailerCount ?? "N/A")],
-          ["Roof Hatch Size", String(sectionData.roofHatchSize ?? "N/A")],
-          ["Roof Hatch Count", String(sectionData.roofHatchCount ?? "N/A")],
-          ["Slip Flashing Count", String(sectionData.slipFlashingCount ?? "N/A")],
-          ["Coping Metal Measurements", String(sectionData.copingMetalMeasurements ?? "N/A")],
-          ["Hold Down Cleat Count", String(sectionData.holdDownCleatCount ?? "N/A")],
-          ["Drip Edge Count", String(sectionData.dripEdgeCount ?? "N/A")],
-          ["Pipe Boots Count", String(sectionData.pipeBootsCount ?? "N/A")],
-          ["Pitch Pans Count", String(sectionData.pitchPansCount ?? "N/A")]
-        ]
-      },
-      layout: "lightHorizontalLines",
-      margin: [0, 0, 0, 30]
-    },
-
-    // === Footer ===
-    {
-      canvas: [
-        { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
-        { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
-      ],
-      absolutePosition: { x: 0, y: 755 }
-    },
-    {
-      columns: [
-        { text: "", width: "*" },
-        {
-          text: `Page ${pageNumber}`,
-
-          fontSize: 10,
-          alignment: "right",
-          margin: [0, 10, 40, 0],
-          color: "white"
-        }
-      ],
-      absolutePosition: { x: 0, y: 760 }
-    }
-  ]
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// =================== PAGE 5: PENETRATIONS + PARAPET ===================
-
-
-
-
-
-const createPenetrationsAndParapetPage = (sectionNumber, sectionData = {}, pageNumber) => ({
-  pageBreak: "before",
-  stack: [
-    // Header
-    ...createStandardHeader(`Section ${sectionNumber} Summary`),
-
-    // === Wall and Curb Square Footage (MOVED TO TOP) ===
-    {
-      text: "Wall and Curb Square Footage",
-      fontSize: 16,
-      bold: true,
-      margin: [0, 30, 0, 10]
-    },
-    {
-      table: {
-        widths: ["60%", "*"],
-        body: [
-          ["Wall Length (ft)", String(sectionData.wallLength ?? "N/A")],
-          ["Wall Height (ft)", String(sectionData.wallHeight ?? "N/A")],
-          ["Curb Length (ft)", String(sectionData.curbLength ?? "N/A")],
-          ["Curb Height (ft)", String(sectionData.curbHeight ?? "N/A")],
-          [
-            "Total Wall and Curb Square Footage",
-            String(
-              sectionData.wallAndCurbSquareFootage ??
-              (
-                ((Number(sectionData.wallLength) || 0) * (Number(sectionData.wallHeight) || 0)) +
-                ((Number(sectionData.curbLength) || 0) * (Number(sectionData.curbHeight) || 0))
-              )
-            ) || "N/A"
-          ]
-        ]
-      },
-      layout: "lightHorizontalLines",
-      margin: [0, 0, 0, 30]
-    },
-
-    // === Penetrations & Vents Section ===
-    {
-      text: "Penetrations & Vents",
-      fontSize: 16,
-      bold: true,
-      margin: [0, 10, 0, 10]
-    },
-    ...[
-      ["Pipes Condition", "pipesCondition"],
-      ["Vents Condition", "ventsCondition"],
-      ["HVAC Units Condition", "hvacCondition"],
-      ["Skylights Condition", "skylightsCondition"],
-      ["Chimneys Condition", "chimneysCondition"]
-    ].map(([label, key]) => ({
-      columns: [
-        {
-          width: "50%",
-          stack: [
-            { text: label, bold: true, margin: [0, 0, 0, 2] },
-            { text: sectionData?.[key] || "N/A", fontSize: 10, margin: [0, 0, 0, 10] }
-          ]
-        },
-        { width: "50%", text: "" }
-      ]
-    })),
-
-    // === Parapet Walls Section ===
-    {
-      text: "Parapet Walls",
-      fontSize: 16,
-      bold: true,
-      margin: [0, 25, 0, 10]
-    },
-    ...[
-      ["Condition of Parapet Walls", "parapetWallCondition"],
-      ["Coping Condition", "copingCondition"]
-    ].map(([label, key]) => ({
-      columns: [
-        {
-          width: "50%",
-          stack: [
-            { text: label, bold: true, margin: [0, 0, 0, 2] },
-            { text: sectionData?.[key] || "N/A", fontSize: 10, margin: [0, 0, 0, 10] }
-          ]
-        },
-        { width: "50%", text: "" }
-      ]
-    })),
-
-    // Footer
-    {
-      canvas: [
-        { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
-        { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
-      ],
-      absolutePosition: { x: 0, y: 755 }
-    },
-    {
-      columns: [
-        { text: "", width: "*" },
-        {
-          text: `Page ${pageNumber}`,
-          fontSize: 10,
-          alignment: "right",
-          margin: [0, 10, 40, 0],
-          color: "white"
-        }
-      ],
-      absolutePosition: { x: 0, y: 760 }
-    }
-  ]
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// =================== PAGE 4: INSULATION + DECK/STRUCTURE ===================
-
-const createInsulationAndDeckPage = (sectionNumber, sectionData = {}, pageNumber) => ({
+// ======== PAGE 1: SECTION SUMMARY (PART 1) ========
+const createSectionPageOne = (sectionNumber, sectionData = {}, pageNumber) => ({
   pageBreak: "before",
   stack: [
     ...createStandardHeader(`Section ${sectionNumber} Summary`),
 
-    // === Insulation Section
-    {
-      text: "Insulation",
-      fontSize: 16,
-      bold: true,
-      margin: [0, 30, 0, 10]
-    },
-    ...[
-      ["Insulation Type", "insulationType"],
-      ["Insulation Thickness (inches)", "insulationThickness"],
-      ["General Condition of Insulation", "insulationCondition"],
-      ["Evidence of Wet Insulation?", "wetInsulation"]
-    ].map(([label, key]) => ({
-      columns: [
-        {
-          width: "50%",
-          stack: [
-            { text: label, bold: true, margin: [0, 0, 0, 2] },
-            { text: sectionData?.[key] || "N/A", fontSize: 10, margin: [0, 0, 0, 10] }
-          ]
-        },
-        { width: "50%", text: "" }
-      ]
-    })),
-
-    // === Deck / Structure Section
-    {
-      text: "Deck / Structure",
-      fontSize: 16,
-      bold: true,
-      margin: [0, 25, 0, 10]
-    },
-    ...[
-      ["Evidence of Structural Issues?", "structuralIssues"],
-      ["Location & Extent of Issues", "structuralIssueDetails"],
-      ["Plywood/Sheathing Condition", "sheathingCondition"]
-    ].map(([label, key]) => ({
-      columns: [
-        {
-          width: "50%",
-          stack: [
-            { text: label, bold: true, margin: [0, 0, 0, 2] },
-            { text: sectionData?.[key] || "N/A", fontSize: 10, margin: [0, 0, 0, 10] }
-          ]
-        },
-        { width: "50%", text: "" }
-      ]
-    })),
-
-    // === Safety Section
-    {
-      text: "Safety",
-      fontSize: 16,
-      bold: true,
-      margin: [0, 25, 0, 10]
-    },
-    ...[
-      ["Is safe roof access available?", "safeAccess"],
-      ["Condition of guardrails or parapets", "guardrailCondition"],
-      ["Trip hazards on roof", "tripHazards"]
-    ].map(([label, key]) => ({
-      columns: [
-        {
-          width: "50%",
-          stack: [
-            { text: label, bold: true, margin: [0, 0, 0, 2] },
-            { text: sectionData?.[key] || "N/A", fontSize: 10, margin: [0, 0, 0, 10] }
-          ]
-        },
-        { width: "50%", text: "" }
-      ]
-    })),
-
-    // === Footer
-    {
-      canvas: [
-        { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
-        { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
-      ],
-      absolutePosition: { x: 0, y: 755 }
-    },
-    {
-      columns: [
-        { text: "", width: "*" },
-        {
-          text: `Page ${pageNumber}`,
-          fontSize: 10,
-          alignment: "right",
-          margin: [0, 10, 40, 0],
-          color: "white"
-        }
-      ],
-      absolutePosition: { x: 0, y: 760 }
-    }
-  ]
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ====== PAGE 3 of ROOF SECTION CONDITION SUMMARY ==============
-const createFlashingAndDrainagePage = (sectionNumber, sectionData = {}, pageNumber) => ({
-  pageBreak: "before",
-  stack: [
-    ...createStandardHeader(`Section ${sectionNumber} Summary`),
-
-    // === Flashing & Sealants Header ===
-    {
-      text: "Flashing & Sealants",
-      fontSize: 16,
-      bold: true,
-      margin: [0, 30, 0, 10],
-      color: "#000"
-    },
-
-    ...[
-      ["Flashing Material", "flashingMaterial"],
-      ["Flashing Condition", "flashingCondition"],
-      ["Length of Damaged Flashing (ft)", "flashingDamageLength"],
-      ["Flashing Locations", "flashingLocations"],
-      ["Sealants Condition", "sealantsCondition"],
-      ["Length of Cracked/Deteriorated Sealant (ft)", "sealantsLength"]
-    ].map(([label, key]) => ({
-      columns: [
-        {
-          width: "40%",
-          text: label,
-          bold: true,
-          fontSize: 10,
-          margin: [0, 2, 0, 2]
-        },
-        {
-          width: "*",
-          text: sectionData?.[key] || "N/A",
-          fontSize: 10,
-          margin: [0, 2, 0, 2]
-        }
-      ]
-    })),
-
-    { text: "", margin: [0, 10] },
-
-    // === Drainage System Header ===
-    {
-      text: "Drainage System",
-      fontSize: 16,
-      bold: true,
-      margin: [0, 10, 0, 10],
-      color: "#000"
-    },
-
-    ...[
-      ["Gutters Condition", "guttersCondition"],
-      ["Gutter Size", "gutterSize"],
-      ["Downspouts Condition", "downspoutsCondition"],
-      ["Number of Downspouts", "downspoutsNumber"],
-      ["Downspouts Size", "downspoutsSize"],
-      ["Drains Condition", "drainsCondition"],
-      ["Scuppers Condition", "scuppersCondition"]
-    ].map(([label, key]) => ({
-      columns: [
-        {
-          width: "40%",
-          text: label,
-          bold: true,
-          fontSize: 10,
-          margin: [0, 2, 0, 2]
-        },
-        {
-          width: "*",
-          text: sectionData?.[key] || "N/A",
-          fontSize: 10,
-          margin: [0, 2, 0, 2]
-        }
-      ]
-    })),
-
-    // === Footer ===
-    {
-      canvas: [
-        { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
-        { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
-      ],
-      absolutePosition: { x: 0, y: 755 }
-    },
-    {
-      columns: [
-        { text: "", width: "*" },
-        {
-          text: `Page ${pageNumber}`,
-          fontSize: 10,
-          alignment: "right",
-          margin: [0, 10, 40, 0],
-          color: "white"
-        }
-      ],
-      absolutePosition: { x: 0, y: 760 }
-    }
-  ]
-});
-
-
-
-
-
-
-// ============ PAGE 2 of ROOF SECTION CONDITION SUMMARY ============
-
-
-
-
-
-const createMembranePage = (sectionNumber, sectionData = {}, pageNumber) => ({
-  pageBreak: "before",
-  stack: [
-    // Header
-    ...createStandardHeader(`Section ${sectionNumber} Summary`),
-
-    // === General Observations Section Header ===
     {
       text: "General Observations",
-      fontSize: 16,
-      bold: true,
-      margin: [0, 30, 0, 15]
+      style: "subheader"
     },
-
-    // === QA Blocks (Label + Value) ===
     ...[
-      ["Evidence of Leaks/Water Damage?", "leaks", "leaksDescription"],
-      ["Ponding Water?", "pondingWater", "pondingWaterDescription"],
-      ["Debris Accumulation?", "debrisAccumulation", "debrisDescription"],
-      ["Vegetation Growth?", "vegetationGrowth", "vegetationDescription"],
-      ["Accessibility Issues?", "accessibilityIssues", "accessibilityDescription"]
-    ].map(([label, valueKey, descKey]) => ({
-      columns: [
-        {
-          width: "50%",
-          stack: [
-            { text: label, bold: true, margin: [0, 0, 0, 2] },
-            { text: sectionData?.[valueKey] || "N/A", fontSize: 10, margin: [0, 0, 0, 10] }
-          ]
-        },
-        {
-          width: "50%",
-          stack: [
-            { text: "Description:", bold: true, margin: [0, 0, 0, 2] },
-            { text: sectionData?.[descKey] || "N/A", fontSize: 10, margin: [0, 0, 0, 10] }
-          ]
-        }
-      ]
+      ["Overall Roof Condition", "overallCondition"],
+      ["Leaks/Water Damage", "leaks"],
+      ["Description", "leaksDescription"],
+      ["Debris Accumulation", "debrisAccumulation"],
+      ["Description", "debrisDescription"],
+      ["Vegetation Growth", "vegetationGrowth"],
+      ["Description", "vegetationDescription"],
+      ["Accessibility Issues", "accessibilityIssues"],
+      ["Description", "accessibilityDescription"]
+    ].map(([label, key]) => ({
+      text: `${label}: ${sectionData?.[key] || "N/A"}`,
+      fontSize: 10,
+      margin: [0, 0, 0, 2]
     })),
-// === Interior Evaluation Section (styled like General Observations) ===
 
-
-
-{
-  text: "Interior Evaluation",
-  fontSize: 16,
-  bold: true,
-  margin: [0, 25, 0, 10]
-},
-...[
-  {
-    label: "Underside Accessible?",
-    key: "undersideAccessible",
-    descKey: null
-  },
-  {
-    label: "Deck Condition",
-    key: "deckCondition",
-    descKey: null
-  },
-  {
-    label: "Deck Damage?",
-    key: "deckDamage",
-    descKey: "deckDamageDescription"
-  },
-  {
-    label: "Moisture or Water Damage?",
-    key: "deckMoisture",
-    descKey: "deckMoistureDescription"
-  }
-].map(({ label, key, descKey }) => ({
-  columns: [
     {
-      width: "50%",
-      stack: [
-        { text: label, bold: true, margin: [0, 5, 0, 0] },
-        { text: sectionData?.[key] || "N/A", fontSize: 10, margin: [0, 0, 0, 10] }
-      ]
+      text: "Interior Evaluation",
+      style: "subheader",
+      margin: [0, 10, 0, 5]
     },
-    descKey
-      ? {
-          width: "50%",
-          stack: [
-            { text: "Description:", bold: true, margin: [0, 5, 0, 0] },
-            { text: sectionData?.[descKey] || "N/A", fontSize: 10, margin: [0, 0, 0, 10] }
-          ]
-        }
-      : { width: "50%", text: "" }
-  ]
-}))
-,
+    ...[
+      ["Underside Accessible", "undersideAccessible"],
+      ["Moisture Damage", "deckMoisture"],
+      ["Description", "deckMoistureDescription"]
+    ].map(([label, key]) => ({
+      text: `${label}: ${sectionData?.[key] || "N/A"}`,
+      fontSize: 10,
+      margin: [0, 0, 0, 2]
+    })),
 
-
-
-    // === Red Footer ===
     {
-      canvas: [
-        { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
-        { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
-      ],
-      absolutePosition: { x: 0, y: 755 }
+      text: "Roofing Membrane / Surface",
+      style: "subheader",
+      margin: [0, 10, 0, 5]
     },
-    {
-      columns: [
-        { text: "", width: "*" },
+    ...[
+      ["Membrane Material", "membraneMaterial"],
+      ["Condition", "membraneCondition"],
+      ["Seams/Overlaps", "seamsCondition"],
+      ["Coating", "coatingCondition"],
+      ["Differences in Firmness", "insulationFirmness"],
+      ["Description", "insulationFirmnessDescription"]
+    ].map(([label, key]) => ({
+      text: `${label}: ${sectionData?.[key] || "N/A"}`,
+      fontSize: 10,
+      margin: [0, 0, 0, 2]
+    })),
+
         {
-          text: `Page ${pageNumber}`,
-          fontSize: 10,
-          alignment: "right",
-          margin: [0, 10, 40, 0],
-          color: "white"
-        }
-      ],
-      absolutePosition: { x: 0, y: 760 }
+      text: "Flashing & Sealants",
+      style: "subheader"
+    },
+    ...[
+      ["Material", "flashingMaterial"],
+      ["Condition", "flashingCondition"],
+      ["Locations", "flashingLocations"],
+      ["Note", "flashingNotes"]
+    ].map(([label, key]) => ({
+      text: `${label}: ${sectionData?.[key] || "N/A"}`,
+      fontSize: 10,
+      margin: [0, 0, 0, 2]
+    })),
+
+    {
+  canvas: [
+    { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
+    { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
+  ],
+  absolutePosition: { x: 0, y: 755 }
+},
+{
+  columns: [
+    { text: "", width: "*" },
+    {
+      text: "Page " + pageNumber,
+      fontSize: 10,
+      alignment: "right",
+      margin: [0, 10, 40, 0],
+      color: "white"
     }
+  ],
+  absolutePosition: { x: 0, y: 760 }
+}
+
   ]
 });
 
 
-
-
-
-
-// =========== PAGE 1 of ROOF SECTION CONDITION SUMMARY ==============
-
-
-
-
-
-
-const createSummaryPage = (sectionNumber, sectionData, pageNumber) => ({
+// ======== PAGE 2: SECTION SUMMARY (PART 2) ========
+const createSectionPageTwo = (sectionNumber, sectionData = {}, pageNumber) => ({
   pageBreak: "before",
   stack: [
-    // Header
-    ...createStandardHeader(`Section ${sectionNumber} Summary`),
+    ...createStandardHeader(`Section ${sectionNumber} Overview`),
 
 
-    
-// === Section Mini Summary Table (Improved Format) ===
+
+    {
+      text: "Drainage System",
+      style: "subheader",
+      margin: [0, 10, 0, 5]
+    },
+    ...[
+      ["Gutters", "guttersCondition"],
+      ["Gutter Size", "gutterSize"],
+      ["Downspouts", "downspoutsCondition"],
+      ["Downspout Size", "downspoutsSize"]
+    ].map(([label, key]) => ({
+      text: `${label}: ${sectionData?.[key] || "N/A"}`,
+      fontSize: 10,
+      margin: [0, 0, 0, 2]
+    })),
+
+    {
+      text: "Penetrations & Vents",
+      style: "subheader",
+      margin: [0, 10, 0, 5]
+    },
+    ...[
+      ["Pipes", "pipesCondition"],
+      ["# of Pipes", "pipesCount"],
+      ["Vents", "ventsCondition"],
+      ["# of Vents", "ventsCount"],
+      ["HVAC Units", "hvacCondition"],
+      ["# of Units", "hvacCount"],
+      ["Chimneys", "chimneysCondition"]
+    ].map(([label, key]) => ({
+      text: `${label}: ${sectionData?.[key] || "N/A"}`,
+      fontSize: 10,
+      margin: [0, 0, 0, 2]
+    })),
+
+    {
+      text: "Parapet Walls",
+      style: "subheader",
+      margin: [0, 10, 0, 5]
+    },
+    ...[
+      ["Wall Condition", "parapetWallCondition"],
+      ["Coping Condition", "copingCondition"]
+    ].map(([label, key]) => ({
+      text: `${label}: ${sectionData?.[key] || "N/A"}`,
+      fontSize: 10,
+      margin: [0, 0, 0, 2]
+    })),
+
+    {
+      text: "Deck / Structure",
+      style: "subheader",
+      margin: [0, 10, 0, 5]
+    },
+    ...[
+      ["Evidence of Structural Issues", "structuralIssues"],
+      ["Details", "structuralIssueDetails"]
+    ].map(([label, key]) => ({
+      text: `${label}: ${sectionData?.[key] || "N/A"}`,
+      fontSize: 10,
+      margin: [0, 0, 0, 2]
+    })),
+
+    {
+      text: "Safety",
+      style: "subheader",
+      margin: [0, 10, 0, 5]
+    },
+    {
+      text: `Roof Access: ${sectionData?.safeAccess || "N/A"}`,
+      fontSize: 10,
+      margin: [0, 0, 0, 2]
+    },
+
+    {
+      text: "Roof Square Footage",
+      style: "subheader",
+      margin: [0, 10, 0, 5]
+    },
+    {
+      text: `Length: ${sectionData?.roofLength || "N/A"} ft\nWidth: ${sectionData?.roofWidth || "N/A"} ft\nTotal: ${(sectionData?.roofLength * sectionData?.roofWidth) || "N/A"} SF`,
+      fontSize: 10,
+      margin: [0, 0, 0, 10]
+    },
+
 {
-  table: {
-    widths: ["40%", "*"],
-    body: [
-      [
-        { text: "Section Name", bold: true },
-        sectionData?.sectionName || `Section ${sectionNumber}`
-      ],
-      [
-        { text: "Section Material", bold: true },
-        sectionData?.roofMaterial || "N/A"
-      ],
-      [
-        { text: "Overall Condition", bold: true },
-        sectionData?.overallCondition || "N/A"
-      ],
-      [
-        { text: "Section Age (approx.)", bold: true },
-        sectionData?.sectionAge || "N/A"
-      ],
-      [
-        { text: "Section Square Footage", bold: true },
-        safeText(
-          sectionData.roofSquareFootage ??
-          (sectionData.roofLength || 0) * (sectionData.roofWidth || 0)
-        ).text
-      ]
-    ]
-  },
-  layout: "lightHorizontalLines",
-  margin: [0, 10, 0, 30]
+  canvas: [
+    { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
+    { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
+  ],
+  absolutePosition: { x: 0, y: 755 }
 },
-
-
-
-
-
-    // === Core Sample Description ===
+{
+  columns: [
+    { text: "", width: "*" },
     {
-      text: "Core Sample Description",
-      fontSize: 14,
-      bold: true,
-      margin: [0, 10, 0, 6]
-    },
-    {
-      table: {
-        widths: ["60%", "*"],
-        body: [
-          ["Roof Cover", sectionData.coreSampleRoofCover || "N/A"],
-          ["Cover Board", sectionData.coreSampleCoverBoard || "N/A"],
-          ["Insulation (Top)", sectionData.coreSampleTopInsulation || "N/A"],
-          ["Insulation (Bottom)", sectionData.coreSampleBottomInsulation || "N/A"],
-          ["Deck Type", sectionData.coreSampleDeckType || "N/A"],
-        ]
-      },
-      layout: "lightHorizontalLines",
-      margin: [0, 0, 0, 20]
-    },
-
-    // === Membrane Section ===
-    {
-      text: "Membrane",
-      fontSize: 14,
-      bold: true,
-      margin: [0, 10, 0, 6]
-    },
-    {
-      stack: [
-        {
-          text: `Membrane Material: ${sectionData.membraneMaterial || "not specified"}.`,
-          margin: [0, 0, 0, 5]
-        },
-        {
-          text: `Condition Membrane ${sectionData.membraneCondition || "N/A"}.`,
-          margin: [0, 0, 0, 5]
-        },
-        {
-          text: `Seams and overlaps description: ${sectionData.seamsCondition || "N/A"}.`,
-          margin: [0, 0, 0, 5]
-        },
-       
-        {
-          text: `Fasteners condition: ${sectionData.fastenersCondition || "N/A"}.`,
-          margin: [0, 0, 0, 5]
-        },
-        {
-          text: `Rusted Fasteners: ${sectionData.rustedFasteners ?? "N/A"}, Loose Fasteners: ${sectionData.looseFasteners ?? "N/A"}, Missing Fasteners: ${sectionData.missingFasteners ?? "N/A"}.`,
-          margin: [0, 0, 0, 10]
-        },
-        {
-          text: `Granules Condition: ${sectionData.granulesCondition || "N/A"}.`,
-          margin: [0, 0, 0, 5]
-        },
-        {
-          text: `Coating Condition: ${sectionData.coatingCondition || "N/A"}.`,
-          margin: [0, 0, 0, 20]
-        }
-      ]
+      text: "Page " + pageNumber,
+      fontSize: 10,
+      alignment: "right",
+      margin: [0, 10, 40, 0],
+      color: "white"
     }
-    
+  ],
+  absolutePosition: { x: 0, y: 760 }
+}
 
-,
-
-  
-    // === Red Footer ===
-    {
-      canvas: [
-        { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
-        { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
-      ],
-      absolutePosition: { x: 0, y: 755 }
-    },
-    {
-      columns: [
-        { text: "", width: "*" },
-        {
-          text: `Page ${pageNumber}`,
-
-          fontSize: 10,
-          alignment: "right",
-          margin: [0, 10, 40, 0],
-          color: "white"
-        }
-      ],
-      absolutePosition: { x: 0, y: 760 }
-    }
   ]
 });
-
   
 
 
@@ -1431,142 +901,6 @@ const roofSections = Array.isArray(formData.roofSections) ? formData.roofSection
 
 
 
- // =================== Page 3 ===================
-
-
-
-
-
-
-{
-    pageBreak: "before",
-    stack: [
-  
-      // === Red/Blue Header (same as Roof-X on Page 1) ===
-      {
-        canvas: [
-          {
-            type: "rect",
-            x: -150,
-            y: 0,
-            w: 595,
-            h: 2,
-            color: "red"
-          },
-         
-        ]
-      },
-      {
-        canvas: [
-          {
-            type: "rect",
-            x: -150,
-            y: 2,
-            w: 595,
-            h: 76,
-            color: "#2e3192"
-          }
-        ]
-      },
-      {
-        canvas: [
-          {
-            type: "rect",
-            x: -150,
-            y: 2,
-            w: 595,
-            h: 2,
-            color: "red"
-          }
-        ]
-      },
-  
-      // === Pricing Notice Text Content ===
-      {
-        margin: [40, 20, 40, 0],
-        table: {
-          widths: ['*'],
-          body: [
-            [
-              {
-                text: 'Pricing Notice',
-                bold: true,
-                fontSize: 24,
-                color: 'white', // Optional: white-on-blue
-                margin: [80, -80, 0, 8]
-              }
-            ],
-            [
-              {
-                text:
-                  'Americanstruction reserves the right to adjust pricing due to industry-wide cost fluctuations. ' +
-                  'Ongoing supply chain constraints and material shortages continue to impact both the cost and availability ' +
-                  'of roofing products across the industry.\n\n' +
-                  'As such, the pricing outlined in this proposal shall remain valid for a period of 30 days from the date of issuance.\n\n' +
-                  'In the event that material prices rise significantly after the contract is signed, through no fault of Americanstruction, ' +
-                  'the total contract amount may be adjusted accordingly. A “significant” increase is defined as a price change exceeding 5% ' +
-                  'from the date of contract execution. Any such changes will be supported with documentation including vendor notices, ' +
-                  'updated quotes, invoices, or receipts.\n\n' +
-                  'Should material delays occur due to unavailability or shortage—again, through no fault of Americanstruction—we shall not be held liable ' +
-                  'for additional costs, damages, or schedule disruptions stemming from such delays.',
-                fontSize: 10,
-                lineHeight: 1.4,
-                margin: [0, 0, 0, 10]
-              }
-            ]
-          ]
-        },
-        layout: 'noBorders'
-      },
-  
-      // Decorative Red/Blue Footer (from page 1)
-      {
-        stack: [
-          {
-            canvas: [
-              {
-                type: "rect",
-                x: 0,
-                y: 0,
-                w: 595,
-                h: 5,
-                color: "red"
-              },
-              {
-                type: "rect",
-                x: 0,
-                y: 5,
-                w: 595,
-                h: 65,
-                color: "#2e3192"
-              }
-            ],
-            absolutePosition: { x: 0, y: 755 }
-          },
-          {
-            columns: [
-              { text: "", width: "*" },
-              {
-                text: "Page 3",
-                fontSize: 10,
-                alignment: "right",
-                margin: [0, 10, 40, 0],
-                color: "white"
-              }
-            ],
-            absolutePosition: { x: 0, y: 760 }
-          }
-        ]
-      }
-    ]
-  },
-  {
-    image: americanstructionheader,
-    width: 150,
-    alignment: "right",
-    margin: [50, -375, 0, 0]
-  },
-
 
    // =================== Page 4===================
   
@@ -1957,6 +1291,42 @@ margin: [0, 0, 0, 10]
 
 
 
+
+
+//============= Loop for roof sections !!!!!!
+
+
+
+
+
+
+roofSections.forEach((section, index) => {
+  try {
+    if (!section) throw new Error("Missing section");
+
+    const pageStart = basePageOffset + index * 2;
+
+    const pages = [
+      createSectionPageOne(index + 1, section, pageStart + 1),
+      createSectionPageTwo(index + 1, section, pageStart + 2),
+    ];
+
+    docDefinition.content.push(...pages);
+  } catch (err) {
+    console.error(`Error creating roof section ${index + 1}:`, err);
+  }
+});
+
+
+
+const finalPageNumber =
+  6 + // first 6 pages before images
+  imagePages.length +
+  overviewPages.length +
+  droneImages.length +
+  1 + // roof condition summary overview
+  roofSections.length * 6 +
+  1; // final pricing page itself
 
 
  
@@ -2464,52 +1834,45 @@ margin: [0, 0, 0, 8]
 
 
 
-
-
-
-
-
-
-
-
-//============= Loop for roof sections !!!!!!
-
-
-
-
-
-
-roofSections.forEach((section, index) => {
-  try {
-    if (!section) throw new Error("Missing section");
-
-const pageStart = basePageOffset + index * 4;
-
-    const pages = [
-
-      createMembranePage(index + 1, section, pageStart + 1),
-      createFlashingAndDrainagePage(index + 1, section, pageStart + 2), // ✅ this line!
-      createInsulationAndDeckPage(index + 1, section, pageStart + 3),
-      createPenetrationsAndParapetPage(index + 1, section, pageStart + 4),
-
-    ];
-    
-
-    docDefinition.content.push(...pages);
-  } catch (err) {
-    console.error(`Error creating roof section ${index + 1}:`, err);
-  }
+// === Scope of Work Page ===
+docDefinition.content.push({
+  pageBreak: "before",
+  stack: [
+    ...createStandardHeader("Scope of Work Summary"),
+    {
+      text: formData.selectedScopeText || "No scope selected.",
+      fontSize: 10,
+      margin: [0, 40, 0, 0]
+    },
+    // Footer
+    {
+      canvas: [
+        { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
+        { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
+      ],
+      absolutePosition: { x: 0, y: 755 }
+    },
+    {
+      columns: [
+        { text: "", width: "*" },
+        {
+          text: "Page " + (finalPageNumber + 1),
+          fontSize: 10,
+          alignment: "right",
+          margin: [0, 10, 40, 0],
+          color: "white"
+        }
+      ],
+      absolutePosition: { x: 0, y: 760 }
+    }
+  ]
 });
 
 
-const finalPageNumber =
-  6 + // first 6 pages before images
-  imagePages.length +
-  overviewPages.length +
-  droneImages.length +
-  1 + // roof condition summary overview
-  roofSections.length * 6 +
-  1; // final pricing page itself
+
+
+
+
 
 
 
@@ -2565,6 +1928,63 @@ docDefinition.content.push({
     }
   ]
 });
+
+
+
+// ================= CHANGE ORDER ITEMS PAGE =================
+docDefinition.content.push({
+  pageBreak: "before",
+  stack: [
+    ...createStandardHeader("Change Order Items"),
+
+
+    {
+      ul: [
+        "Interior Protection Draping – $1.50 per sq ft",
+        "Fall Suspension Protection – $3.50 per sq ft",
+        "Drain (Retrofit) Replacement – $775.00",
+        "Drain Bowl Replacement – $850.00 Ea",
+        "Drain Ring Replacement – $350.00",
+        "Drain Basket Replacement / Cast Iron – $350 Ea per unit",
+        "Wood Decking Replacement – $7.00 per sq ft (1/2\" 4x8 sheet)",
+        "Metal Decking Replacement – $16.50 per sq ft (22 ga. B-Deck)",
+        "Wood Nailer Replacement Per Bd. Ft. – $5.50",
+        "Walkway Protection Mats (EPDM/TPO) – $40.00 Ea",
+        "Walkway Protection Roll – $28.00 per Ln Ft.",
+        "New Bilco Roof Hatch 30 x 36 – $1,850.00 Ea",
+        "Hatch Safety Rail – $950.00 Ea"
+      ],
+      fontSize: 10,
+      margin: [0, 0, 0, 30]
+    },
+
+    // Footer
+    {
+      canvas: [
+        { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
+        { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
+      ],
+      absolutePosition: { x: 0, y: 755 }
+    },
+    {
+      columns: [
+        { text: "", width: "*" },
+        {
+          text: "Page " + (finalPageNumber + 1),
+          fontSize: 10,
+          alignment: "right",
+          margin: [0, 10, 40, 0],
+          color: "white"
+        }
+      ],
+      absolutePosition: { x: 0, y: 760 }
+    }
+  ]
+});
+
+
+
+
 
 
 
@@ -2643,10 +2063,7 @@ docDefinition.content.push({
 
 
 
-
-
-
-//////CONTRACT page 1
+//Contract 1 
 
 
 
@@ -2656,101 +2073,84 @@ docDefinition.content.push({
     ...createStandardHeader("Contract"),
 
     {
-      text: "CONSTRUCTION, ROOF REPLACEMENT, OR REPAIR",
+      text: "CONSTRUCTION CONTRACT AGREEMENT",
       bold: true,
       fontSize: 10,
-      margin: [0, 40, 0, 5]
+      margin: [0, 30, 0, 10]
     },
     {
       text:
-        "This Contract is made on 7/10/2024\nBETWEEN the contractor : Americanstruction Inc\nwhose address is: 11751 Wind Dance Ct. Mokena, Illinois 60448\nreferred to as the “Contractor,”\nAND the Property Owner(s) : Matt Moeller\nwhose address is : 1610 Main Street Crete, IL 60417\nreferred to as the “Owner.”\nIf there is more than one Property Owner, the word “Owner” shall mean each Property Owner named above.",
+        "Effective Date: ____________________\n\n" +
+        "This Contract (the “Contract”) is entered into as of the Effective Date,\n\nBETWEEN:\nAMERICANSTRUCTION INC.\n19222 S LaGrange Rd., Mokena, Illinois, 60448\n(the “Contractor”)\n\nAND:\n{{CUSTOMER_NAME}}\n{{CUSTOMER_ADDRESS}}\n(the “Owner”)\n\nIf more than one Owner, this refers to all listed above.",
       fontSize: 8,
       margin: [0, 0, 0, 10]
     },
-
     {
-      text: "1. Agreement.",
+      text: "Table of Contents",
       bold: true,
       fontSize: 10,
-      margin: [0, 8, 0, 3]
+      margin: [0, 10, 0, 5]
     },
     {
-      text:
-        "The contractor agrees to perform certain construction, alteration or repair work (referred to as the “Work”) in accordance with this Contract. All work will be done in a good, sound and workmanlike manner. The Contractor will begin the work no later than (see Schedule A).",
+      ul: [
+        "Agreement and Work Performance",
+        "Scope of Work",
+        "Location",
+        "Price and Payment Schedule",
+        "Materials",
+        "Compliance with Laws and Design Defects",
+        "Contract Changes (Change Orders)"
+      ],
       fontSize: 8
     },
 
     {
-      text: "2. Work.",
-      bold: true,
-      fontSize: 10,
-      margin: [0, 8, 0, 3]
-    },
-    {
-      text:
-        "The Work is described as follows: A detailed Description of the Work is attached and incorporated hereto as Schedule A.",
-      fontSize: 8
-    },
-
-    {
-      text: "3. Location.",
-      bold: true,
-      fontSize: 10,
-      margin: [0, 8, 0, 3]
-    },
-    {
-      text:
-        "All work will be completed on the property (called the “Property”) known as:\n1610 Main Street Crete, IL 60417",
-      fontSize: 8
-    },
-
-    {
-      text: "4. Price.",
-      bold: true,
-      fontSize: 10,
-      margin: [0, 8, 0, 3]
-    },
-    {
-      text:
-        "The agreed upon price is TBD based on option chosen, upgrades, and change orders, to be paid as follows:\nSchedule of Payments:\nFinal price includes labor, material, taxes, and disposal.\n1) Payment includes 1/3 down (due upon signed agreement), 1/3 upon material drop, 1/3 upon substantial completion.",
-      fontSize: 8
-    },
-
-    {
-      text: "5. Materials.",
-      bold: true,
-      fontSize: 10,
-      margin: [0, 8, 0, 3]
-    },
-    {
-      text:
-        "The Contractor will provide the materials, supplies, equipment, services and labor necessary for the complete performance of this Contract. Unless otherwise agreed, all materials will be new and of good quality.",
-      fontSize: 8
-    },
-
-    {
-      text: "6. Compliance with Laws.",
-      bold: true,
-      fontSize: 10,
-      margin: [0, 8, 0, 3]
-    },
-    {
-      text:
-        "The Contractor will comply with all applicable Federal, State and local laws regarding work, materials and the safety of persons or property. The Owner will not be responsible for any loss or damage to the work or any property of the Contractor.",
-      fontSize: 8
-    },
-
-    {
-      text: "7. No Oral Changes.",
-      bold: true,
-      fontSize: 10,
-      margin: [0, 8, 0, 3]
-    },
-    {
-      text:
-        "This Contract can only be changed by an agreement in writing signed by both the Owner and the Contractor (Change Order). No variations, alterations, deviations, deletions or extra work can be made unless both the Owner and the Contractor specifically agree in writing.",
+      ul: [
+        "Coordination and Delays",
+        "Failure to Complete Work",
+        "Failure to Pay Contractor",
+        "Insurance",
+        "Ownership of Materials",
+        "Care of Property",
+        "Permits",
+        "Notices"
+      ],
       fontSize: 8,
-      margin: [0, 0, 0, 30]
+      margin: [0, 30, 0, 10]
+    },
+    {
+      ul: [
+        "Parties Bound",
+        "Retainage",
+        "Payment to Subcontractors (\"Pay When Paid\" Clause)",
+        "Termination for Convenience",
+        "Notice to Owner",
+        "Signatures"
+      ],
+      fontSize: 8
+    },
+    {
+      text: "1. Agreement and Work Performance",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 20, 0, 5]
+    },
+    {
+      text:
+        "The Contractor agrees to perform construction or repair work (“Work”) per this Contract. All Work shall be performed in a good, sound, workmanlike manner. The Contractor shall begin no later than the date in Schedule A.",
+      fontSize: 8
+    },
+
+    {
+      text: "2. Scope of Work",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 3]
+    },
+    {
+      text:
+        "Work is defined in Schedule A, which is incorporated into this Contract by reference.",
+      fontSize: 8
     },
 
     createFooter(finalPageNumber + 7)
@@ -2760,7 +2160,168 @@ docDefinition.content.push({
 
 
 
-////// CONTRACT PAGE 2
+//Contract 3
+
+docDefinition.content.push({
+  pageBreak: "before",
+  stack: [
+    ...createStandardHeader("Contract"),
+
+    {
+      text: "3. Location",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 30, 0, 5]
+    },
+    {
+      text: "Work shall be performed at: {{CUSTOMER_ADDRESS}}",
+      fontSize: 8
+    },
+
+    {
+      text: "4. Price and Payment Schedule",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 5]
+    },
+    {
+      text:
+        "Total contract price: [PRICE]\n\nTo be paid in 3 parts:\n1/3 upon signing\n1/3 on material drop\n1/3 on substantial completion\n\nIncludes labor, materials, taxes, and disposal.",
+      fontSize: 8
+    },
+
+    {
+      text: "5. Materials",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 5]
+    },
+    {
+      text:
+        "Contractor will provide all materials, labor, and equipment. Unless stated otherwise, materials will be new and of good quality.",
+      fontSize: 8
+    },
+
+    {
+      text: "6. Compliance with Laws and Design Defects",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 5]
+    },
+    {
+      text:
+        "Contractor will follow all applicable laws and safety rules. Contractor is not responsible for any design defects and is released from any liability arising from them.",
+      fontSize: 8
+    },
+
+
+    
+    {
+      text: "7. Contract Changes (Change Orders)",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 30, 0, 5]
+    },
+    {
+      text:
+        "This Contract can only be changed via signed written Change Order by both parties. No verbal changes are valid.",
+      fontSize: 8
+    },
+
+    {
+      text: "8. Coordination and Delays",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 5]
+    },
+    {
+      text:
+        "Contractor will coordinate work based on reasonable scheduling by Owner. Contractor and subcontractors are not liable for third-party delays.",
+      fontSize: 8
+    },
+
+    {
+      text: "9. Failure to Complete Work",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 5]
+    },
+    {
+      text:
+        "If Contractor fails to begin within 3 days after notice, Owner may complete the Work and charge additional costs to Contractor.",
+      fontSize: 8
+    },
+
+    {
+      text: "10. Failure to Pay Contractor",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 5]
+    },
+    {
+      text:
+        "Contractor may terminate this Contract if not paid within 5 days of the due date. Owner remains liable for completed Work, profits, and damages.",
+      fontSize: 8
+    },
+
+
+    {
+      text: "11. Insurance",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 30, 0, 5]
+    },
+    {
+      text:
+        "Owner must insure all buildings and materials against fire. Both Owner and Contractor must be listed on policy.",
+      fontSize: 8
+    },
+
+    {
+      text: "12. Ownership of Materials",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 5]
+    },
+    {
+      text:
+        "Contractor retains ownership of materials and Work until paid in full. Contractor has access rights to materials during this period.",
+      fontSize: 8
+    },
+
+    {
+      text: "13. Care of Property",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 5]
+    },
+    {
+      text:
+        "Contractor will safeguard Property and surrounding area. Site will be left clean prior to final payment.",
+      fontSize: 8
+    },
+
+    {
+      text: "14. Permits",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 10, 0, 5]
+    },
+    {
+      text:
+        "Contractor will obtain all required permits. Owner pays for permit fees and must cooperate in process.",
+      fontSize: 8
+    },
+
+    createFooter(finalPageNumber + 9)
+  ]
+});
+
+
+
+//Contract 6
+
+
 
 
 docDefinition.content.push({
@@ -2769,172 +2330,175 @@ docDefinition.content.push({
     ...createStandardHeader("Contract"),
 
     {
-      text: "8. Failure to Complete Work.",
+      text: "15. Notices",
       bold: true,
       fontSize: 10,
-      margin: [0, 40, 0, 3]
+      margin: [0, 30, 0, 5]
     },
     {
       text:
-        "The Contractor must properly and diligently complete the work provided for in this Contract. Otherwise, the Owner may notify the Contractor in writing that he must begin work within three days or the Owner will complete the work by other means. Any additional cost to complete this work will be charged to the Contractor.",
+        "All notices must be written and delivered personally or by email to addresses in this Contract or to the party’s attorney.",
       fontSize: 8
     },
 
     {
-      text: "9. Failure to Pay Contractor.",
+      text: "16. Parties Bound",
       bold: true,
       fontSize: 10,
-      margin: [0, 10, 0, 3]
+      margin: [0, 10, 0, 5]
     },
     {
-      text:
-        "The Contractor may stop work and terminate this Contract if the Owner fails to pay the Contractor any sum within 5 (“five”) days after the date fixed for payment. The Owner must then pay for all work which has been completed, together with the Contractor’s reasonable profits and damages.",
+      text: "This Contract binds both parties and their legal successors.",
       fontSize: 8
     },
 
     {
-      text: "10. Fire Insurance.",
+      text: "17. Retainage",
       bold: true,
       fontSize: 10,
-      margin: [0, 10, 0, 3]
+      margin: [0, 10, 0, 5]
     },
     {
       text:
-        "The Owner will adequately insure all buildings as well as any work and materials used in the buildings against fire. The policy will provide for extended coverage in the names of both the Owner and the Contractor.",
+        "5% of contract price may be retained for punch-out. Full trade payment due upon substantial completion.",
       fontSize: 8
     },
 
     {
-      text: "11. Ownership of Materials.",
+      text: "18. Payment to Subcontractors (\"Pay When Paid\" Clause)",
       bold: true,
       fontSize: 10,
-      margin: [0, 10, 0, 3]
+      margin: [0, 10, 0, 5]
     },
     {
       text:
-        "The Contractor will continue to own all materials delivered and work performed until paid for by the Owner. The Contractor will have access to these materials and work at all reasonable times.",
+        "Contractor will pay subcontractors within 30–45 days of invoice, even if Owner has not yet paid. This is subject to state law.",
       fontSize: 8
     },
 
     {
-      text: "12. Care of Property.",
+      text: "19. Termination for Convenience",
       bold: true,
       fontSize: 10,
-      margin: [0, 10, 0, 3]
+      margin: [0, 30, 0, 5]
     },
     {
       text:
-        "The Contractor will protect the work, materials, property and adjacent property from damage or loss. The Contractor will also take proper precautions for the safety of the public. The Property will be kept free of waste, rubbish and surplus materials. The Contractor will leave the Property “broom clean” before being entitled to the final payment under this Contract.",
+        "Owner may terminate this Contract at any time with written notice. Contractor will be paid for completed Work, materials, and reasonable demobilization — not lost profits.",
       fontSize: 8
     },
 
     {
-      text: "13. Permits.",
+      text: "20. Notice to Owner",
       bold: true,
       fontSize: 10,
-      margin: [0, 10, 0, 3]
+      margin: [0, 10, 0, 5]
     },
     {
       text:
-        "The Contractor will obtain all building permits or approvals as required by law. The Owner will pay for these permits or approvals and cooperate in obtaining them.",
+        "a. DO NOT SIGN THIS CONTRACT IF BLANK.\nb. YOU ARE ENTITLED TO A COPY OF THE CONTRACT AT THE TIME YOU SIGN.\nc. KEEP IT TO PROTECT YOUR LEGAL RIGHTS.\n\nDo not sign any completion certificate or agreement stating that you are satisfied with the entire project before it is complete.",
       fontSize: 8
     },
 
     {
-      text: "14. Notices.",
+      text: "21. Signatures",
       bold: true,
       fontSize: 10,
-      margin: [0, 10, 0, 3]
+      margin: [0, 10, 0, 5]
     },
     {
       text:
-        "All notices under this Contract must be in writing. The notices must be delivered personally or via electronic mail, to the other party at the address(es) provided in this Contract or to that party’s attorney.",
-      fontSize: 8
-    },
-
-    {
-      text: "15. Parties.",
-      bold: true,
-      fontSize: 10,
-      margin: [0, 10, 0, 3]
-    },
-    {
-      text:
-        "Both the Owner and the Contractor are bound by this Contract. All parties who lawfully succeed to their rights and responsibilities are also bound.",
-      fontSize: 8
-    },
-
-    {
-      text: "16. Retainage.",
-      bold: true,
-      fontSize: 10,
-      margin: [0, 10, 0, 3]
-    },
-    {
-      text:
-        "A maximum allowable retainage of 5% of original contract price shall be held for any punch-out items. Customer agrees to pay in full at completion of each trade.",
-      fontSize: 8
-    },
-
-    {
-      text: "17. NOTICE TO OWNER.",
-      bold: true,
-      fontSize: 10,
-      margin: [0, 10, 0, 3]
-    },
-    {
-      text:
-        "a. Do not sign this contract if blank.\nb. You are entitled to a copy of the contract at the time you sign.\nc. Keep it to protect your legal rights.\n\nDo not sign any completion certificate or agreement stating that you are satisfied with the entire project before this project is complete.",
-      fontSize: 8
-    },
-
-    {
-      text: "18. Signatures.",
-      bold: true,
-      fontSize: 10,
-      margin: [0, 10, 0, 3]
-    },
-    {
-      text:
-        "Both parties sign and agree to this Contract by electronic signature. The respective signatures will be recorded on the Authorization Page of this contract. THE OWNER ACKNOWLEDGES RECEIPT OF A COMPLETELY EXECUTED COPY WITHOUT CHARGE.",
+        "Both parties agree to this Contract via electronic signature on the Authorization Page. Owner acknowledges receipt of a fully executed copy.",
       fontSize: 8,
       margin: [0, 0, 0, 30]
     },
 
-    createFooter(finalPageNumber + 8)
+    createFooter(finalPageNumber + 12)
   ]
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // ================= CONTRACT - SIGNATURES + OPTIONS PAGE =================
 docDefinition.content.push({
   pageBreak: "before",
   stack: [
-    ...createStandardHeader("Contract"),
 
-    // Pricing Summary
+    // =================== NORMAL HEADER ===================
+    ...createStandardHeader("Signature Page"),
+
+    // =================== SIGNATURE BLOCK ===================
     {
       columns: [
         {
           width: "50%",
           stack: [
             {
-              text: "☑ Silicone Coating",
+              text: (formData.clientname ? formData.clientname + ":" : "______________:"),
+              bold: true,
               fontSize: 9,
-              margin: [0, 10, 0, 2]
+              margin: [0, 0, 0, 3]
             },
             {
-              text: "$85,446.00",
-              fontSize: 9
+              canvas: [
+                { type: 'line', x1: 0, y1: 0, x2: 240, y2: 0, lineWidth: 1 }
+              ],
+              margin: [0, 0, 0, 5]
             },
             {
-              text: "☑ Roof Overlay & TPO System",
+              text: "~SIGN_HERE_CLIENT~",  // 🔥 DOCUSIGN ANCHOR
+              fontSize: 6,
+              color: "#ffffff",
+              margin: [0, 0, 0, 10]
+            },
+            {
+              text: (formData.inspectorName ? formData.inspectorName + ":" : "______________:"),
+              bold: true,
               fontSize: 9,
-              margin: [0, 10, 0, 2]
+              margin: [0, 10, 0, 3]
             },
             {
-              text: "$164,002.23",
-              fontSize: 9
+              canvas: [
+                { type: 'line', x1: 0, y1: 0, x2: 240, y2: 0, lineWidth: 1 }
+              ],
+              margin: [0, 0, 0, 5]
+            },
+            {
+              text: "~SIGN_HERE_INSPECTOR~",  // 🔥 DOCUSIGN ANCHOR
+              fontSize: 6,
+              color: "#ffffff",
+              margin: [0, 0, 0, 10]
             }
           ]
         },
@@ -2942,139 +2506,49 @@ docDefinition.content.push({
           width: "50%",
           stack: [
             {
-              text: "Project: 3272541976",
+              text: "Date:",
+              bold: true,
               fontSize: 9,
-              alignment: "right"
+              margin: [0, 0, 0, 3]
             },
             {
-              text: "Name: Matt Moeller",
+              canvas: [
+                { type: 'line', x1: 0, y1: 0, x2: 240, y2: 0, lineWidth: 1 }
+              ],
+              margin: [0, 0, 0, 5]
+            },
+            {
+              text: "~DATE_SIGNED_CLIENT~",  // 🔥 DATE ANCHOR
+              fontSize: 6,
+              color: "#ffffff",
+              margin: [0, 0, 0, 10]
+            },
+            {
+              text: "Date:",
+              bold: true,
               fontSize: 9,
-              alignment: "right"
+              margin: [0, 10, 0, 3]
             },
             {
-              text: "Address: 1610 Main Street, Crete, IL",
-              fontSize: 9,
-              alignment: "right"
-            }
-          ]
-        }
-      ]
-    },
-
-    // Disclaimer
-    {
-      text: "Estimates valid for 20 days from date of estimate / A 33% deposit is required before any material is ordered",
-      fontSize: 8,
-      bold: true,
-      margin: [0, 10, 0, 10]
-    },
-
-       // Optional Upgrades
-    {
-      text: "Optional Upgrades",
-      bold: true,
-      fontSize: 12,
-      margin: [0, 10, 0, 5]
-    },
-    {
-      table: {
-        headerRows: 1,
-        widths: ["*", "auto", "auto", "auto"],
-        body: [
-          [
-            { text: "Description", bold: true, fontSize: 9 },
-            { text: "Qty", bold: true, fontSize: 9 },
-            { text: "Unit price", bold: true, fontSize: 9 },
-            { text: "Line total", bold: true, fontSize: 9 }
-          ],
-          [
-            {
-              stack: [
-                { text: "☐ Once a year annual Inspection (beginning Spring 2026)", margin: [2, 0, 0, 0] }
-              ]
+              canvas: [
+                { type: 'line', x1: 0, y1: 0, x2: 240, y2: 0, lineWidth: 1 }
+              ],
+              margin: [0, 0, 0, 5]
             },
-            { text: "10", alignment: "center" },
-            "",
-            ""
-          ],
-          [
             {
-              stack: [
-                { text: "☐ $10,000.00 discount to the school for the “Silicone” project which has already been applied.", margin: [2, 0, 0, 0] }
-              ]
-            },
-            "",
-            "",
-            ""
-          ],
-          [
-            {
-              stack: [
-                { text: "☐ Fix the area above gymnasium sign:", margin: [2, 0, 0, 0] },
-                { text: "prep the damaged area and we will silicone coat the panels (per the scope) in white", fontSize: 8, margin: [12, 2, 0, 0] }
-              ]
-            },
-            "1",
-            "",
-            ""
-          ]
-        ]
-      },
-      fontSize: 8,
-      layout: "lightHorizontalLines",
-      margin: [0, 0, 0, 10]
-    },
-
-
-    // Customer Comments and Product Selections
-    {
-      columns: [
-        {
-          width: "60%",
-          stack: [
-            { text: "Customer Comments / Notes", bold: true, fontSize: 9, margin: [0, 5, 0, 3] },
-            {
-              canvas: [{ type: 'rect', x: 0, y: 0, w: 350, h: 70, r: 0, lineColor: '#999' }]
+              text: "~DATE_SIGNED_INSPECTOR~",  // 🔥 DATE ANCHOR
+              fontSize: 6,
+              color: "#ffffff",
+              margin: [0, 0, 0, 10]
             }
           ]
         }
       ],
-      columnGap: 20,
-      margin: [0, 10, 0, 15]
+      columnGap: 40,
+      margin: [0, 80, 0, 40]
     },
 
-    // Signature lines
-    {
-      columns: [
-        {
-          width: "50%",
-          stack: [
-            { text: "Matt Moeller:", margin: [0, 10, 0, 5] },
-            { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 200, y2: 0, lineWidth: 1 }] },
-            { text: "Date:", margin: [0, 10, 0, 5] },
-            { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 200, y2: 0, lineWidth: 1 }] }
-          ]
-        },
-        {
-          width: "50%",
-          stack: [
-            { text: "Michael DeGregorio:", margin: [0, 10, 0, 5] },
-            { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 200, y2: 0, lineWidth: 1 }] },
-            { text: "Date:", margin: [0, 10, 0, 5] },
-            { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 200, y2: 0, lineWidth: 1 }] }
-          ]
-        }
-      ]
-    },
-
-    // Footer text
-    {
-      text:
-        "By signing this form I agree to and confirm the following: I certify that I am the registered owner of the above project property, or have the legal permission to authorize the work as stated. I agree to pay the total project price and understand that this work will be completed in accordance with industry best practices.",
-      fontSize: 7,
-      margin: [0, 20, 0, 25]
-    },
-
+    // =================== NORMAL FOOTER ===================
     createFooter(finalPageNumber + 1)
   ]
 });
@@ -3579,7 +3053,7 @@ docDefinition.content.push({
 docDefinition.content.push({
   pageBreak: "before",
   stack: [
-    ...createStandardHeader("Annual Inspection"),
+    ...createStandardHeader("Service and Maintenance"),
 
 
     {

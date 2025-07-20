@@ -14,6 +14,11 @@ import { fetchImageAsBase64 } from "../utils/pdfGenerator"; // make sure this is
 import { ImageEditorPopup } from "./ImageEditorPopup"; // adjust the path if needed
 import { useAuth } from "../../hooks/useAuth";
 import { doc, getDoc, deleteDoc } from "firebase/firestore";
+import ScopeOfWorkSelector from "./ScopeDropdown";
+import ScopeDropdown from './ScopeDropdown';
+import PhotoDescriptionDropdown from "./PhotoDescriptionDropdown";
+
+
 
 
 
@@ -125,6 +130,17 @@ const convertToBase64 = (file: File): Promise<string> =>
   
 
   const InspectionForm: React.FC<InspectionFormProps> = ({ onSubmit }) => {
+
+const [selectedScope, setSelectedScope] = useState("");
+const [editableScopeText, setEditableScopeText] = useState("");
+
+
+
+
+
+
+
+    
     const location = useLocation();
     const { user } = useAuth();
     const handleClearInspection = async () => {
@@ -178,7 +194,7 @@ const convertToBase64 = (file: File): Promise<string> =>
     // State to store form data
     const [formData, setFormData] = useState({
 
-      
+      selectedScopeText: "",
 
       
         // Property Details
@@ -372,6 +388,9 @@ additionalPDFs: [],
 
     const [spreadsheetUploaded, setSpreadsheetUploaded] = useState(false);
 
+    
+const [configMenuOpen, setConfigMenuOpen] = useState(false);
+
     const [spreadsheetUrl, setSpreadsheetUrl] = useState<string | null>(null);
 
     const [editorOpen, setEditorOpen] = useState(false);
@@ -379,6 +398,9 @@ const [editorImage, setEditorImage] = useState(null);
 const [editorIndex, setEditorIndex] = useState<number | null>(null);
 const [editorType, setEditorType] = useState<'images' | 'overviewImages' | 'droneImages' | null>(null);
 const [initialLoadComplete, setInitialLoadComplete] = useState(false);
+
+
+
 
 
 
@@ -1039,6 +1061,96 @@ try {
   Clear Inspection
 </button>
 
+<div className="bg-white border shadow-md rounded-lg mb-10">
+  <button
+    type="button"
+    onClick={() => setConfigMenuOpen(prev => !prev)}
+    className="w-full flex justify-between items-center px-6 py-4 text-left text-2xl font-bold hover:bg-gray-50"
+  >
+    Report Configuration
+    <span className="text-xl">{configMenuOpen ? "▲" : "▼"}</span>
+  </button>
+
+  {configMenuOpen && (
+    <div className="px-6 pb-6 pt-2">
+      {/* === Color Scheme === */}
+      <div className="flex flex-wrap gap-8 mb-6">
+        <div>
+          <label className="block font-medium mb-1">Primary Color</label>
+          <input
+            type="color"
+            className="w-12 h-8 border rounded"
+            defaultValue="#1e40af"
+            disabled
+          />
+        </div>
+        <div>
+          <label className="block font-medium mb-1">Accent Color</label>
+          <input
+            type="color"
+            className="w-12 h-8 border rounded"
+            defaultValue="#facc15"
+            disabled
+          />
+        </div>
+      </div>
+
+      {/* === Branding Image Upload === */}
+      <div className="mb-8">
+        <label className="block font-medium mb-2">Top Logo (Branding)</label>
+        <input
+          type="file"
+          accept="image/*"
+          className="mb-2"
+          disabled
+        />
+        <div className="text-sm text-gray-500">Upload your company’s logo. (Disabled for now)</div>
+      </div>
+
+      {/* === Page Toggles & Edit Buttons === */}
+      <div className="space-y-4">
+        {[
+          "Cover Page",
+          "Table of Contents",
+          "Scope of Work",
+          "Pricing Summary",
+          "Drone Overview Photos",
+          "General Overview Photos",
+          "Defect Photos",
+          "Roof Section Summary",
+          "Labor Warranty",
+          "Contract Page",
+          "Additional Terms"
+        ].map((pageName, index) => (
+          <div key={index} className="flex justify-between items-center border-b pb-2">
+            <span className="font-medium">{pageName}</span>
+            <div className="flex items-center gap-4">
+              <button
+                className="bg-gray-100 text-sm px-3 py-1 rounded hover:bg-gray-200"
+                disabled
+              >
+                Edit
+              </button>
+              <label className="inline-flex items-center cursor-pointer">
+                <input type="checkbox" className="sr-only peer" disabled />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:bg-blue-600 relative">
+                  <span className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition peer-checked:translate-x-5" />
+                </div>
+              </label>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+</div>
+
+
+
+
+
+
+
 
 
 
@@ -1078,26 +1190,41 @@ try {
           />
 
           <div className="mt-2 space-y-1">
-            <textarea
-  placeholder="Describe this image..."
-  value={image.note || ""}
-  onChange={(e) => {
-    const imgs = [...formData.images];
-    imgs[index].note = e.target.value;
-    setFormData({ ...formData, images: imgs });
-  }}
-  className="w-full border p-2 rounded"
-/>
-<p className="text-xs text-gray-500 mt-1">
-  {getWordCount(image.note || "")} / 100 words
-</p>
-<button
-  type="button"
-  onClick={() => openImageEditor(index, "images")}
-  className="mt-2 text-blue-600 underline"
->
-  Annotate
-</button>
+           <div className="mt-2 space-y-2">
+  <PhotoDescriptionDropdown
+    label="Describe this Photo:"
+    options={[
+      "Ponding", "Alligatoring", "Failed Installation", "Failed Repair",
+      "Seams are deteriorated", "Wires are not secure", "Leak Point", "Potential Leak Point",
+      "Debris", "Area of Inspections", "Seams are stretching", "Exposed Area (Hole)",
+      "No slip sheet", "Clogged Drain", "The membrane has exceeded its useful life",
+      "Cracked Membrane", "Wall Detached", "Wrinkled Membrane", "Core", "Repaired Core", "Damaged Unit"
+    ]}
+    selected={image.selectedDescriptions || []}
+    onChange={(newDescriptions) => {
+      const imgs = [...formData.images];
+      imgs[index] = {
+        ...imgs[index],
+        selectedDescriptions: newDescriptions,
+        note: newDescriptions.map(option => `• ${option}`).join("\n") // this fills the final PDF note
+      };
+      setFormData({ ...formData, images: imgs });
+    }}
+  />
+
+  <p className="text-xs text-gray-500">
+    {getWordCount(image.note || "")} / 100 words
+  </p>
+  <button
+    type="button"
+    onClick={() => openImageEditor(index, "images")}
+    className="text-blue-600 underline"
+  >
+    Annotate
+  </button>
+</div>
+
+
 
           </div>
 
@@ -1148,16 +1275,29 @@ try {
           />
 
           <div className="mt-2 space-y-1">
-            <textarea
-              placeholder="Describe this image..."
-              value={image.note || ""}
-              onChange={(e) => {
-                const imgs = [...formData.overviewImages];
-                imgs[index].note = e.target.value;
-                setFormData({ ...formData, overviewImages: imgs });
-              }}
-              className="w-full border p-2 rounded"
-            />
+            <PhotoDescriptionDropdown
+    label="Describe this Photo:"
+    options={[
+      "Ponding", "Alligatoring", "Failed Installation", "Failed Repair",
+      "Seams are deteriorated", "Wires are not secure", "Leak Point", "Potential Leak Point",
+      "Debris", "Area of Inspections", "Seams are stretching", "Exposed Area (Hole)",
+      "No slip sheet", "Clogged Drain", "The membrane has exceeded its useful life",
+      "Cracked Membrane", "Wall Detached", "Wrinkled Membrane", "Core", "Repaired Core", "Damaged Unit"
+    ]}
+    selected={image.selectedDescriptions || []}
+    onChange={(newDescriptions) => {
+      const imgs = [...formData.overviewImages]; // ✅ RIGHT
+
+      imgs[index] = {
+        ...imgs[index],
+        selectedDescriptions: newDescriptions,
+        note: newDescriptions.map(option => `• ${option}`).join("\n") // this fills the final PDF note
+      };
+      setFormData({ ...formData, overviewImages: imgs });
+
+    }}
+  />
+
             <p className="text-xs text-gray-500 mt-1">
               {getWordCount(image.note || "")} / 100 words
             </p>
@@ -1224,16 +1364,28 @@ try {
           />
 
           <div className="mt-2 space-y-1">
-            <textarea
-              placeholder="Describe this image..."
-              value={image.note || ""}
-              onChange={(e) => {
-                const imgs = [...formData.droneImages];
-                imgs[index].note = e.target.value;
-                setFormData({ ...formData, droneImages: imgs });
-              }}
-              className="w-full border p-2 rounded"
-            />
+             <PhotoDescriptionDropdown
+    label="Describe this Photo:"
+    options={[
+      "Ponding", "Alligatoring", "Failed Installation", "Failed Repair",
+      "Seams are deteriorated", "Wires are not secure", "Leak Point", "Potential Leak Point",
+      "Debris", "Area of Inspections", "Seams are stretching", "Exposed Area (Hole)",
+      "No slip sheet", "Clogged Drain", "The membrane has exceeded its useful life",
+      "Cracked Membrane", "Wall Detached", "Wrinkled Membrane", "Core", "Repaired Core", "Damaged Unit"
+    ]}
+    selected={image.selectedDescriptions || []}
+    onChange={(newDescriptions) => {
+      const imgs = [...formData.droneImages]; // ✅ RIGHT
+
+      imgs[index] = {
+        ...imgs[index],
+        selectedDescriptions: newDescriptions,
+        note: newDescriptions.map(option => `• ${option}`).join("\n") // this fills the final PDF note
+      };
+      setFormData({ ...formData, droneImages: imgs });
+
+    }}
+  />
             <p className="text-xs text-gray-500 mt-1">
               {getWordCount(image.note || "")} / 100 words
             </p>
@@ -1574,13 +1726,14 @@ try {
 
 <h3 className="text-lg font-bold mt-6">Scope of Work</h3>
 
-<label className="block mt-2">Summary of the overall condition across all roof sections</label>
-<textarea
-  name="overallConditionSummary"
-  value={formData.overallConditionSummary}
-  onChange={handleChange}
-  className="w-full border p-2 rounded"
+
+<ScopeDropdown
+  selectedScopeText={formData.selectedScopeText}
+  setSelectedScopeText={(text) =>
+    setFormData({ ...formData, selectedScopeText: text })
+  }
 />
+
 
 
 
