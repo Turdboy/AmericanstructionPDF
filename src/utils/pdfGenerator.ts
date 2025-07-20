@@ -43,6 +43,14 @@ const chunkImages = (images, size = 2) => {
   return chunks;
 };
 
+const colorTheme = {
+  primary: "#2e3192",  // Blue background
+  accent: "red",       // Red lines
+  text: "white",       // White text (for headers/footer)
+  neutral: "#000000"   // Black lines, if needed
+};
+
+
 
 const truncateText = (text = "", maxChars = 500) => {
   if (typeof text !== "string") return "";
@@ -178,28 +186,30 @@ const createStandardHeader = (titleText = "") => ([
 ]);
 
 
-const createFooter = (pageNumber) => [
-  {
-    canvas: [
-      { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
-      { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
-    ],
-    absolutePosition: { x: 0, y: 755 }
-  },
-  {
-    columns: [
-      { text: "", width: "*" },
-      {
-        text: "Page " + pageNumber,
-        fontSize: 10,
-        alignment: "right",
-        margin: [0, 10, 40, 0],
-        color: "white"
-      }
-    ],
-    absolutePosition: { x: 0, y: 760 }
-  }
-];
+const createFooter = (pageNumber) => {
+  return [
+    {
+      canvas: [
+        { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
+        { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
+      ],
+      absolutePosition: { x: 0, y: 755 }
+    },
+    {
+      columns: [
+        { text: "", width: "*" },
+        {
+          text: `Page ${pageNumber}`,
+          fontSize: 10,
+          alignment: "right",
+          margin: [0, 10, 40, 0],
+          color: "white"
+        }
+      ],
+      absolutePosition: { x: 0, y: 760 }
+    }
+  ];
+};
 
 
 
@@ -264,7 +274,8 @@ export const generatePDF = (formData) => {
     const imagePages = chunkImages(formData.images || []);
     const overviewPages = chunkImages(formData.overviewImages || []);
     const droneImages = chunkImages(formData.droneImages || []);
-    const basePageOffset = 6 + imagePages.length + overviewPages.length + droneImages.length + 2;
+
+
 
 
 
@@ -353,26 +364,8 @@ const createSectionPageOne = (sectionNumber, sectionData = {}, pageNumber) => ({
       margin: [0, 0, 0, 2]
     })),
 
-    {
-  canvas: [
-    { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
-    { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
-  ],
-  absolutePosition: { x: 0, y: 755 }
-},
-{
-  columns: [
-    { text: "", width: "*" },
-    {
-      text: "Page " + pageNumber,
-      fontSize: 10,
-      alignment: "right",
-      margin: [0, 10, 40, 0],
-      color: "white"
-    }
-  ],
-  absolutePosition: { x: 0, y: 760 }
-}
+...createFooter(pageNumber)
+
 
   ]
 });
@@ -471,26 +464,7 @@ const createSectionPageTwo = (sectionNumber, sectionData = {}, pageNumber) => ({
       margin: [0, 0, 0, 10]
     },
 
-{
-  canvas: [
-    { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
-    { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
-  ],
-  absolutePosition: { x: 0, y: 755 }
-},
-{
-  columns: [
-    { text: "", width: "*" },
-    {
-      text: "Page " + pageNumber,
-      fontSize: 10,
-      alignment: "right",
-      margin: [0, 10, 40, 0],
-      color: "white"
-    }
-  ],
-  absolutePosition: { x: 0, y: 760 }
-}
+...createFooter(pageNumber)
 
   ]
 });
@@ -533,6 +507,10 @@ const roofSections = Array.isArray(formData.roofSections) ? formData.roofSection
 
 
     const docDefinition = {
+      footer: function(currentPage, pageCount) {
+  return createFooter(currentPage);
+},
+
         content: [
 
             // =================== Cover Page Header ===================
@@ -743,12 +721,13 @@ const roofSections = Array.isArray(formData.roofSections) ? formData.roofSection
     stack: [
       
 
-      { text: "Roofing License #104.018983", fontSize: 15 },
+
 
       { text: "Thank you for choosing Americanstruction", fontSize: 20, italics: true, bold: true, margin: [0, 2, 0, 0] }
     ],
     margin: [10, 60, 0, 0]
   },  
+  ...createFooter(1),
 
   
   // Add this to your PDF content array where you want the Pricing Notice to appear
@@ -863,31 +842,7 @@ const roofSections = Array.isArray(formData.roofSections) ? formData.roofSection
         ]
       },
   
-      // Footer
-      {
-        stack: [
-          {
-            canvas: [
-              { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
-              { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
-            ],
-            absolutePosition: { x: 0, y: 755 }
-          },
-          {
-            columns: [
-              { text: "", width: "*" },
-              {
-                text: "Page 2",
-                fontSize: 10,
-                alignment: "right",
-                margin: [0, 10, 40, 0],
-                color: "white"
-              }
-            ],
-            absolutePosition: { x: 0, y: 760 }
-          }
-        ]
-      }
+        ...createFooter(2),
     ],
     margin: [0, 30, 0, 0]
   },
@@ -1057,45 +1012,7 @@ const roofSections = Array.isArray(formData.roofSections) ? formData.roofSection
                       
                     },
 
-                    // FOOTER CODE 
-                    {
-                      stack: [
-                        {
-                          canvas: [
-                            {
-                              type: "rect",
-                              x: 0,
-                              y: 0,
-                              w: 595,
-                              h: 5,
-                              color: "red"
-                            },
-                            {
-                              type: "rect",
-                              x: 0,
-                              y: 5,
-                              w: 595,
-                              h: 65,
-                              color: "#2e3192"
-                            }
-                          ],
-                          absolutePosition: { x: 0, y: 755 }
-                        },
-                        {
-                          columns: [
-                            { text: "", width: "*" },
-                            {
-                              text: "Page 4",
-                              fontSize: 10,
-                              alignment: "right",
-                              margin: [0, 10, 40, 0],
-                              color: "white"
-                            }
-                          ],
-                          absolutePosition: { x: 0, y: 760 }
-                        }
-                      ]
-                    }
+                   ...createFooter(3),
                     
                     
                     
@@ -1117,7 +1034,7 @@ const roofSections = Array.isArray(formData.roofSections) ? formData.roofSection
             
             
             
-             // =================== Page 5 ===================
+             // =================== Page 4 ===================
 
 {
   pageBreak: "before",
@@ -1201,45 +1118,7 @@ margin: [0, 0, 0, 10]
       layout: 'noBorders'
     },
 
-    // === Red/Blue Footer ===
-    {
-      stack: [
-        {
-          canvas: [
-            {
-              type: "rect",
-              x: 0,
-              y: 0,
-              w: 595,
-              h: 5,
-              color: "red"
-            },
-            {
-              type: "rect",
-              x: 0,
-              y: 5,
-              w: 595,
-              h: 65,
-              color: "#2e3192"
-            }
-          ],
-          absolutePosition: { x: 0, y: 755 }
-        },
-        {
-          columns: [
-            { text: "", width: "*" },
-            {
-              text: "Page 5",
-              fontSize: 10,
-              alignment: "right",
-              margin: [0, 10, 40, 0],
-              color: "white"
-            }
-          ],
-          absolutePosition: { x: 0, y: 760 }
-        }
-      ]
-    }
+    ...createFooter(4),
   ]
 },
 {
@@ -1291,42 +1170,51 @@ margin: [0, 0, 0, 10]
 
 
 
-
-
 //============= Loop for roof sections !!!!!!
 
 
 
 
+const basePageOffset = 4; // 4 static + 1 roof summary
+const roofSectionPages = roofSections.length * 2;
 
+const overviewBaseOffset = basePageOffset + roofSectionPages;
+const droneBaseOffset = overviewBaseOffset + overviewPages.length;
+const defectBaseOffset = droneBaseOffset + droneImages.length;
 
 roofSections.forEach((section, index) => {
-  try {
-    if (!section) throw new Error("Missing section");
 
-    const pageStart = basePageOffset + index * 2;
 
-    const pages = [
-      createSectionPageOne(index + 1, section, pageStart + 1),
-      createSectionPageTwo(index + 1, section, pageStart + 2),
-    ];
 
-    docDefinition.content.push(...pages);
-  } catch (err) {
-    console.error(`Error creating roof section ${index + 1}:`, err);
-  }
+
+
+
+
+  
+  const pageStart = basePageOffset + index * 2;
+
+  const pages = [
+    createSectionPageOne(index + 1, section, pageStart + 1),
+    createSectionPageTwo(index + 1, section, pageStart + 2),
+  ];
+
+  docDefinition.content.push(...pages);
 });
 
 
 
-const finalPageNumber =
-  6 + // first 6 pages before images
-  imagePages.length +
-  overviewPages.length +
-  droneImages.length +
-  1 + // roof condition summary overview
-  roofSections.length * 6 +
-  1; // final pricing page itself
+
+
+
+
+
+
+
+
+
+
+
+const finalPageNumber = defectBaseOffset + imagePages.length ; // +1 for final pricing or contract page
 
 
  
@@ -1462,31 +1350,8 @@ overviewPages.forEach((pair, index) => {
           }
         ]
       },
-      // Footer
-      {
-        stack: [
-          {
-            canvas: [
-              { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
-              { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
-            ],
-            absolutePosition: { x: 0, y: 755 }
-          },
-          {
-            columns: [
-              { text: "", width: "*" },
-              {
-                text: "Page " + (6 + index),
-                fontSize: 10,
-                alignment: "right",
-                margin: [0, 10, 40, 0],
-                color: "white"
-              }
-            ],
-            absolutePosition: { x: 0, y: 760 }
-          }
-        ]
-      }
+     createFooter(overviewBaseOffset + index+1)
+
     ]
   });
 
@@ -1620,31 +1485,7 @@ droneImages.forEach((pair, index) => {
           ]
         },
 
-        // Footer with page number adjusted
-        {
-          stack: [
-            {
-              canvas: [
-                { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
-                { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
-              ],
-              absolutePosition: { x: 0, y: 755 }
-            },
-            {
-              columns: [
-                { text: "", width: "*" },
-                {
-                  text: "Page " + (6 + overviewPages.length + index),
-                  fontSize: 10,
-                  alignment: "right",
-                  margin: [0, 10, 40, 0],
-                  color: "white"
-                }
-              ],
-              absolutePosition: { x: 0, y: 760 }
-            }
-          ]
-        }
+        createFooter(droneBaseOffset + index+1)
       ]
     });
   } catch (err) {
@@ -1781,32 +1622,8 @@ margin: [0, 0, 0, 8]
         ]
       },
 
-      // Footer
-      {
-        stack: [
-          {
-            canvas: [
-              { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
-              { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
-            ],
-            absolutePosition: { x: 0, y: 755 }
-          },
-          {
-            columns: [
-              { text: "", width: "*" },
-              {
-                text: "Page " + (6 + + overviewPages.length + droneImages.length
-                  + index),
-                fontSize: 10,
-                alignment: "right",
-                margin: [0, 10, 40, 0],
-                color: "white"
-              }
-            ],
-            absolutePosition: { x: 0, y: 760 }
-          }
-        ]
-      }
+      createFooter(defectBaseOffset + index +1)
+
     ]
   });
 
@@ -1833,40 +1650,6 @@ margin: [0, 0, 0, 8]
 
 
 
-
-// === Scope of Work Page ===
-docDefinition.content.push({
-  pageBreak: "before",
-  stack: [
-    ...createStandardHeader("Scope of Work Summary"),
-    {
-      text: formData.selectedScopeText || "No scope selected.",
-      fontSize: 10,
-      margin: [0, 40, 0, 0]
-    },
-    // Footer
-    {
-      canvas: [
-        { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
-        { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
-      ],
-      absolutePosition: { x: 0, y: 755 }
-    },
-    {
-      columns: [
-        { text: "", width: "*" },
-        {
-          text: "Page " + (finalPageNumber + 1),
-          fontSize: 10,
-          alignment: "right",
-          margin: [0, 10, 40, 0],
-          color: "white"
-        }
-      ],
-      absolutePosition: { x: 0, y: 760 }
-    }
-  ]
-});
 
 
 
@@ -1905,27 +1688,8 @@ docDefinition.content.push({
       margin: [0, 0, 0, 30]
     },
 
-    // 🟥⬛ Matching Americanstruction Footer (like Final Pricing Page)
-    {
-      canvas: [
-        { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
-        { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
-      ],
-      absolutePosition: { x: 0, y: 755 }
-    },
-    {
-      columns: [
-        { text: "", width: "*" },
-        {
-          text: "Page " + (finalPageNumber + 1), // ✅ carry from previous page count
-          fontSize: 10,
-          alignment: "right",
-          margin: [0, 10, 40, 0],
-          color: "white"
-        }
-      ],
-      absolutePosition: { x: 0, y: 760 }
-    }
+...createFooter(finalPageNumber + 1)
+
   ]
 });
 
@@ -1959,26 +1723,7 @@ docDefinition.content.push({
     },
 
     // Footer
-    {
-      canvas: [
-        { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
-        { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
-      ],
-      absolutePosition: { x: 0, y: 755 }
-    },
-    {
-      columns: [
-        { text: "", width: "*" },
-        {
-          text: "Page " + (finalPageNumber + 1),
-          fontSize: 10,
-          alignment: "right",
-          margin: [0, 10, 40, 0],
-          color: "white"
-        }
-      ],
-      absolutePosition: { x: 0, y: 760 }
-    }
+   ...createFooter(finalPageNumber + 2)
   ]
 });
 
@@ -2033,28 +1778,7 @@ docDefinition.content.push({
       margin: [0, 0, 0, 30]
     },
 
-    // Footer
-    {
-      canvas: [
-        { type: "rect", x: 0, y: 0, w: 595, h: 5, color: "red" },
-        { type: "rect", x: 0, y: 5, w: 595, h: 65, color: "#2e3192" }
-      ],
-      absolutePosition: { x: 0, y: 755 }
-    },
-    {
-      columns: [
-        { text: "", width: "*" },
-        {
-          text: "Page " + finalPageNumber,
-
-          fontSize: 10,
-          alignment: "right",
-          margin: [0, 10, 40, 0],
-          color: "white"
-        }
-      ],
-      absolutePosition: { x: 0, y: 760 }
-    }
+...createFooter(finalPageNumber + 3)
   ]
 });
 
@@ -2153,7 +1877,7 @@ docDefinition.content.push({
       fontSize: 8
     },
 
-    createFooter(finalPageNumber + 7)
+   ...createFooter(finalPageNumber + 4)
   ]
 });
 
@@ -2313,7 +2037,7 @@ docDefinition.content.push({
       fontSize: 8
     },
 
-    createFooter(finalPageNumber + 9)
+    ...createFooter(finalPageNumber + 5)
   ]
 });
 
@@ -2413,7 +2137,7 @@ docDefinition.content.push({
       margin: [0, 0, 0, 30]
     },
 
-    createFooter(finalPageNumber + 12)
+    createFooter(finalPageNumber + 6)
   ]
 });
 
@@ -2549,7 +2273,7 @@ docDefinition.content.push({
     },
 
     // =================== NORMAL FOOTER ===================
-    createFooter(finalPageNumber + 1)
+    createFooter(finalPageNumber + 7)
   ]
 });
 
@@ -2640,7 +2364,7 @@ docDefinition.content.push({
       margin: [0, 0, 0, 25]
     },
 
-    createFooter(finalPageNumber + 2)
+    createFooter(finalPageNumber + 8)
   ]
 });
 
@@ -2744,7 +2468,7 @@ docDefinition.content.push({
       margin: [0, 0, 0, 30]
     },
 
-    createFooter(finalPageNumber + 2)
+    createFooter(finalPageNumber + 9)
   ]
 });
 
@@ -2833,7 +2557,7 @@ docDefinition.content.push({
       margin: [0, 0, 0, 8]
     },
 
-    createFooter(finalPageNumber + 4)
+    createFooter(finalPageNumber + 10)
   ]
 });
 
@@ -2908,7 +2632,7 @@ docDefinition.content.push({
       margin: [0, 0, 0, 30]
     },
 
-    createFooter(finalPageNumber + 5)
+    createFooter(finalPageNumber + 11)
   ]
 });
 
@@ -2979,7 +2703,7 @@ docDefinition.content.push({
   margin: [0, 0, 0, 20]
 },
 
-    createFooter(finalPageNumber + 6)
+    createFooter(finalPageNumber + 12)
   ]
 });
 
@@ -3044,7 +2768,7 @@ docDefinition.content.push({
       margin: [0, 0, 0, 20]
     },
 
-    createFooter(finalPageNumber + 7)
+    createFooter(finalPageNumber + 13)
   ]
 });
 
@@ -3093,7 +2817,7 @@ docDefinition.content.push({
       margin: [0, 0, 0, 20]
     },
 
-    createFooter(finalPageNumber + 1)
+    createFooter(finalPageNumber + 14)
   ]
 });
 
