@@ -1,0 +1,65 @@
+name: Build & Distribute iOS to TestFlight
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  ios:
+    runs-on: macos-latest
+    env:
+      TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+      ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build web assets
+      run: npm run build
+
+    - name: Copy assets into iOS
+      run: npx cap copy ios
+
+    - name: Install CocoaPods
+      working-directory: ios/App
+      run: pod install
+
+    - name: Archive iOS app
+      working-directory: ios/App
+      run: |
+        xcodebuild archive \
+          -workspace App.xcworkspace \
+          -scheme App \
+          -configuration Release \
+          -archivePath $PWD/build/App.xcarchive \
+          DEVELOPMENT_TEAM=$TEAM_ID \
+          -allowProvisioningUpdates
+
+    - name: Export .ipa
+      working-directory: ios/App
+      run: |
+        xcodebuild -exportArchive \
+          -archivePath build/App.xcarchive \
+          -exportOptionsPlist ExportOptions.plist \
+          -exportPath build
+
+    - name: Upload to TestFlight
+      uses: apple-actions/app-store-release@v1
+      with:
+        api-key-id: ${{ env.KEY_ID }}
+        api-issuer-id: ${{ env.ISSUER_ID }}
+        api-private-key: ${{ secrets.APP_STORE_CONNECT_KEY }}
+        ipa-path: ios/App/build/App.ipa
+        app-version: '1.0.0'
+        app-bundle-id: com.yourcompany.roofxapp
+

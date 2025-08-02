@@ -1,0 +1,51 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { VpaiLogo } from "./images";
+
+const LandingPageMobile = () => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="sm:hidden bg-black text-white flex flex-col items-center text-center p-6">
+      <img src={VpaiLogo} alt="VPAI Logo" className="w-32 h-32 mb-4" />
+      <h1 className="text-xl font-bold mb-2">
+        Win More Contracts <br /> with <span className="text-purple-400">VPAI</span>
+      </h1>
+      <p className="text-gray-400 text-sm max-w-xs mb-4">
+        AI-crafted, competitive bids designed to outshine competitors and win you more contracts.
+      </p>
+
+      {/* Demo Button */}
+      <button
+        onClick={() => navigate("/survey-proposal")}
+        className="bg-purple-600 hover:bg-purple-700 transition text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md mb-4"
+      >
+        Demo our Tech
+      </button>
+
+      {/* Extra Buttons */}
+      <div className="flex flex-col space-y-2 w-full max-w-xs">
+        <button
+          onClick={() => navigate("/revisit")}
+          className="bg-gray-700 hover:bg-gray-800 transition text-white text-sm font-semibold py-2 px-4 rounded-lg shadow"
+        >
+          Revisit Inspections
+        </button>
+        <button
+          onClick={() => navigate("/inspection")}
+          className="bg-gray-700 hover:bg-gray-800 transition text-white text-sm font-semibold py-2 px-4 rounded-lg shadow"
+        >
+          Start Inspection
+        </button>
+        <button
+          onClick={() => navigate("/account")}
+          className="bg-gray-700 hover:bg-gray-800 transition text-white text-sm font-semibold py-2 px-4 rounded-lg shadow"
+        >
+          Account
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default LandingPageMobile;
