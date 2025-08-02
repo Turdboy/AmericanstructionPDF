@@ -77,6 +77,10 @@ const cleanedInspection = deepClean({
   ...(inspection.clientSignature !== undefined && { clientSignature: inspection.clientSignature }),
   ...(inspection.clientInitials !== undefined && { clientInitials: inspection.clientInitials }),
 
+  ...(inspection.clientSignedDate !== undefined && { clientSignedDate: inspection.clientSignedDate }),
+...(inspection.inspectorSignedDate !== undefined && { inspectorSignedDate: inspection.inspectorSignedDate }),
+
+
   userId: user.uid,
   saveType: "auto",
 });

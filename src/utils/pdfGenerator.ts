@@ -2279,12 +2279,16 @@ docDefinition.content.push({
               ],
               margin: [0, 0, 0, 5]
             },
-            {
-              text: "~DATE_SIGNED_CLIENT~",  // 🔥 DATE ANCHOR
-              fontSize: 6,
-              color: "#ffffff",
-              margin: [0, 0, 0, 10]
-            },
+{
+  text: formData.clientSignedDate
+    ? `Signed on: ${formData.clientSignedDate?.toDate?.().toLocaleDateString?.() || "Not yet signed."
+}`
+    : "Not yet signed.",
+  fontSize: 8,
+  italics: true,
+  margin: [0, 0, 0, 10]
+},
+
             {
               text: "Date:",
               bold: true,
@@ -2297,12 +2301,15 @@ docDefinition.content.push({
               ],
               margin: [0, 0, 0, 5]
             },
-            {
-              text: "~DATE_SIGNED_INSPECTOR~",  // 🔥 DATE ANCHOR
-              fontSize: 6,
-              color: "#ffffff",
-              margin: [0, 0, 0, 10]
-            }
+{
+  text: formData.inspectorSignedDate
+    ? `Signed on: ${new Date(formData.inspectorSignedDate).toLocaleDateString()}`
+    : "Not yet signed.",
+  fontSize: 8,
+  italics: true,
+  margin: [0, 0, 0, 10]
+}
+
           ]
         }
       ],

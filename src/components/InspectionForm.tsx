@@ -534,6 +534,10 @@ const [manualTestAddOn, setManualTestAddOn] = useState({
 const [clientEmail, setClientEmail] = useState("");
 const [inspectorEmail, setInspectorEmail] = useState("");
 
+const [clientSignedDate, setClientSignedDate] = useState<string | null>(null);
+const [inspectorSignedDate, setInspectorSignedDate] = useState<string | null>(null);
+
+
 
 
 
@@ -682,6 +686,19 @@ if (data.inspectorInitials) setInspectorInitials(data.inspectorInitials);
 
 if (data.clientSignature) setClientSignature(data.clientSignature);
 if (data.clientInitials) setClientInitials(data.clientInitials);
+
+if (data.clientSignedDate) {
+  const date = new Date(data.clientSignedDate);
+  setClientSignedDate(date.toLocaleDateString());
+}
+if (data.inspectorSignedDate) {
+  const date = new Date(data.inspectorSignedDate);
+  setInspectorSignedDate(date.toLocaleDateString());
+}
+
+
+
+
 setFormData(prev => ({
   ...prev,
   clientSignature: data.clientSignature || "",
@@ -2282,6 +2299,10 @@ await sendProposalEmail({
     <div className="font-signature italic text-xl text-gray-800 mt-1">
       {clientSignature ? `✒️ ${clientSignature}` : <em className="text-gray-400">Not signed yet.</em>}
     </div>
+    {clientSignedDate && (
+  <div className="text-sm text-gray-600">Signed on: {clientSignedDate}</div>
+)}
+
     <div className="font-signature text-md text-gray-600">
       {clientInitials ? `🖋️ Initials: ${clientInitials}` : <em className="text-gray-400">No initials yet.</em>}
     </div>
@@ -2291,7 +2312,12 @@ await sendProposalEmail({
     <h4 className="font-semibold text-gray-700">Inspector Signature</h4>
     <div className="font-signature italic text-xl text-gray-800 mt-1">
       {inspectorSignature ? `✒️ ${inspectorSignature}` : <em className="text-gray-400">Not signed yet.</em>}
+      
     </div>
+    {inspectorSignedDate && (
+  <div className="text-sm text-gray-600">Signed on: {inspectorSignedDate}</div>
+)}
+
     <div className="font-signature text-md text-gray-600">
       {inspectorInitials ? `🖋️ Initials: ${inspectorInitials}` : <em className="text-gray-400">No initials yet.</em>}
     </div>

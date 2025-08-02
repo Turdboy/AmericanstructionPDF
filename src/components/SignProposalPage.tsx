@@ -211,6 +211,9 @@ const update: any = {
   },
 };
 
+update.clientSignedDate = new Date().toISOString();
+
+
 if (signature) update.clientSignature = signature;
 if (initials) update.clientInitials = initials;
 
@@ -249,8 +252,11 @@ const handleInspectorSubmit = () => {
   // ✅ Set confirmation flag
   setInspectorConfirmed(true);
 
+
+
   
 };
+
 
 
 
@@ -454,6 +460,8 @@ const handleInspectorSubmit = () => {
 const update: any = {
   inspectorConfirmed: true,
 };
+
+update.inspectorSignedDate = new Date().toISOString();
 
 if (signature) update.inspectorSignature = signature;
 if (initials) update.inspectorInitials = initials;
