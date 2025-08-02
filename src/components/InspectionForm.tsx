@@ -1991,7 +1991,7 @@ const inspection = {
 
 
 <div className="mt-8 border p-4 rounded bg-white shadow space-y-3">
-  <h3 className="text-md font-semibold text-gray-800">🔥 Force-Save Test Add-On</h3>
+  <h3 className="text-md font-semibold text-gray-800">Enter Pricing Options:</h3>
 
   <input
     type="text"
@@ -2066,7 +2066,7 @@ const inspection = {
       console.log("✅ Manually saved test add-on:", testAddOns);
     }}
   >
-    Save Test Add-On to Firestore
+    Save Pricing Option to Firestore
   </button>
 </div>
 
@@ -2102,86 +2102,6 @@ const inspection = {
     </div>
   ))}
 
-  <div className="border rounded p-4 bg-white shadow space-y-3">
-    <input
-      type="text"
-      placeholder="Title"
-      className="w-full px-3 py-2 border rounded"
-      value={newAddOn.title}
-      onChange={(e) =>
-        setNewAddOn({ ...newAddOn, title: e.target.value })
-      }
-    />
-    <textarea
-      placeholder="Description"
-      className="w-full px-3 py-2 border rounded"
-      value={newAddOn.description}
-      onChange={(e) =>
-        setNewAddOn({ ...newAddOn, description: e.target.value })
-      }
-    />
-    <input
-      type="number"
-      placeholder="Price ($)"
-      className="w-full px-3 py-2 border rounded"
-      value={newAddOn.price}
-      onChange={(e) =>
-        setNewAddOn({ ...newAddOn, price: e.target.value })
-      }
-    />
-<button
-  type="button"
-  className="bg-blue-600 text-white px-4 py-2 rounded"
-  onClick={async () => {
-    if (!newAddOn.title || !newAddOn.description || !newAddOn.price) {
-      alert("Please fill out all fields.");
-      return;
-    }
-
-    const updatedAddOns = [
-      ...(formData.optionalAddOns || []),
-      {
-        title: newAddOn.title,
-        description: newAddOn.description,
-        price: Number(newAddOn.price),
-        clientAccepted: false,
-      },
-    ];
-
-    const updatedFormData = {
-      ...formData,
-      optionalAddOns: updatedAddOns,
-    };
-
-    // Save full inspection draft to Firestore immediately after update
-await saveInspectionDraftToFirestore({
-  formData: {
-    ...formData,
-    optionalAddOns: updatedAddOns, // ✅ override in case state is lagging
-  },
-  roofSections,
-  selectedScopeText: selectedScopeText || "",
-  clientConfirmation: clientConfirmation || null,
-  inspectorConfirmation: inspectorConfirmation || null,
-  spreadsheetUrl: spreadsheetUrl || null,
-  finalEstimate: finalEstimate || null,
-});
-
-
-    // Then update React state locally
-    // Then update React state locally
-setFormData(updatedFormData);
-setOptionalAddOns(updatedAddOns); // ✅ keep external state in sync
-
-    setNewAddOn({ title: "", description: "", price: "" });
-
-    console.log("✅ Saved updated add-ons to Firestore:", updatedAddOns);
-  }}
->
-  Confirm Add-On
-</button>
-
-  </div>
 </div>
 
 

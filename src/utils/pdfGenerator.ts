@@ -1698,6 +1698,31 @@ docDefinition.content.push({
   fontSize: 10,
   lineHeight: 1.4,
 },
+ {
+  absolutePosition: { x: 440, y: 710 }, // 🧭 Adjust as needed
+  stack: [
+    {
+      text: formData.clientInitials || "",
+      fontSize: 11,
+      bold: true,
+      italics: true,
+      alignment: "left",
+      margin: [20, 0, 0, 2], // spacing above line
+    },
+    {
+      canvas: [
+        {
+          type: 'line',
+          x1: 0,
+          y1: 0,
+          x2: 60,  // line length
+          y2: 0,
+          lineWidth: 1.5, // ✅ bolder line
+        }
+      ],
+    },
+  ],
+},
 
 
 ...createFooter(finalPageNumber + 1)
@@ -1806,6 +1831,31 @@ docDefinition.content.push({
         "Work is defined in Schedule A, which is incorporated into this Contract by reference.",
       fontSize: 8
     },
+     {
+  absolutePosition: { x: 440, y: 710 }, // 🧭 Adjust as needed
+  stack: [
+    {
+      text: formData.clientInitials || "",
+      fontSize: 11,
+      bold: true,
+      italics: true,
+      alignment: "left",
+      margin: [20, 0, 0, 2], // spacing above line
+    },
+    {
+      canvas: [
+        {
+          type: 'line',
+          x1: 0,
+          y1: 0,
+          x2: 60,  // line length
+          y2: 0,
+          lineWidth: 1.5, // ✅ bolder line
+        }
+      ],
+    },
+  ],
+},
 
    ...createFooter(finalPageNumber + 2)
   ]
@@ -1966,6 +2016,31 @@ docDefinition.content.push({
         "Contractor will obtain all required permits. Owner pays for permit fees and must cooperate in process.",
       fontSize: 8
     },
+     {
+  absolutePosition: { x: 440, y: 710 }, // 🧭 Adjust as needed
+  stack: [
+    {
+      text: formData.clientInitials || "",
+      fontSize: 11,
+      bold: true,
+      italics: true,
+      alignment: "left",
+      margin: [20, 0, 0, 2], // spacing above line
+    },
+    {
+      canvas: [
+        {
+          type: 'line',
+          x1: 0,
+          y1: 0,
+          x2: 60,  // line length
+          y2: 0,
+          lineWidth: 1.5, // ✅ bolder line
+        }
+      ],
+    },
+  ],
+},
 
     ...createFooter(finalPageNumber + 5)
   ]
@@ -2066,6 +2141,31 @@ docDefinition.content.push({
       fontSize: 8,
       margin: [0, 0, 0, 30]
     },
+     {
+  absolutePosition: { x: 440, y: 710 }, // 🧭 Adjust as needed
+  stack: [
+    {
+      text: formData.clientInitials || "",
+      fontSize: 11,
+      bold: true,
+      italics: true,
+      alignment: "left",
+      margin: [20, 0, 0, 2], // spacing above line
+    },
+    {
+      canvas: [
+        {
+          type: 'line',
+          x1: 0,
+          y1: 0,
+          x2: 60,  // line length
+          y2: 0,
+          lineWidth: 1.5, // ✅ bolder line
+        }
+      ],
+    },
+  ],
+},
 
     createFooter(finalPageNumber + 6)
   ]
@@ -2212,7 +2312,7 @@ docDefinition.content.push({
 
 // ======= Optional Add-Ons (Selected Upon Signing) =======
   {
-      text: "Pricing Options:",
+      text: "Final Price:",
       style: "subheader",
       margin: [0, 0, 0, 10]
     },
@@ -2320,6 +2420,9 @@ docDefinition.content.push({
       margin: [0, 0, 0, 25]
     },
 
+
+
+
     createFooter(finalPageNumber + 8)
   ]
 });
@@ -2423,6 +2526,7 @@ docDefinition.content.push({
       fontSize: 8,
       margin: [0, 0, 0, 30]
     },
+    
 
     createFooter(finalPageNumber + 9)
   ]
@@ -2512,6 +2616,31 @@ docDefinition.content.push({
       fontSize: 8,
       margin: [0, 0, 0, 8]
     },
+     {
+  absolutePosition: { x: 440, y: 710 }, // 🧭 Adjust as needed
+  stack: [
+    {
+      text: formData.clientInitials || "",
+      fontSize: 11,
+      bold: true,
+      italics: true,
+      alignment: "left",
+      margin: [20, 0, 0, 2], // spacing above line
+    },
+    {
+      canvas: [
+        {
+          type: 'line',
+          x1: 0,
+          y1: 0,
+          x2: 60,  // line length
+          y2: 0,
+          lineWidth: 1.5, // ✅ bolder line
+        }
+      ],
+    },
+  ],
+},
 
     createFooter(finalPageNumber + 10)
   ]
@@ -2587,6 +2716,31 @@ docDefinition.content.push({
       fontSize: 8,
       margin: [0, 0, 0, 30]
     },
+     {
+  absolutePosition: { x: 440, y: 710 }, // 🧭 Adjust as needed
+  stack: [
+    {
+      text: formData.clientInitials || "",
+      fontSize: 11,
+      bold: true,
+      italics: true,
+      alignment: "left",
+      margin: [20, 0, 0, 2], // spacing above line
+    },
+    {
+      canvas: [
+        {
+          type: 'line',
+          x1: 0,
+          y1: 0,
+          x2: 60,  // line length
+          y2: 0,
+          lineWidth: 1.5, // ✅ bolder line
+        }
+      ],
+    },
+  ],
+},
 
     createFooter(finalPageNumber + 11)
   ]
@@ -2658,6 +2812,31 @@ docDefinition.content.push({
   fontSize: 8,
   margin: [0, 0, 0, 20]
 },
+ {
+  absolutePosition: { x: 440, y: 710 }, // 🧭 Adjust as needed
+  stack: [
+    {
+      text: formData.clientInitials || "",
+      fontSize: 11,
+      bold: true,
+      italics: true,
+      alignment: "left",
+      margin: [20, 0, 0, 2], // spacing above line
+    },
+    {
+      canvas: [
+        {
+          type: 'line',
+          x1: 0,
+          y1: 0,
+          x2: 60,  // line length
+          y2: 0,
+          lineWidth: 1.5, // ✅ bolder line
+        }
+      ],
+    },
+  ],
+},
 
     createFooter(finalPageNumber + 12)
   ]
@@ -2723,6 +2902,31 @@ docDefinition.content.push({
       fontSize: 8,
       margin: [0, 0, 0, 20]
     },
+     {
+  absolutePosition: { x: 440, y: 710 }, // 🧭 Adjust as needed
+  stack: [
+    {
+      text: formData.clientInitials || "",
+      fontSize: 11,
+      bold: true,
+      italics: true,
+      alignment: "left",
+      margin: [20, 0, 0, 2], // spacing above line
+    },
+    {
+      canvas: [
+        {
+          type: 'line',
+          x1: 0,
+          y1: 0,
+          x2: 60,  // line length
+          y2: 0,
+          lineWidth: 1.5, // ✅ bolder line
+        }
+      ],
+    },
+  ],
+},
 
     createFooter(finalPageNumber + 13)
   ]
