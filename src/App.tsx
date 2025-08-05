@@ -35,6 +35,8 @@ import VysixEditProfilePage from "./components/VysixEditProfilePage";
 import AboutMeJamesTyler from "./components/AboutMeJamesTyler"; 
 import SignProposalPage from './components/SignProposalPage'; // 👈 ✅ Correct path for your case
 import ClientProposalPage from "./components/ClientProposalPage";
+import DesignInspectionPage from "./components/DesignInspectionPage"; // 👈 You'll create this next
+
 
 
 import { useAuth } from "../hooks/useAuth"; // ✅ adjust path if needed
@@ -65,8 +67,7 @@ function VysixDropdown({ dropdownOpen, setDropdownOpen }) {
           onClick={(e) => e.stopPropagation()}
         >
           {[
-            { label: "Home", path: "/vysix/dashboard" },
-            { label: "Profile", path: "/vysix/profile" },
+
             { label: "about me", path: "/vysix/shows" }
           ].map((item) => (
             <div
@@ -155,6 +156,13 @@ useEffect(() => {
         >
           Start Inspection
         </Link>
+        <Link
+  to="/design-inspection"
+  className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
+>
+  Design Inspection
+</Link>
+
 
 
 <VysixDropdown dropdownOpen={dropdownOpen} setDropdownOpen={setDropdownOpen} />
@@ -165,22 +173,7 @@ useEffect(() => {
       </div>
 
       <div className="flex space-x-2 items-center">
-        <a
-          href="https://www.linkedin.com/company/106768017/admin/dashboard/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-        >
-          LinkedIn
-        </a>
-        <a
-          href="https://www.instagram.com/vpaiproposaltool/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 transition"
-        >
-          Instagram
-        </a>
+       
         <Link
           to="/account"
           className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
@@ -261,6 +254,8 @@ useEffect(() => {
     }}
   />
 } />
+<Route path="/design-inspection" element={<DesignInspectionPage />} />
+
 
   <Route path="/edit-proposal" element={<EditProposalPage />} />
   <Route path="/revisit" element={<SavedInspectionPage />} />

@@ -35,7 +35,7 @@ const LandingPage = () => {
               </p>
 
               <button
-                onClick={() => navigate("/get-started")}
+                onClick={() => navigate("/design")}
                 className="bg-purple-600 hover:bg-purple-700 transition text-white text-lg font-semibold py-3 px-6 rounded-lg shadow-md"
               >
                 Get Started
@@ -65,7 +65,7 @@ const LandingPage = () => {
               Vpai doesn’t just generate proposals — it crafts <span className="text-purple-400 font-semibold">winning bids</span> designed to outshine competitors, backed by smart pricing, client insights, and razor-sharp positioning.
             </p>
             <button
-              onClick={() => navigate("/landingpagetvtracker")}
+              onClick={() => navigate("/design")}
               className="bg-purple-600 hover:bg-purple-700 transition text-white text-lg font-semibold py-3 px-6 rounded-lg shadow-md"
             >
               See How It Works
@@ -89,7 +89,7 @@ const LandingPage = () => {
 
         <div className="flex flex-col space-y-3 w-full max-w-xs">
           <button
-            onClick={() => navigate("/get-started")}
+            onClick={() => navigate("/design")}
             className="bg-purple-600 hover:bg-purple-700 transition text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md"
           >
             Get Started

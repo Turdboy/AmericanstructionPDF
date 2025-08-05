@@ -69,9 +69,35 @@ const [title, setTitle] = useState("");
 const [headerStyle, setHeaderStyle] = useState("");
 const [footerStyle, setFooterStyle] = useState("");
 
+
+const [showFormBuilder, setShowFormBuilder] = useState(false);
+
+
 const [showHeaderFooterTextOptions, setShowHeaderFooterTextOptions] = useState(false);
 const [showHeaderFooterImageOptions, setShowHeaderFooterImageOptions] = useState(false);
 const [showThemeColors, setShowThemeColors] = useState(false);
+
+
+const [formSections, setFormSections] = useState<{ title: string; fields: { label: string; type: string; options: string[] }[] }[]>([]);
+
+
+const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+
+const handleDragStart = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+  setDraggedIndex(index);
+};
+
+const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+  if (draggedIndex === null) return;
+  const updatedSections = [...formSections];
+  const [movedSection] = updatedSections.splice(draggedIndex, 1);
+  updatedSections.splice(index, 0, movedSection);
+  setFormSections(updatedSections);
+  setDraggedIndex(null);
+};
+
+
+
 
 
 
@@ -215,6 +241,58 @@ const getHighestZIndex = () => {
 };
 
 
+const updateSectionTitle = (index: number, title: string) => {
+  const newSections = [...formSections];
+  newSections[index].title = title;
+  setFormSections(newSections);
+};
+
+const addSection = () => {
+  setFormSections([
+    ...formSections,
+    {
+      title: "",
+      fields: [] // start empty!
+    }
+  ]);
+};
+
+
+const addField = (sectionIndex: number) => {
+  setFormSections(prev => {
+    const updated = [...prev];
+
+    // Only allow ONE field per section
+    if (updated[sectionIndex].fields.length === 0) {
+      updated[sectionIndex].fields.push({
+        label: "",
+        type: "",
+        options: []
+      });
+    }
+
+    return updated;
+  });
+};
+
+
+const updateField = (sIndex: number, fIndex: number, label: string) => {
+  const newSections = [...formSections];
+  newSections[sIndex].fields[fIndex].label = label;
+  setFormSections(newSections);
+};
+
+const updateFieldType = (sIndex: number, fIndex: number, type: string) => {
+  const newSections = [...formSections];
+  newSections[sIndex].fields[fIndex].type = type;
+  setFormSections(newSections);
+};
+
+const deleteField = (sIndex: number, fIndex: number) => {
+  const newSections = [...formSections];
+  newSections[sIndex].fields.splice(fIndex, 1);
+  setFormSections(newSections);
+};
 
   
 
@@ -558,6 +636,8 @@ onClick={() => setShowDesignOptions(prev => !prev)}
 
 
 
+
+
     </div>
 
 
@@ -567,12 +647,138 @@ onClick={() => setShowDesignOptions(prev => !prev)}
 
   )}
 
+{/* 🔽 New Dropdown Panel for Inspection Form Layout */}
+<div className="border-t border-gray-300 mt-8 pt-6">
+  <button
+    className="w-full text-left text-lg font-semibold mb-2 flex justify-between items-center"
+    onClick={() => setShowFormBuilder(!showFormBuilder)}
+  >
+    <span>📋 Inspection Form Builder</span>
+    <span>{showFormBuilder ? "▲" : "▼"}</span>
+  </button>
+
+  {showFormBuilder && (
+    <div className="border p-4 rounded bg-gray-50 dark:bg-gray-800 dark:text-white">
+      <p className="mb-4 text-sm text-gray-700 dark:text-gray-300">
+        <strong>Instructions:</strong> Each section can only have one field. Start by entering a section title, then click <em>Add Field</em> to define the input type and label. If you choose “Multiple Choice,” you can add options.
+      </p>
+
+{formSections.map((section, sIndex) => (
+  <div
+    key={sIndex}
+    className="mb-6 border p-4 bg-white dark:bg-gray-900 rounded cursor-move"
+    draggable
+    onDragStart={(e) => handleDragStart(e, sIndex)}
+    onDragOver={(e) => e.preventDefault()}
+    onDrop={(e) => handleDrop(e, sIndex)}
+  >
+    <div className="flex items-center mb-2">
+      <span className="mr-2 font-bold text-lg">#{sIndex + 1}</span>
+      <label className="block font-semibold">Section Heading:</label>
+    </div>
+
+          <label className="block font-semibold mb-1">Section Heading:</label>
+          <input
+            type="text"
+            placeholder="Leave Blank if you Don't Want Your Field to have a Label"
+            value={section.title}
+            onChange={(e) => updateSectionTitle(sIndex, e.target.value)}
+            className="mb-3 border p-2 w-full rounded dark:bg-gray-800 dark:text-white"
+          />
+
+          {section.fields.length === 0 && (
+            <button
+              onClick={() => addField(sIndex)}
+              className="text-blue-600 text-sm mb-2"
+            >
+              + Add Field
+            </button>
+          )}
+
+          {section.fields.map((field, fIndex) => (
+            <div key={fIndex} className="mb-3">
+              <div className="flex gap-2 items-center mb-2">
+               <select
+  value={field.type}
+  onChange={(e) => updateFieldType(sIndex, fIndex, e.target.value)}
+  className="border p-2 rounded text-black bg-white"
+>
+
+  <option value="text">Text Input</option>
+  <option value="number">Number Input</option>
+  <option value="checkbox">Checkbox</option>
+  <option value="multipleChoice">Multiple Choice</option>
+  <option value="image">Image Upload</option>
+  <option value="signature">Signature</option>
+  <option value="initials">Initials</option>
+  <option value="price">Price Field</option>
+  <option value="address">Address</option>
+  <option value="date">Date Picker</option>
+  <option value="document">Upload Document (PDF)</option>
+  <option value="note">Read-Only Note</option>
+  <option value="checkboxGroup">Checkbox Group</option>
+</select>
 
 
+                <input
+                  type="text"
+                  placeholder="Field Label (e.g., Roof Age)"
+                  value={field.label}
+                  onChange={(e) => updateField(sIndex, fIndex, e.target.value)}
+                  className="border p-2 flex-1 rounded dark:bg-gray-800 dark:text-white"
+                />
 
+                <button
+                  onClick={() => deleteField(sIndex, fIndex)}
+                  className="text-red-500 text-sm"
+                >
+                  🗑️
+                </button>
+              </div>
 
+              {field.type === "multiple-choice" && (
+                <div className="pl-4">
+                  {field.options?.map((option, oIndex) => (
+                    <div key={oIndex} className="flex items-center gap-2 mb-1">
+                      <input
+                        type="text"
+                        placeholder={`Option ${oIndex + 1}`}
+                        value={option}
+                        onChange={(e) =>
+                          updateOption(sIndex, fIndex, oIndex, e.target.value)
+                        }
+                        className="border p-1 rounded w-full dark:bg-gray-800 dark:text-white"
+                      />
+                      <button
+                        onClick={() => removeOption(sIndex, fIndex, oIndex)}
+                        className="text-red-400 text-sm"
+                      >
+                        ❌
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    onClick={() => addOption(sIndex, fIndex)}
+                    className="text-blue-600 text-sm mt-1"
+                  >
+                    + Add Option
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      ))}
 
-
+      <button
+        onClick={addSection}
+        className="bg-blue-600 text-white px-4 py-2 mt-2 rounded"
+      >
+        + Add New Section
+      </button>
+    </div>
+  )}
+</div>
 
 
 

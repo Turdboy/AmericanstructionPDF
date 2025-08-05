@@ -1137,6 +1137,8 @@ const emptyRoofSection = {
   clientInitials,
   inspectorSignature,
   inspectorInitials,
+  clientSignedDate,
+  inspectorSignedDate,
 });
 
     };

@@ -2218,6 +2218,12 @@ docDefinition.content.push({
         {
           width: "50%",
           stack: [
+             {
+      text: "Client",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 0, 0, 5]
+    },
             {
               text: (formData.clientname ? formData.clientname + ":" : "______________:"),
               bold: true,
@@ -2238,6 +2244,12 @@ docDefinition.content.push({
   alignment: "left",
   margin: [70, -25, 0, 20], // shifts right onto the signature line
 },
+{
+      text: "Inspector",
+      bold: true,
+      fontSize: 10,
+      margin: [0, 15, 0, 5]
+    },
 
 
             {
@@ -2281,13 +2293,13 @@ docDefinition.content.push({
             },
 {
   text: formData.clientSignedDate
-    ? `Signed on: ${formData.clientSignedDate?.toDate?.().toLocaleDateString?.() || "Not yet signed."
-}`
+    ? `Signed on: ${new Date(formData.clientSignedDate).toLocaleDateString()}`
     : "Not yet signed.",
   fontSize: 8,
   italics: true,
-  margin: [0, 0, 0, 10]
+  margin: [30, -15, 0, 10]
 },
+
 
             {
               text: "Date:",
@@ -2307,7 +2319,7 @@ docDefinition.content.push({
     : "Not yet signed.",
   fontSize: 8,
   italics: true,
-  margin: [0, 0, 0, 10]
+  margin: [30, -15, 0, 10]
 }
 
           ]
