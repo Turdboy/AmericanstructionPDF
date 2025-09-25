@@ -127,13 +127,8 @@ useEffect(() => {
         {/* 🌈 Gradient Header based on logo */}
         {/* Desktop & Tablet Header */}
 <div className="hidden sm:block">
-<header
-  className="text-white z-50 relative"
-  style={{
-    background: "linear-gradient(to right, #5a4634, #7d6750, #5a4634)",
-    boxShadow: "inset -2px 0 4px rgba(0,0,0,0.5), inset 2px 0 4px rgba(0,0,0,0.5)",
-  }}
->
+<header className="bg-[#7C3AED] text-white z-50 relative shadow-md">
+
 
 
     <div className="container mx-auto px-4 py-4 flex justify-between items-center">
