@@ -8,7 +8,8 @@ const MobileHeader: React.FC = () => {
     <div
       className="sm:hidden text-white py-3 px-4 fixed w-full top-0 z-50"
       style={{
-        background: "#7C3AED", // exact fly. purple
+        background: "#D4AF37", // gold theme color
+
         borderBottom: "4px solid black", // black underline like desktop
         boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
       }}
