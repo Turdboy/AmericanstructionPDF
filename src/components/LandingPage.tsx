@@ -117,7 +117,6 @@ const LandingPage = () => {
 <div className="sm:hidden bg-[#6D7E38] text-[#111111] flex flex-col items-center text-center min-h-screen pt-16 px-6">
   {/* Logo & Title */}
   <img src={VpaiLogo} alt="jjfly Logo" className="w-40 h-auto mx-auto mb-6" />
-  <h1 className="text-3xl font-bold mb-8 text-[#111111]">James Tyler Computing</h1>
 
   {/* Two-column layout */}
   <div className="flex justify-center gap-6 w-full max-w-2xl">
