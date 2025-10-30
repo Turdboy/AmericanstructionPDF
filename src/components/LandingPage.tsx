@@ -15,7 +15,7 @@ const LandingPage = () => {
             <img
               src={VpaiLogo}
               alt="jjfly Logo"
-              style={{ width: "180px", height: "auto" }}
+              style={{ width: "280px", height: "auto" }}
               className="mb-6"
             />
 
