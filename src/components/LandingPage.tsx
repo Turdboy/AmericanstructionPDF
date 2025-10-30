@@ -20,7 +20,7 @@ const LandingPage = () => {
             />
 
 <h3 className="text-lg font-bold text-white">
-                    James Tyler Holdings hello
+                    James Tyler Holdings
                   </h3>
             <h2 className="text-2xl font-bold mb-6  text-[#111111]">My Portfolio:</h2>
 
