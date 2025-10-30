@@ -19,7 +19,9 @@ const LandingPage = () => {
               className="mb-6"
             />
 
-
+<h3 className="text-lg font-bold text-white">
+                    James Tyler Holdings
+                  </h3>
             <h2 className="text-2xl font-bold mb-6  text-[#111111]">My Portfolio:</h2>
 
             {/* Portfolio Projects */}
@@ -78,15 +80,7 @@ const LandingPage = () => {
               </div>
             </div>
 
-            {/* GitHub Button */}
-            <div className="mt-6">
-              <button
-                onClick={() => console.log("GitHub link here")}
-                className="bg-[#111111] text-white px-6 py-2 rounded hover:bg-gray-800"
-              >
-                GitHub
-              </button>
-            </div>
+
           </div>
 
           {/* Right Column — Bio & Image */}
