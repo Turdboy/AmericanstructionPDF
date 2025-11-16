@@ -49,7 +49,7 @@ function VysixDropdown({ dropdownOpen, setDropdownOpen }) {
     <div className="relative inline-block text-left">
       {dropdownOpen && (
         <div
-          className="absolute left-0 mt-2 w-48 bg-gray-900 border border-gray-700 rounded shadow-lg z-50"
+          className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg z-50"
           onClick={(e) => e.stopPropagation()}
         >
           {[{ label: "about me", path: "/vysix/shows" }].map((item) => (
@@ -63,7 +63,7 @@ function VysixDropdown({ dropdownOpen, setDropdownOpen }) {
                   navigate(item.path);
                 }
               }}
-              className="px-4 py-2 text-sm hover:bg-gray-800 cursor-pointer"
+              className="px-4 py-2 text-sm text-black hover:bg-gray-100 cursor-pointer"
             >
               {item.label}
             </div>
@@ -75,7 +75,7 @@ function VysixDropdown({ dropdownOpen, setDropdownOpen }) {
               setDropdownOpen(false);
               navigate("/");
             }}
-            className="px-4 py-2 text-sm text-red-400 hover:bg-gray-800 cursor-pointer"
+            className="px-4 py-2 text-sm text-red-500 hover:bg-gray-100 cursor-pointer"
           >
             Sign Out
           </div>
@@ -98,52 +98,68 @@ function App() {
     return () => window.removeEventListener("click", close);
   }, []);
 
+  const brandWhite = "#FFFFFF";
+
   return (
     <AuthProvider>
       <Router>
         <div className="min-h-screen bg-white">
-          {/* 🌟 Gold Header */}
+
+          {/* 🌟 NEW WHITE HEADER */}
           <div className="hidden sm:block">
-            <header className="bg-[#D4AF37] text-white z-50 relative shadow-md">
+            <header
+              className="text-black z-50 relative shadow-md"
+              style={{ backgroundColor: brandWhite }}
+            >
               <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+
+                {/* Left Buttons */}
                 <div className="flex space-x-4">
                   <Link
                     to="/"
-                    className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
+                    className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition"
                   >
                     Home
                   </Link>
+
                   <Link
                     to="/revisit"
-                    className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
+                    className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition"
                   >
                     Revisit Inspections
                   </Link>
+
                   <Link
                     to="/inspection"
-                    className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
+                    className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition"
                   >
                     Start Inspection
                   </Link>
-                  <VysixDropdown dropdownOpen={dropdownOpen} setDropdownOpen={setDropdownOpen} />
+
+                  <VysixDropdown
+                    dropdownOpen={dropdownOpen}
+                    setDropdownOpen={setDropdownOpen}
+                  />
                 </div>
 
+                {/* Right Button */}
                 <div className="flex space-x-2 items-center">
                   <Link
                     to="/account"
-                    className="bg-black text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
+                    className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition"
                   >
                     Account
                   </Link>
                 </div>
+
               </div>
             </header>
           </div>
 
-          {/* Mobile Header (unchanged for now, will update next) */}
+          {/* Mobile Header (unchanged for now) */}
           <MobileHeader />
 
-          {/* Routes */}
+          {/* ROUTES */}
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/vysix/profile/edit" element={<VysixEditProfilePage />} />
@@ -169,18 +185,14 @@ function App() {
             <Route path="/process" element={<ProcessPage />} />
             <Route path="/profilesurvey" element={<ProfileSurvey />} />
             <Route path="/profile/:id" element={<ProfilePreviewPage />} />
-            <Route
-              path="/inspection"
-              element={
-                <InspectionTypePage />
-              }
-            />
+            <Route path="/inspection" element={<InspectionTypePage />} />
             <Route path="/design-inspection" element={<DesignInspectionPage />} />
             <Route path="/edit-proposal" element={<EditProposalPage />} />
             <Route path="/revisit" element={<SavedInspectionPage />} />
             <Route path="/v1/*" element={<MainPage />} />
             <Route path="/mobile" element={<MobileLandingPage />} />
           </Routes>
+
         </div>
       </Router>
     </AuthProvider>

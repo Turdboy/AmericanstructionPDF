@@ -8,13 +8,13 @@ const MobileHeader: React.FC = () => {
     <div
       className="sm:hidden text-white py-3 px-4 fixed w-full top-0 z-50"
       style={{
-        background: "#D4AF37", // gold theme color
-
-        borderBottom: "4px solid black", // black underline like desktop
+        background: "#FFFFFF", // <-- changed from gold to pure white
+        borderBottom: "4px solid black", // keep the black underline
         boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
       }}
     >
       <div className="flex justify-between items-center">
+
         {/* Left Group */}
         <div className="flex space-x-2">
           <button
